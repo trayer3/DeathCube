@@ -2,6 +2,8 @@ package com.projectreddog.deathcube;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.projectreddog.deathcube.init.ModBlocks;
@@ -22,13 +24,13 @@ public class DeathCube {
 	}
 	
 	@Mod.EventHandler
-	public void init(FMLPreInitializationEvent event) {
+	public void init(FMLInitializationEvent event) {
 		
 		proxy.registerRenderers();
 	}
 	
 	@Mod.EventHandler
-	public void postInit(FMLPreInitializationEvent event) {
+	public void postInit(FMLPostInitializationEvent event) {
 		
 	}
 }
