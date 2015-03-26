@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "deathcube",
+    "name": "DeathCube",
+    "description": "This is a description of DeathCube.  Very informative!",
+    "version": "1.0",
+    "mcversion": "1.8",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [ "trayer3"],
+    "credits": "Authored by trayer3",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [ "Forge" ],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": true
+  }]
+}
