@@ -5,7 +5,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
@@ -21,6 +23,7 @@ public class DeathCube {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ModBlocks.init();
+		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}
 	
 	@Mod.EventHandler
