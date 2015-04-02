@@ -11,6 +11,10 @@ import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 public class GuiSpawnPoint extends GuiScreen {
 
 	private TileEntitySpawnPoint spawn_point;
+	private int gui_Width = 176;
+	private int gui_Height = 222;
+	private int x = 0;
+	private int y = 0;
 	
 	public GuiSpawnPoint(TileEntitySpawnPoint spawn_point) {
 		super();
@@ -18,21 +22,29 @@ public class GuiSpawnPoint extends GuiScreen {
 	}
 	
 	@Override
-	public void drawBackground(int tint) {
-		GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        this.mc.getTextureManager().bindTexture(Reference.GUI_SPAWN_POINT_BACKGROUND);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.drawTexturedModalRect(0, 0, 0, 0, 176, 222);
-        /**float f = 32.0F;
-        worldrenderer.startDrawingQuads();
-        worldrenderer.setColorOpaque_I(4210752);
-        worldrenderer.addVertexWithUV(0.0D, (double)this.height, 0.0D, 0.0D, (double)((float)this.height / f + (float)tint));
-        worldrenderer.addVertexWithUV((double)this.width, (double)this.height, 0.0D, (double)((float)this.width / f), (double)((float)this.height / f + (float)tint));
-        worldrenderer.addVertexWithUV((double)this.width, 0.0D, 0.0D, (double)((float)this.width / f), (double)tint);
-        worldrenderer.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, (double)tint);
-        tessellator.draw();**/
-	}
+    public void drawScreen(int mouseX, int mouseY, float partTicks) {
+        this.drawDefaultBackground();
+
+        x = (this.width - this.gui_Width) / 2;
+        y = (this.height - this.gui_Height) / 2;
+        
+        this.mc.renderEngine.bindTexture(Reference.GUI_SPAWN_POINT_BACKGROUND);
+        this.drawTexturedModalRect(x, y, 0, 0, this.gui_Width, this.gui_Height);
+
+        super.drawScreen(mouseX, mouseY, partTicks);
+    }
+	
+	@Override
+    public boolean doesGuiPauseGame() {
+        return false;
+    }
+	
+	@Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+
+        /**
+         *  Save data to server.
+         */
+    }
 }
