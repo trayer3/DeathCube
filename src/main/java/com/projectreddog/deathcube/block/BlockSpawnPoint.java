@@ -16,7 +16,7 @@ import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 
 public class BlockSpawnPoint extends BlockContainer {
-	
+
 	protected BlockSpawnPoint(Material material) {
 		super(material);
 
@@ -68,9 +68,9 @@ public class BlockSpawnPoint extends BlockContainer {
 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		
+
 		/**
-		 *  Not needed if not using an inventory.
+		 * Not needed if not using an inventory.
 		 */
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
