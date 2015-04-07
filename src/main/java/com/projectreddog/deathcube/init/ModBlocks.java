@@ -22,7 +22,7 @@ public class ModBlocks {
 	public static void init() {
 		GameRegistry.registerBlock(capturepoint, Reference.MODBLOCK_CAPTURE_POINT);
 		GameRegistry.registerBlock(spawnpoint, Reference.MODBLOCK_SPAWN_POINT);
-		GameRegistry.registerBlock(spawnpoint, Reference.MODBLOCK_GAME_CONTROLLER);
+		GameRegistry.registerBlock(gamecontroller, Reference.MODBLOCK_GAME_CONTROLLER);
 		
 		Log.info("Modblocks initialized");
 	}
