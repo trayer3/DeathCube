@@ -10,13 +10,15 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onBlockBreak(BreakEvent event) {
-		if (!event.state.getBlock().equals(Block.getBlockFromName("cobblestone"))) { // && event.getPlayer(). Get Game Mode) {
+		if (!event.state.getBlock().equals(Block.getBlockFromName("cobblestone")) && !event.getPlayer().capabilities.isCreativeMode) {
 			/**
 			 * If Block is not Cobblestone and player not in Creative, cancel block break event.
 			 */
 			event.setCanceled(true);
-			
-			Log.info("Block Broken - Tried to Cancel");
+
+			// Test Logging
+			// Log.info("Player: " + event.getPlayer().getName() +
+			// " - Cancel Block Break");
 		}
 	}
 }

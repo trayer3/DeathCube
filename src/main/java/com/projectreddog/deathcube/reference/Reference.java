@@ -12,7 +12,7 @@ public class Reference {
     public static final String MODBLOCK_CAPTURE_POINT = "capturepoint";
     public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
     
-    public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/screengui.png");
+    public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/spawnpointgui.png");
     
     public static final int GUI_SPAWN_POINT = 0;
 	public static final int GUI_CAPTURE_POINT = 1;
