@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntitySpawnPoint extends TileEntity implements IUpdatePlayerListBox {
 
 	public TileEntitySpawnPoint() {
-	
 
 	}
 

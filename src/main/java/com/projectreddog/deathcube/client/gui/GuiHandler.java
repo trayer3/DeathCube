@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 
 public class GuiHandler implements IGuiHandler {
@@ -26,6 +27,15 @@ public class GuiHandler implements IGuiHandler {
 			if (entity != null) {
 				if (entity instanceof TileEntitySpawnPoint) {
 					return new GuiSpawnPoint((TileEntitySpawnPoint) entity);
+				}
+			}
+		}
+		else if (ID == Reference.GUI_GAME_CONTROLLER) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntityGameController) {
+					return new GuiGameController((TileEntityGameController) entity);
 				}
 			}
 		}

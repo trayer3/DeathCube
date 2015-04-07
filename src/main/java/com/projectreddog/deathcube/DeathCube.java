@@ -25,6 +25,9 @@ public class DeathCube {
 	@Mod.Instance(Reference.MOD_ID)
 	public static DeathCube instance;
 
+	public static int currentAvailableGameID = 1;
+	public static int numGameIDs = 0;
+
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
 	 */
@@ -37,10 +40,10 @@ public class DeathCube {
 
 		// Initialize Network Handling
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
-		
+
 		// Register Event Handling
 		MinecraftForge.EVENT_BUS.register(new DeathCubeEventHandler());
-        FMLCommonHandler.instance().bus().register(new DeathCubeEventHandler());
+		FMLCommonHandler.instance().bus().register(new DeathCubeEventHandler());
 
 		// Log Completion
 		Log.info("Pre Initialization Complete!");
@@ -67,5 +70,25 @@ public class DeathCube {
 
 		// Log Completion
 		Log.info("PostInitialization Complete!");
+	}
+
+	public static int getGameID() {
+		/**
+		 * Provide a Game ID and change next available.
+		 */
+		currentAvailableGameID++;
+		numGameIDs++;
+		return currentAvailableGameID - 1;
+	}
+
+	public static void freeGameID() {
+		/**
+		 * Decrement number of game IDs. Then, if none are in use, reset available ID to 1.
+		 */
+		if (numGameIDs > 0) {
+			numGameIDs--;
+			if (numGameIDs <= 0)
+				currentAvailableGameID = 1;
+		}
 	}
 }
