@@ -12,12 +12,12 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 
 	public static int gameID;
 	
-	private static enum GameStates {
+	public static enum GameStates {
 		Lobby, GameWarmup, Running, PostGame, GameOver
 	}
 
 	/**
-	 * Field States: 
+	 * Field States:
 	 *    Off 		- Removes Force Field Blocks 
 	 *    Inactive 	- Places Force Field Blocks, but they are OK to touch. 
 	 *    Active 	- Arms Force Field Blocks as dangerous to touch!
@@ -29,7 +29,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 	public static GameStates gameState = GameStates.Lobby;
 	public static FieldStates fieldState = FieldStates.Off;
 
-	private int gameTimer = -1;
+	public static int gameTimer = -1;
 
 	public TileEntityGameController() {
 		gameID = DeathCube.instance.getGameID();
@@ -46,9 +46,10 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			if (gameTimer >= 0)
 				gameTimer = -1;
 		} else if (gameState == GameStates.GameWarmup) {
-			if (gameTimer < 0)
-				
+			if (gameTimer < 0){
 				gameTimer = 1200;
+				Log.info("Game now Warming Up.");
+			}
 			else if (gameTimer > 0) {
 				/**
 				 * Decrement Warm-up Timer
@@ -66,25 +67,59 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 				 */
 				gameState = GameStates.Running;
 				
+				Log.info("Game now Running.");
+				
 				StartGame();
-			} else
+			} else {
 				/**
 				 * This condition show not be reached, ever.
 				 */
 				Log.info("Invalid Game State! " + gameState + " - Timer: " + gameTimer);
+			}
 		} else if (gameState == GameStates.Running) {
 			/**
 			 * TODO: Main Game actions.
 			 */
 			if (fieldState != FieldStates.Active)
 				fieldState = FieldStates.Active;
+			
 		} else if (gameState == GameStates.PostGame) {
 			/**
 			 * TODO: Post Game actions.
-			 * 		
 			 */
-			if (fieldState != FieldStates.Inactive)
-				fieldState = FieldStates.Inactive;
+			if (gameTimer < 0){
+				gameTimer = 1200;
+				
+				if (fieldState != FieldStates.Inactive)
+					fieldState = FieldStates.Inactive;
+				
+				Log.info("Game has ended.");
+			}
+			else if (gameTimer > 0) {
+				/**
+				 * Decrement Timer
+				 */
+				gameTimer--;
+				
+				/**
+				 * TODO: Other Post Game Stuff
+				 */
+				
+			}
+			else if (gameTimer == 0) {
+				/**
+				 * Timer is Up - Return to Lobby GameState
+				 */
+				gameState = GameStates.Lobby;
+				
+				Log.info("Game now in Lobby.");
+			} else {
+				/**
+				 * This condition show not be reached, ever.
+				 */
+				Log.info("Invalid Game State! " + gameState + " - Timer: " + gameTimer);
+			}
+			
 		} else if (gameState == GameStates.GameOver) {
 			/**
 			 * TODO: Post Game actions.

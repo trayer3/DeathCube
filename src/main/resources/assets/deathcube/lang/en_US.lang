@@ -2,3 +2,5 @@
 tile.deathcube:capturepoint.name=Capture Point
 tile.deathcube:spawnpoint.name=Spawn Point
 tile.deathcube:gamecontroller.name=DeathCube Game Controller
+
+commands.game.usage=/game <start|end>

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.init.ModBlocks;
+import com.projectreddog.deathcube.init.ModCommands;
 import com.projectreddog.deathcube.init.ModTileEntities;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
@@ -57,6 +58,9 @@ public class DeathCube {
 
 		// Register Stuff
 		proxy.registerRenderers();
+		
+		// Register Commands
+		ModCommands.init();
 
 		// Log Completion
 		Log.info("Initialization Complete!");

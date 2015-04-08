@@ -2,18 +2,19 @@ package com.projectreddog.deathcube.event;
 
 import java.util.Collection;
 
-import com.projectreddog.deathcube.utility.Log;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.projectreddog.deathcube.command.CommandGame;
 
 public class DeathCubeEventHandler {
 
@@ -105,11 +106,11 @@ public class DeathCubeEventHandler {
 		}
 	}
 
-	public void onCommandEntered(CommandEvent event) {
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent event) {
 		/**
-		 * TODO: Custom Commands for DeathCube.
-		 * 
-		 * Try to use a GUI, where possible or more convenient.
+		 * Register server commands
 		 */
+		//event.registerServerCommand(new CommandGame());
 	}
 }

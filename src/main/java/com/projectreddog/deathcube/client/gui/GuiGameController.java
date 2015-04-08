@@ -4,8 +4,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
-import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
-import com.projectreddog.deathcube.network.NetworkHandler;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 
@@ -37,7 +35,7 @@ public class GuiGameController extends GuiScreen {
 		/**
 		 * Prepare Button
 		 */
-		startButton = new GuiButton(0, x + 10, y + 37, 40, 20, "");
+		startButton = new GuiButton(0, (this.width - 80) / 2, ((this.height - 20) / 2) + 50, 80, 20, "");
 		buttonList.add(startButton);
 
 		/**
@@ -80,7 +78,11 @@ public class GuiGameController extends GuiScreen {
 	
 	@Override
     protected void actionPerformed(GuiButton button){
-        if(button.id == 0) NetworkHandler.sendToServer(new MessageHandleGuiButtonPress(te, 0));
+        if(button.id == 0) {
+        	/**
+        	 * Start Game
+        	 */
+        }
     }
 	
 	@Override
