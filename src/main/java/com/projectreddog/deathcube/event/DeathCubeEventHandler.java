@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.command.CommandGame;
+import com.projectreddog.deathcube.init.ModCommands;
 
 public class DeathCubeEventHandler {
 
@@ -107,10 +108,11 @@ public class DeathCubeEventHandler {
 	}
 
 	@EventHandler
-	public void serverLoad(FMLServerStartingEvent event) {
+	public void serverStart(FMLServerStartingEvent event) {
 		/**
 		 * Register server commands
 		 */
-		//event.registerServerCommand(new CommandGame());
+		event.registerServerCommand(new CommandGame());
+		//ModCommands.init();
 	}
 }

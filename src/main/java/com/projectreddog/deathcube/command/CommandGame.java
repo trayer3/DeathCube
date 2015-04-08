@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.command;
 
 import java.util.List;
 
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +12,7 @@ import net.minecraft.util.BlockPos;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController.GameStates;
 
-public class CommandGame implements ICommand {
+public class CommandGame extends CommandBase {//implements ICommand {
 
 	@Override
 	public int compareTo(Object arg0) {

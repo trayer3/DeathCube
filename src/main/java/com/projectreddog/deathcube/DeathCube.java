@@ -60,7 +60,7 @@ public class DeathCube {
 		proxy.registerRenderers();
 		
 		// Register Commands
-		ModCommands.init();
+		// ModCommands.init();
 
 		// Log Completion
 		Log.info("Initialization Complete!");
@@ -71,7 +71,7 @@ public class DeathCube {
 	 */
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-
+		
 		// Log Completion
 		Log.info("PostInitialization Complete!");
 	}
