@@ -94,7 +94,7 @@ public class GuiGameController extends GuiScreen {
 		super.onGuiClosed();
 
 		/**
-		 * Save data from gui to server.
+		 * Save data from Gui to server.
 		 */
 	}
 }

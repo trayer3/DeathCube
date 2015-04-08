@@ -5,13 +5,13 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
-import com.minemaarten.advancedmod.AdvancedMod;
-import com.minemaarten.advancedmod.reference.Reference;
-import com.minemaarten.advancedmod.tileentity.TileEntityAdvancedMod;
-
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.tileentity.TileEntityDeathCube;
 
 @Sharable
 public class DescriptionHandler extends SimpleChannelInboundHandler<FMLProxyPacket>{
@@ -32,9 +32,10 @@ public class DescriptionHandler extends SimpleChannelInboundHandler<FMLProxyPack
         int x = buf.readInt();
         int y = buf.readInt();
         int z = buf.readInt();
-        TileEntity te = AdvancedMod.proxy.getClientPlayer().worldObj.getTileEntity(x, y, z);
-        if(te instanceof TileEntityAdvancedMod) {
-            ((TileEntityAdvancedMod)te).readFromPacket(buf);
+        BlockPos bp = new BlockPos(x, y, z);
+        TileEntity te = DeathCube.proxy.getClientPlayer().worldObj.getTileEntity(bp);
+        if(te instanceof TileEntityDeathCube) {
+            ((TileEntityDeathCube)te).readFromPacket(buf);
         }
     }
 
