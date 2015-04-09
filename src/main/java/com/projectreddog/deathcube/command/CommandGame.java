@@ -29,10 +29,6 @@ public class CommandGame extends CommandBase {//implements ICommand {
 		return "commands.game.usage";
 	}
 
-	@Override
-	public List getAliases() {
-		return null;
-	}
 
 	@Override
 	public void execute(ICommandSender sender, String[] args) throws CommandException {

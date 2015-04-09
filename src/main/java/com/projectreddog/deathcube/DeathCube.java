@@ -7,9 +7,11 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.init.ModBlocks;
+import com.projectreddog.deathcube.init.ModCommands;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
 import com.projectreddog.deathcube.proxy.IProxy;
@@ -55,13 +57,18 @@ public class DeathCube {
 		MinecraftForge.EVENT_BUS.register(new DeathCubeEventHandler());
 		FMLCommonHandler.instance().bus().register(new DeathCubeEventHandler());
 
-		// Register Commands
-		// ModCommands.init();
 
 		// Log Completion
 		Log.info("Initialization Complete!");
 	}
 
+	
+	@Mod.EventHandler
+	public void serverStart (FMLServerStartingEvent event){
+		// Register Commands
+		ModCommands.init(event);
+	}
+	
 	/**
 	 * PostInitialization: Run after other mods are finished
 	 */
