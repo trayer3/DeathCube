@@ -33,11 +33,6 @@ public class GameTeam {
 	}
 	
 	/**
-	 * Add all players to Teams at Game Start
-	 * 	- Allow for greater than 2 teams
-	 */
-	
-	/**
 	 * Add new players to server to Teams when GameState is Running
 	 * 	- Randomly
 	 */

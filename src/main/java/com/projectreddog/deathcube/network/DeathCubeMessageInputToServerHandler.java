@@ -26,13 +26,15 @@ public class DeathCubeMessageInputToServerHandler implements IMessageHandler<Dea
 
 	public void processMessage(DeathCubeMessageInputToServer message, MessageContext ctx) {
 
-		if(message.buttonID == Reference.BUTTON_START_GAME) {
+		if (message.buttonID == Reference.BUTTON_START_GAME) {
 			// Start Game
 			Log.info("Server sees Start Button Pressed");
-			if (TileEntityGameController.gameState == GameStates.Lobby) {
-				TileEntityGameController.gameState = GameStates.GameWarmup;
-			} else if(TileEntityGameController.gameState == GameStates.Running) {
-				TileEntityGameController.gameState = GameStates.PostGame;
+			if (TileEntityGameController.gameState != null) {
+				if (TileEntityGameController.gameState == GameStates.Lobby) {
+					TileEntityGameController.gameState = GameStates.GameWarmup;
+				} else if (TileEntityGameController.gameState == GameStates.Running) {
+					TileEntityGameController.gameState = GameStates.PostGame;
+				}
 			}
 		}
 	}

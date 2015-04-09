@@ -153,11 +153,6 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 	}
 	
 	public void StartGame(){
-
-		/**
-		 * TODO: Play Sound at Game Start
-		 */
-		//Bukkit.getServer().getWorld("World").playSound(lobbySpawn,  Sound.BAT_DEATH, 100, 1);
 		
 		/**
 		 * Create Team Objects
@@ -198,19 +193,12 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			Log.info("Added player: " + player.getName() + " to team: " + gameTeams[teamIndex].getTeamColor());
 			
 			/**
-			 *  TODO: Avoid death by falling.
+			 *  Set velocity to zero to avoid death falling.
+			 *  Clear any potion effects from Lobby time.
 			 */
-			//Vector vec = new Vector();
-			//p.setVelocity(vec);
-			//p.setFallDistance(0);
-			
-			/**
-			 *  TODO: Clear all effects acquired in lobby.
-			 */
-			//for (PotionEffect effect : p.getActivePotionEffects())
-			//{
-			//	p.removePotionEffect(effect.getType());
-			//}
+			player.setVelocity(0, 0, 0);
+			player.fallDistance = 0;
+			player.clearActivePotions();
 			
 			/**
 			 *  TODO: Initialize Kill Streak Timers
@@ -222,6 +210,13 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			 *  TODO: Teleport Players to Team Spawn Locations.
 			 */
 			//SpawnPlayerInGame(p);
+			//player.playerLocation = this.pos;
+			player.setPositionAndUpdate(this.pos.getX() + 0.5d, this.pos.getY() + 1, this.pos.getZ() + 0.5d);
+			
+			/**
+			 * Play sound at Game Start
+			 */
+			player.playSound("mob.bat.death", 1.0f, 1.0f);
 		}
 	}
 

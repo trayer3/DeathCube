@@ -12,7 +12,7 @@ import net.minecraft.util.BlockPos;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController.GameStates;
 
-public class CommandGame extends CommandBase {//implements ICommand {
+public class CommandGame extends CommandBase {
 
 	@Override
 	public int compareTo(Object arg0) {
