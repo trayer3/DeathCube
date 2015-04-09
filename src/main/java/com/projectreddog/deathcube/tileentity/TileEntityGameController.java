@@ -47,7 +47,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 				gameTimer = -1;
 		} else if (gameState == GameStates.GameWarmup) {
 			if (gameTimer < 0){
-				gameTimer = 1200;
+				gameTimer = 200;
 				Log.info("Game now Warming Up.");
 			}
 			else if (gameTimer > 0) {
@@ -65,6 +65,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 				/**
 				 * Timer is Up - Start Game!
 				 */
+				gameTimer = -1;
 				gameState = GameStates.Running;
 				
 				Log.info("Game now Running.");
@@ -87,15 +88,15 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			/**
 			 * TODO: Post Game actions.
 			 */
-			if (gameTimer < 0){
-				gameTimer = 1200;
+			if (gameTimer < 0 || gameTimer > 200){
+				gameTimer = 200;
 				
 				if (fieldState != FieldStates.Inactive)
 					fieldState = FieldStates.Inactive;
 				
 				Log.info("Game has ended.");
 			}
-			else if (gameTimer > 0) {
+			else if (gameTimer > 0 && gameTimer <= 200) {
 				/**
 				 * Decrement Timer
 				 */

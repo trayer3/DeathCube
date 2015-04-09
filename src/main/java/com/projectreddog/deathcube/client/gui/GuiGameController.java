@@ -4,8 +4,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
+import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.DeathCubeMessageInputToServer;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
+import com.projectreddog.deathcube.utility.Log;
 
 public class GuiGameController extends GuiScreen {
 
@@ -31,11 +34,11 @@ public class GuiGameController extends GuiScreen {
 		 */
 		x = (this.width - this.gui_Width) / 2;
 		y = (this.height - this.gui_Height) / 2;
-		
+
 		/**
 		 * Prepare Button
 		 */
-		startButton = new GuiButton(0, (this.width - 80) / 2, ((this.height - 20) / 2) + 50, 80, 20, "");
+		startButton = new GuiButton(Reference.BUTTON_START_GAME, (this.width - 80) / 2, ((this.height - 20) / 2) + 50, 80, 20, "");
 		buttonList.add(startButton);
 
 		/**
@@ -75,21 +78,23 @@ public class GuiGameController extends GuiScreen {
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
-	
+
 	@Override
     protected void actionPerformed(GuiButton button){
-        if(button.id == 0) {
+        if(button.id == Reference.BUTTON_START_GAME) {
         	/**
         	 * Start Game
         	 */
+        	Log.info("Start Button Pressed");
+        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.BUTTON_START_GAME));
         }
     }
-	
+
 	@Override
-    public void updateScreen(){
-        super.updateScreen();
-        startButton.displayString = "Start Game!";
-    }
+	public void updateScreen() {
+		super.updateScreen();
+		startButton.displayString = "Start Game!";
+	}
 
 	@Override
 	public void onGuiClosed() {

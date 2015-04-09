@@ -7,12 +7,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.init.ModBlocks;
-import com.projectreddog.deathcube.init.ModCommands;
+import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
@@ -38,13 +36,7 @@ public class DeathCube {
 		// Initialize Classes
 		ModBlocks.init();
 		ModTileEntities.init();
-
-		// Initialize Network Handling
-		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
-
-		// Register Event Handling
-		MinecraftForge.EVENT_BUS.register(new DeathCubeEventHandler());
-		FMLCommonHandler.instance().bus().register(new DeathCubeEventHandler());
+		ModNetwork.init();
 
 		// Log Completion
 		Log.info("Pre Initialization Complete!");
@@ -58,7 +50,11 @@ public class DeathCube {
 
 		// Register Stuff
 		proxy.registerRenderers();
-		
+
+		// Register Event Handling
+		MinecraftForge.EVENT_BUS.register(new DeathCubeEventHandler());
+		FMLCommonHandler.instance().bus().register(new DeathCubeEventHandler());
+
 		// Register Commands
 		// ModCommands.init();
 
@@ -71,7 +67,7 @@ public class DeathCube {
 	 */
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		
+
 		// Log Completion
 		Log.info("PostInitialization Complete!");
 	}
