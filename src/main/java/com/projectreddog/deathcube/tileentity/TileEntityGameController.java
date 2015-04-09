@@ -1,16 +1,15 @@
 package com.projectreddog.deathcube.tileentity;
 
-import java.util.Random;
-
-import com.projectreddog.deathcube.DeathCube;
-import com.projectreddog.deathcube.utility.Log;
+import java.util.List;
 
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityGameController extends TileEntity implements IUpdatePlayerListBox {
+import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.utility.Log;
+import com.projectreddog.deathcube.utility.RandomChoice;
 
-	public static int gameID;
+public class TileEntityGameController extends TileEntity implements IUpdatePlayerListBox {
 	
 	public static enum GameStates {
 		Lobby, GameWarmup, Running, PostGame, GameOver
@@ -26,13 +25,18 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 		Off, Inactive, Active
 	}
 
+	/**
+	 * Game Controller variables.
+	 */
 	public static GameStates gameState = GameStates.Lobby;
 	public static FieldStates fieldState = FieldStates.Off;
-
 	public static int gameTimer = -1;
+	
+	private GameTeam[] gameTeams;
+	private int numPossibleTeams = 2;
 
 	public TileEntityGameController() {
-		gameID = DeathCube.instance.getGameID();
+		
 	}
 
 	@Override
@@ -40,11 +44,21 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 		if (gameState == GameStates.Lobby) {
 			/**
 			 * TODO: Lobby actions.
+			 * Make sure the force field is Inactive.
+			 * Make sure the timer is not running.
 			 */
 			if (fieldState != FieldStates.Inactive)
 				fieldState = FieldStates.Inactive;
 			if (gameTimer >= 0)
 				gameTimer = -1;
+			
+			/**
+			 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
+			 * 
+			 * Or store this information elsewhere?  A game setup Tile Entity?  Game Controller
+			 * 		used only by players when starting the game.
+			 */
+			
 		} else if (gameState == GameStates.GameWarmup) {
 			if (gameTimer < 0){
 				gameTimer = 200;
@@ -123,13 +137,12 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			
 		} else if (gameState == GameStates.GameOver) {
 			/**
-			 * TODO: Post Game actions.
+			 * TODO: Game Over actions.
+			 * TODO: Vote on next Map?
 			 * 		
 			 */
 			if (fieldState != FieldStates.Off)
 				fieldState = FieldStates.Off;
-			
-			DeathCube.instance.freeGameID();
 		}
 	}
 	
@@ -146,6 +159,13 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 		 * 		New Players need to Right-Click the Game Controller to Join
 		 * 		(Or another Block/Tile Entity)
 		 */
+		gameTeams = new GameTeam[numPossibleTeams];
+		List<String> usedColors;
+		for(int i=0; i<=numPossibleTeams; i++) {
+			String color = (String) RandomChoice.chooseRandom((List<Object>) usedColors);
+			gameTeams[i] = new GameTeam(color);
+			usedColors.add(color);
+		}
 
 		/**
 		 * For each player in the Game:

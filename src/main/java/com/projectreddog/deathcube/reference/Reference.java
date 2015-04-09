@@ -21,4 +21,9 @@ public class Reference {
     public static final int GUI_GAME_CONTROLLER = 0;
     public static final int GUI_SPAWN_POINT = 1;
 	public static final int GUI_CAPTURE_POINT = 2;
+	
+	public static final String TEAM_RED = "red";
+	public static final String TEAM_BLUE = "blue";
+	public static final String TEAM_GREEN = "green";
+	public static final String TEAM_YELLOW = "yellow";
 }

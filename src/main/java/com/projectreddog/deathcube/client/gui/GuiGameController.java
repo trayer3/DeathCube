@@ -44,9 +44,9 @@ public class GuiGameController extends GuiScreen {
 		/**
 		 * Prepare Text Field
 		 */
-		textField = new GuiTextField(20, fontRendererObj, x + 60, y + 20, 70, 12);
+		textField = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
 		textField.setMaxStringLength(40);
-		textField.setText("Red");
+		textField.setText("2");
 	}
 
 	@Override
@@ -69,6 +69,7 @@ public class GuiGameController extends GuiScreen {
 		mc.fontRendererObj.drawString("DeathCube Game Controller", x + 8, y + 8, 4210752);
 
 		// Text Fields
+		mc.fontRendererObj.drawString("Teams", x + 20, y + 22, 4210752);
 		textField.drawTextBox();
 
 		super.drawScreen(mouseX, mouseY, partTicks);
@@ -86,7 +87,7 @@ public class GuiGameController extends GuiScreen {
         	 * Start Game
         	 */
         	Log.info("Start Button Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.BUTTON_START_GAME));
+        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.BUTTON_START_GAME, Integer.parseInt(textField.getText())));
         }
     }
 

@@ -78,24 +78,4 @@ public class DeathCube {
 		// Log Completion
 		Log.info("PostInitialization Complete!");
 	}
-
-	public static int getGameID() {
-		/**
-		 * Provide a Game ID and change next available.
-		 */
-		currentAvailableGameID++;
-		numGameIDs++;
-		return currentAvailableGameID - 1;
-	}
-
-	public static void freeGameID() {
-		/**
-		 * Decrement number of game IDs. Then, if none are in use, reset available ID to 1.
-		 */
-		if (numGameIDs > 0) {
-			numGameIDs--;
-			if (numGameIDs <= 0)
-				currentAvailableGameID = 1;
-		}
-	}
 }
