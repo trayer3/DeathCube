@@ -1,5 +1,6 @@
 package com.projectreddog.deathcube.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class GameTeam {
 
-	private List<EntityPlayer> playerList;
+	private List<EntityPlayer> playerList = new ArrayList<EntityPlayer>();
 	
 	private int numPlayers = 0;
 	private String teamColor;
@@ -25,6 +26,10 @@ public class GameTeam {
 	
 	public GameTeam(String teamColor) {
 		this.teamColor = teamColor;
+	}
+	
+	public String getTeamColor() {
+		return teamColor;
 	}
 	
 	/**

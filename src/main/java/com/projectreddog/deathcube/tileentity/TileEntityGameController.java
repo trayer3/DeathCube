@@ -1,11 +1,17 @@
 package com.projectreddog.deathcube.tileentity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 import com.projectreddog.deathcube.utility.RandomChoice;
 
@@ -33,7 +39,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 	public static int gameTimer = -1;
 	
 	private GameTeam[] gameTeams;
-	private int numPossibleTeams = 2;
+	private int numPossibleTeams = 4;
 
 	public TileEntityGameController() {
 		
@@ -154,24 +160,43 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 		//Bukkit.getServer().getWorld("World").playSound(lobbySpawn,  Sound.BAT_DEATH, 100, 1);
 		
 		/**
-		 * TODO: Assign Players to Random Teams
-		 * 		Track All Players in Lobby Area
-		 * 		New Players need to Right-Click the Game Controller to Join
-		 * 		(Or another Block/Tile Entity)
+		 * Create Team Objects
 		 */
 		gameTeams = new GameTeam[numPossibleTeams];
-		List<String> usedColors;
-		for(int i=0; i<=numPossibleTeams; i++) {
-			String color = (String) RandomChoice.chooseRandom((List<Object>) usedColors);
+		List<String> usedColors = new ArrayList<String>();
+		for(int i=0; i<numPossibleTeams; i++) {
+			//String color = (String) RandomChoice.chooseRandom((List<Object>) usedColors);
+			String color = Reference.TEAM_RED;
+			if(i==0)
+				color = Reference.TEAM_RED;
+			else if(i==1)
+				color = Reference.TEAM_BLUE;
+			else if(i==2)
+				color = Reference.TEAM_GREEN;
+			else if(i==3)
+			color = Reference.TEAM_YELLOW;
+				
 			gameTeams[i] = new GameTeam(color);
 			usedColors.add(color);
+			
+			Log.info("Team added, color: " + gameTeams[i].getTeamColor());
 		}
 
 		/**
 		 * For each player in the Game:
 		 */
-		//for (Player p : Bukkit.getOnlinePlayers())
-		//{
+		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		for (EntityPlayer player : playerList)
+		{
+			/**
+			 * Assign to a Team
+			 */
+			Random rand = new Random();
+			int teamIndex = rand.nextInt(gameTeams.length);
+			gameTeams[teamIndex].addPlayer(player);
+			
+			Log.info("Added player: " + player.getName() + " to team: " + gameTeams[teamIndex].getTeamColor());
+			
 			/**
 			 *  TODO: Avoid death by falling.
 			 */
@@ -197,7 +222,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 			 *  TODO: Teleport Players to Team Spawn Locations.
 			 */
 			//SpawnPlayerInGame(p);
-		//}
+		}
 	}
 
 }
