@@ -33,11 +33,6 @@ public class GameTeam {
 	}
 	
 	/**
-	 * Add new players to server to Teams when GameState is Running
-	 * 	- Randomly
-	 */
-	
-	/**
 	 * If teams are uneven, enhance smaller team's equipment?
 	 * 	- Return to normal if teams are no longer uneven.
 	 */

@@ -7,30 +7,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 
 public class GuiHandler implements IGuiHandler {
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world,	int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world,	int x, int y, int z) {
-		
-		if (ID == Reference.GUI_SPAWN_POINT) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 
-			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
-			if (entity != null) {
-				if (entity instanceof TileEntitySpawnPoint) {
-					return new GuiSpawnPoint((TileEntitySpawnPoint) entity);
-				}
-			}
-		}
-		else if (ID == Reference.GUI_GAME_CONTROLLER) {
+		if (ID == Reference.GUI_GAME_CONTROLLER) {
 
 			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
 			if (entity != null) {
@@ -38,8 +30,24 @@ public class GuiHandler implements IGuiHandler {
 					return new GuiGameController((TileEntityGameController) entity);
 				}
 			}
+		} else if (ID == Reference.GUI_SPAWN_POINT) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntitySpawnPoint) {
+					return new GuiSpawnPoint((TileEntitySpawnPoint) entity);
+				}
+			}
+		} else if (ID == Reference.GUI_CAPTURE_POINT) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntityCapturePoint) {
+					return new GuiCapturePoint((TileEntityCapturePoint) entity);
+				}
+			}
 		}
-		
+
 		return null;
 	}
 

@@ -5,6 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntitySpawnPoint extends TileEntity implements IUpdatePlayerListBox {
 
+	public int spawnPointID;
+	public String spawnPointTeamColor;
+	
 	public TileEntitySpawnPoint() {
 
 	}

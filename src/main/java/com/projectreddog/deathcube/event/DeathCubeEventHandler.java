@@ -16,6 +16,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.command.CommandGame;
 import com.projectreddog.deathcube.init.ModCommands;
+import com.projectreddog.deathcube.tileentity.TileEntityGameController;
+import com.projectreddog.deathcube.tileentity.TileEntityGameController.GameStates;
+import com.projectreddog.deathcube.utility.Log;
 
 public class DeathCubeEventHandler {
 
@@ -98,12 +101,30 @@ public class DeathCubeEventHandler {
 	}
 
 	public void onPlayerJoin(EntityJoinWorldEvent event) {
+		Log.info("Entity joined game.");
 		if (event.entity instanceof EntityPlayer) {
 			/**
 			 * If Entity is a Player, perform an action based on Gamestate.
 			 * 
-			 * TODO: Action on Join per Gamestate.
+			 * TODO:  This doesn't work.  Wrong event?
 			 */
+			
+			if(TileEntityGameController.gameState != null) {
+				if(TileEntityGameController.gameState == GameStates.Lobby) {
+					/**
+					 * If Lobby state, teleport to Lobby.
+					 */
+					Log.info("Player joined Lobby.");
+				} else if(TileEntityGameController.gameState == GameStates.Running) {
+					/**
+					 * If Running state, add to team and spawn in game.
+					 */
+					Log.info("Player joined Running Game.");
+				}
+			}
+			
+			
+			
 			
 		}
 	}
