@@ -17,7 +17,7 @@ import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 import com.projectreddog.deathcube.utility.RandomChoice;
 
-public class TileEntityGameController extends TileEntity implements IUpdatePlayerListBox {
+public class TileEntityGameController extends TileEntityDeathCube implements IUpdatePlayerListBox {
 	
 	public static enum GameStates {
 		Lobby, GameWarmup, Running, PostGame, GameOver

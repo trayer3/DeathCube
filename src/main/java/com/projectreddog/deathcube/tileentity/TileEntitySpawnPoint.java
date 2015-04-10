@@ -3,7 +3,7 @@ package com.projectreddog.deathcube.tileentity;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntitySpawnPoint extends TileEntity implements IUpdatePlayerListBox {
+public class TileEntitySpawnPoint extends TileEntityDeathCube implements IUpdatePlayerListBox {
 
 	public int spawnPointID;
 	public String spawnPointTeamColor;

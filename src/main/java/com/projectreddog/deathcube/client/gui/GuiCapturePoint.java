@@ -1,19 +1,18 @@
 package com.projectreddog.deathcube.client.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.DeathCubeMessageInputToServer;
+import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.NetworkHandler;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
-import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
 
-public class GuiCapturePoint extends GuiScreen {
+public class GuiCapturePoint extends GuiDeathCube {
 
-	private TileEntityCapturePoint game_controller;
+	private TileEntityCapturePoint capture_point;
 	private GuiTextField text_PointName;
 	private GuiTextField text_PointTeam;
 	private GuiTextField text_PointRadius;
@@ -23,9 +22,9 @@ public class GuiCapturePoint extends GuiScreen {
 	private int x = 0;
 	private int y = 0;
 
-	public GuiCapturePoint(TileEntityCapturePoint game_controller) {
+	public GuiCapturePoint(TileEntityCapturePoint capture_point) {
 		super();
-		this.game_controller = game_controller;
+		this.capture_point = capture_point;
 	}
 
 	@Override
@@ -44,15 +43,15 @@ public class GuiCapturePoint extends GuiScreen {
 		text_PointName = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
 		text_PointName.setMaxStringLength(40);
 		text_PointName.setText("Point Name");
-		
+
 		text_PointTeam = new GuiTextField(20, fontRendererObj, x + 70, y + 45, 70, 12);
 		text_PointTeam.setMaxStringLength(40);
 		text_PointTeam.setText("Point Team");
-		
+
 		text_PointRadius = new GuiTextField(20, fontRendererObj, x + 70, y + 70, 70, 12);
 		text_PointRadius.setMaxStringLength(40);
 		text_PointRadius.setText("Point Radius");
-		
+
 		text_PointCaptureOrderNumber = new GuiTextField(20, fontRendererObj, x + 95, y + 20, 70, 12);
 		text_PointCaptureOrderNumber.setMaxStringLength(40);
 		text_PointCaptureOrderNumber.setText("Point Number");
@@ -92,7 +91,25 @@ public class GuiCapturePoint extends GuiScreen {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		//button.displayString = "Test Button";
+		// button.displayString = "Test Button";
+	}
+
+	/**
+	 * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+	 */
+	@Override
+	protected void keyTyped(char chr, int keyCode) {
+		if (text_PointName.textboxKeyTyped(chr, keyCode)) {
+			NetworkHandler.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD1_ID, text_PointName.getText()));
+		} else if (text_PointTeam.textboxKeyTyped(chr, keyCode)) {
+			NetworkHandler.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD1_ID, text_PointTeam.getText()));
+		} else if (text_PointRadius.textboxKeyTyped(chr, keyCode)) {
+			NetworkHandler.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD1_ID, text_PointRadius.getText()));
+		} else if (text_PointCaptureOrderNumber.textboxKeyTyped(chr, keyCode)) {
+			NetworkHandler.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD1_ID, text_PointCaptureOrderNumber.getText()));
+		} else {
+			super.keyTyped(chr, keyCode);
+		}
 	}
 
 	@Override
