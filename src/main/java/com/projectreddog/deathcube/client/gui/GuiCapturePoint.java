@@ -18,7 +18,6 @@ public class GuiCapturePoint extends GuiScreen {
 	private GuiTextField text_PointTeam;
 	private GuiTextField text_PointRadius;
 	private GuiTextField text_PointCaptureOrderNumber;
-	private GuiButton button;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
 	private int x = 0;
@@ -40,17 +39,23 @@ public class GuiCapturePoint extends GuiScreen {
 		y = (this.height - this.gui_Height) / 2;
 
 		/**
-		 * Prepare Button
-		 */
-		//button = new GuiButton(Reference.BUTTON_TEST, (this.width - 80) / 2, ((this.height - 20) / 2) + 50, 80, 20, "");
-		//buttonList.add(button);
-
-		/**
 		 * Prepare Text Field
 		 */
 		text_PointName = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
 		text_PointName.setMaxStringLength(40);
-		text_PointName.setText("2");
+		text_PointName.setText("Point Name");
+		
+		text_PointTeam = new GuiTextField(20, fontRendererObj, x + 70, y + 45, 70, 12);
+		text_PointTeam.setMaxStringLength(40);
+		text_PointTeam.setText("Point Team");
+		
+		text_PointRadius = new GuiTextField(20, fontRendererObj, x + 70, y + 70, 70, 12);
+		text_PointRadius.setMaxStringLength(40);
+		text_PointRadius.setText("Point Radius");
+		
+		text_PointCaptureOrderNumber = new GuiTextField(20, fontRendererObj, x + 95, y + 20, 70, 12);
+		text_PointCaptureOrderNumber.setMaxStringLength(40);
+		text_PointCaptureOrderNumber.setText("Point Number");
 	}
 
 	@Override
@@ -85,17 +90,6 @@ public class GuiCapturePoint extends GuiScreen {
 	}
 
 	@Override
-    protected void actionPerformed(GuiButton button){
-        if(button.id == Reference.BUTTON_TEST) {
-        	/**
-        	 * Start Game
-        	 */
-        	Log.info("Capture Point Button Pressed");
-        	//ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.BUTTON_START_GAME, Integer.parseInt(textField.getText())));
-        }
-    }
-
-	@Override
 	public void updateScreen() {
 		super.updateScreen();
 		//button.displayString = "Test Button";
@@ -108,5 +102,7 @@ public class GuiCapturePoint extends GuiScreen {
 		/**
 		 * Save data from Gui to server.
 		 */
+		Log.info("Capture Point Gui - Exited");
+		ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, text_PointName.getText(), text_PointTeam.getText(), text_PointRadius.getText(), text_PointCaptureOrderNumber.getText()));
 	}
 }

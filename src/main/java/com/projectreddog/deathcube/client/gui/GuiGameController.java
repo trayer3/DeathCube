@@ -13,7 +13,7 @@ import com.projectreddog.deathcube.utility.Log;
 public class GuiGameController extends GuiScreen {
 
 	private TileEntityGameController game_controller;
-	private GuiTextField textField;
+	private GuiTextField text_NumTeams;
 	private GuiButton startButton;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
@@ -44,9 +44,9 @@ public class GuiGameController extends GuiScreen {
 		/**
 		 * Prepare Text Field
 		 */
-		textField = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
-		textField.setMaxStringLength(40);
-		textField.setText("2");
+		text_NumTeams = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
+		text_NumTeams.setMaxStringLength(40);
+		text_NumTeams.setText("2");
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class GuiGameController extends GuiScreen {
 
 		// Text Fields
 		mc.fontRendererObj.drawString("Teams", x + 20, y + 22, 4210752);
-		textField.drawTextBox();
+		text_NumTeams.drawTextBox();
 
 		super.drawScreen(mouseX, mouseY, partTicks);
 	}
@@ -87,7 +87,7 @@ public class GuiGameController extends GuiScreen {
         	 * Start Game
         	 */
         	Log.info("Start Button Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.BUTTON_START_GAME, Integer.parseInt(textField.getText())));
+        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, String.valueOf(Reference.BUTTON_START_GAME), text_NumTeams.getText(), "", ""));
         }
     }
 
