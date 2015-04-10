@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
@@ -49,7 +51,7 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 	public void update() {
 		if (gameState == GameStates.Lobby) {
 			/**
-			 * TODO: Lobby actions.
+			 * Lobby actions:
 			 * Make sure the force field is Inactive.
 			 * Make sure the timer is not running.
 			 */
@@ -59,11 +61,25 @@ public class TileEntityGameController extends TileEntity implements IUpdatePlaye
 				gameTimer = -1;
 			
 			/**
-			 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
+			 * TODO: Count the number of Spawn Points in current DeathCube Force Field boundaries.
 			 * 
 			 * Or store this information elsewhere?  A game setup Tile Entity?  Game Controller
 			 * 		used only by players when starting the game.
 			 */
+			
+			List<TileEntity> tileEntities = this.worldObj.loadedTileEntityList;
+			for(TileEntity te : tileEntities) {
+				if(te instanceof TileEntitySpawnPoint) {
+					/**
+					 * Track Spawn Points
+					 */
+				}
+				//else if(te instanceof TileEntitySpawnPoint) {
+					/**
+					 * Track Capture Points
+					 */
+				//}
+			}
 			
 		} else if (gameState == GameStates.GameWarmup) {
 			if (gameTimer < 0){
