@@ -59,7 +59,6 @@ public class GuiCapturePoint extends GuiDeathCube {
 
 	@Override
     public void onTextfieldUpdate(int fieldID){
-		
         if(fieldID == Reference.MESSAGE_FIELD1_ID) {
         	text_PointName.setText(capture_point.getCapturePointName());
         } else if(fieldID == Reference.MESSAGE_FIELD2_ID) {

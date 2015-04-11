@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -83,9 +84,9 @@ public class MessageHandleTextUpdate implements IMessage, IMessageHandler<Messag
 	}
 
 	public void handleServerSide(MessageHandleTextUpdate message, EntityPlayer player) {
-		TileEntity te = message.getTileEntity(player.worldObj);
-		if (te instanceof TileEntityDeathCube) {
-			((TileEntityDeathCube) te).onGuiTextfieldUpdate(message.fieldID, message.text);
+		TileEntity lookupTE = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+		if (lookupTE instanceof TileEntityDeathCube) {
+			((TileEntityDeathCube) lookupTE).onGuiTextfieldUpdate(message.fieldID, message.text);
 		}
 	}
 }
