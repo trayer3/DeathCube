@@ -46,6 +46,24 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public TileEntityGameController() {
 		
 	}
+	
+	@Override
+    public void onGuiButtonPress(int buttonID){
+        if(buttonID == Reference.BUTTON_START_GAME) {
+        	/**
+			 * Start Button Pressed - Start Game!
+			 */
+			Log.info("Server sees Start Button Pressed");
+			Log.info("Tile Entity starting game.");
+			if (TileEntityGameController.gameState != null) {
+				if (TileEntityGameController.gameState == GameStates.Lobby) {
+					TileEntityGameController.gameState = GameStates.GameWarmup;
+				} else if (TileEntityGameController.gameState == GameStates.Running) {
+					TileEntityGameController.gameState = GameStates.PostGame;
+				}
+			}
+        }
+    }
 
 	@Override
 	public void update() {

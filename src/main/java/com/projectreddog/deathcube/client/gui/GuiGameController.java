@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 import com.projectreddog.deathcube.init.ModNetwork;
-import com.projectreddog.deathcube.network.DeathCubeMessageInputToServer;
+import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
@@ -87,7 +87,8 @@ public class GuiGameController extends GuiScreen {
         	 * Start Game
         	 */
         	Log.info("Start Button Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, String.valueOf(Reference.BUTTON_START_GAME), text_NumTeams.getText(), "", ""));
+        	//ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, String.valueOf(Reference.BUTTON_START_GAME), text_NumTeams.getText(), "", ""));
+        	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller, Reference.BUTTON_START_GAME));
         }
     }
 

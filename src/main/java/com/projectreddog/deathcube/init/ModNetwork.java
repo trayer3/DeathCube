@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.client.gui.GuiHandler;
-import com.projectreddog.deathcube.network.DeathCubeMessageInputToServer;
-import com.projectreddog.deathcube.network.DeathCubeMessageInputToServerHandler;
+import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
+import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class ModNetwork {
@@ -24,13 +24,23 @@ public class ModNetwork {
 		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
 
 		// Message to Server
-		simpleNetworkWrapper.registerMessage(DeathCubeMessageInputToServerHandler.class, DeathCubeMessageInputToServer.class, 0, Side.SERVER);
+		//simpleNetworkWrapper.registerMessage(DeathCubeMessageInputToServerHandler.class, DeathCubeMessageInputToServer.class, 0, Side.SERVER);
+		simpleNetworkWrapper.registerMessage(MessageHandleGuiButtonPress.class, MessageHandleGuiButtonPress.class, 0, Side.SERVER);
+		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 1, Side.SERVER);
 
 		// Message to Client
 		// If needed
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}
+	
+	public static void sendToServer(IMessage message){
+		ModNetwork.simpleNetworkWrapper.sendToServer(message);
+    }
+
+    public static void sendTo(IMessage message, EntityPlayerMP player){
+    	ModNetwork.simpleNetworkWrapper.sendTo(message, player);
+    }
 
 	public static void sendPacketToAllAround(IMessage packet, TargetPoint tp) {
 		for (EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
@@ -47,4 +57,12 @@ public class ModNetwork {
 			}
 		}
 	}
+	
+	public static void sendToAll(IMessage message){
+		ModNetwork.simpleNetworkWrapper.sendToAll(message);
+    }
+
+    public static void sendToDimension(IMessage message, int dimensionId){
+    	ModNetwork.simpleNetworkWrapper.sendToDimension(message, dimensionId);
+    }
 }
