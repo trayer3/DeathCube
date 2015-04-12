@@ -34,12 +34,12 @@ public class MessageHandleTextUpdate implements IMessage, IMessageHandler<Messag
 	public MessageHandleTextUpdate() {
 	}
 
-	public MessageHandleTextUpdate(TileEntityDeathCube te, int id, String text) {
+	public MessageHandleTextUpdate(BlockPos pos, int id, String text) {
 		this.fieldID = id;
 		this.text = text;
-		this.x = te.getPos().getX();
-		this.y = te.getPos().getY();
-		this.z = te.getPos().getZ();
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
 	}
 
 	@Override
@@ -70,16 +70,16 @@ public class MessageHandleTextUpdate implements IMessage, IMessageHandler<Messag
 			Log.info("Server received message: " + message.text);
 			handleServerSide(message, ctx.getServerHandler().playerEntity);
 		} else {
+			Log.info("Client received message: " + message.text);
 			handleClientSide(message, DeathCube.proxy.getClientPlayer());
 		}
 		return null;
 	}
 	
 	public void handleClientSide(MessageHandleTextUpdate message, EntityPlayer player) {
-		handleServerSide(message, player);
-		GuiScreen gui = Minecraft.getMinecraft().currentScreen;// <-- Warning, this will crash when tested on server, will be discussed next episode.
-		if (gui instanceof GuiDeathCube) {
-			((GuiDeathCube) gui).onTextfieldUpdate(message.fieldID);
+		TileEntity lookupTE = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+		if (lookupTE instanceof TileEntityDeathCube) {
+			((TileEntityDeathCube) lookupTE).onGuiTextfieldUpdate(message.fieldID, message.text);
 		}
 	}
 

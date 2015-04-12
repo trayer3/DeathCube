@@ -27,9 +27,10 @@ public class ModNetwork {
 		//simpleNetworkWrapper.registerMessage(DeathCubeMessageInputToServerHandler.class, DeathCubeMessageInputToServer.class, 0, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleGuiButtonPress.class, MessageHandleGuiButtonPress.class, 0, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 1, Side.SERVER);
+		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 2, Side.CLIENT);
 
 		// Message to Client
-		// If needed
+		
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}

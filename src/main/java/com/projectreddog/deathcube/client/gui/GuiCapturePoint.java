@@ -44,6 +44,10 @@ public class GuiCapturePoint extends GuiDeathCube {
 		text_PointTeam.setMaxStringLength(40);
 		text_PointTeam.setText(capture_point.getCapturePointTeamColor());
 		
+		Log.info("Opened Capture Point GUI - Team Color: " + capture_point.getCapturePointTeamColor());
+		// True = Client
+		Log.info("This is a client instance:" + String.valueOf(capture_point.getWorld().isRemote));
+		
 		text_PointName = new GuiTextField(20, fontRendererObj, x + 90, y + 40, 90, 12);
 		text_PointName.setMaxStringLength(40);
 		text_PointName.setText(capture_point.getCapturePointName());
@@ -137,14 +141,14 @@ public class GuiCapturePoint extends GuiDeathCube {
 	protected void keyTyped(char chr, int keyCode) throws IOException {
 		Log.info("Key typed: " + chr);
 		if (text_PointName.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD1_ID, text_PointName.getText()));
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD1_ID, text_PointName.getText()));
 		} else if (text_PointTeam.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD2_ID, text_PointTeam.getText()));
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD2_ID, text_PointTeam.getText()));
 			Log.info("Key typed in Team Color box.");
 		} else if (text_PointRadius.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD3_ID, text_PointRadius.getText()));
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD3_ID, text_PointRadius.getText()));
 		} else if (text_PointCaptureOrderNumber.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point, Reference.MESSAGE_FIELD4_ID, text_PointCaptureOrderNumber.getText()));
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD4_ID, text_PointCaptureOrderNumber.getText()));
 		} else {
 			super.keyTyped(chr, keyCode);
 		}
