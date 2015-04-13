@@ -5,21 +5,28 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 
 public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpdatePlayerListBox {
 
-	//public int capturePointID;
-	public int captureOrderNumber;
-	public int captureRadius;
-	public int captureTime;
-	public String capturePointTeamColor = "Blue";
-	public String capturePointName;
-	//public boolean isActive;
+	/**
+	 * GUI Variables
+	 */
+	public String capturePointTeamColor = "Red";
+	public String capturePointName = "Point 1";
+	public int captureOrderNumber = 1;
+	public int captureRadius = 1;
+	public int captureTime = 5;
 	
+	/**
+	 * Tile Entity Variables
+	 */
+	public boolean isBeingCaptured = false;
 	private int numPlayersOnPoint = 0;
-	private int countDownTimer;
+	private long pointTimerStart, pointTimerCurrent;
+	private double remainingTime;
 	
 	public TileEntityCapturePoint() {
 		/**
@@ -30,9 +37,26 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		 * Other values set by GUI.
 		 */
 		//capturePointTeamColor = "Red";
-		capturePointName = "Point 1";
-		captureRadius = 1;
-		captureOrderNumber = 1;
+		//capturePointName = "Point 1";
+		//captureRadius = 1;
+		//captureOrderNumber = 1;
+		//captureTime = 5;
+		Log.info("Capture Point Constructor");
+		if(this.worldObj != null) {
+			if(this.worldObj.isRemote) {
+				Log.info("Client requesting text update.");
+				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.pos));
+			}
+		} else {
+			Log.info("World object null.");
+		}
+	}
+	
+	public void onTextRequest() {
+		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
+		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
+		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
+		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
 	}
 	
 	@Override
@@ -110,38 +134,69 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		return captureOrderNumber;
 	}
 	
-	//@Override
+	@Override
     public void readFromNBT(NBTTagCompound tag){
-        //super.readFromNBT(tag);
-        capturePointName = tag.getString("name");
+        super.readFromNBT(tag);
+        capturePointName = tag.getString("name");        
         capturePointTeamColor = tag.getString("team");
-        captureRadius = tag.getInteger("radius");
+        captureRadius = tag.getInteger("radius");        
         captureOrderNumber = tag.getInteger("order");
+        Log.info("Capture Point - NBT Read");
     }
 
-    //@Override
+    @Override
     public void writeToNBT(NBTTagCompound tag){
-        //super.writeToNBT(tag);
+        super.writeToNBT(tag);
         tag.setString("name", capturePointName);
         tag.setString("team", capturePointTeamColor);
         tag.setInteger("radius", captureRadius);
         tag.setInteger("order", captureOrderNumber);
+        Log.info("Capture Point - NBT Write");
     }
 	
 	@Override
 	public void update() {
-		/**
-		 * Check if players are nearby.  
-		 * 
-		 * If in radius and on proper Team, run count-down timer.
-		 * 
-		 * Built-in function for Mob Spawner checks for any player not in Spectate mode.  Copy class and
-		 * 		add in check for Team.  Also, track which player and how many players are on point.
-		 * 		See:  BlockMobSpawner
-		 * 			  TileEntityMobSpawner
-		 */
-		if(this.worldObj.func_175636_b((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, (double)this.captureRadius)) {
-			Log.info("Player in range of Capture Point: " + capturePointName);
+		//Log.info("Capture Point Team: "+ getCapturePointTeamColor());
+		if(this.worldObj.isRemote) {
+			/**
+			 * Check if players are nearby, only on Server-side.  
+			 * 
+			 * If in radius and on proper Team, run count-down timer.
+			 * 
+			 * Built-in function for Mob Spawner checks for any player not in Spectate mode.  Copy class and
+			 * 		add in check for Team.  Also, track which player and how many players are on point.
+			 * 		See:  BlockMobSpawner
+			 * 			  TileEntityMobSpawner
+			 */
+			if(this.worldObj.func_175636_b((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, (double)this.captureRadius + 0.5D)) {
+				if(isBeingCaptured) {
+					/**
+					 * Being Captured - Calculate Time Remaining
+					 */
+					pointTimerCurrent = System.currentTimeMillis();
+					remainingTime = (double)captureTime - ((double)(pointTimerCurrent - pointTimerStart)/1000);
+					Log.info("Player in range of Capture Point.  Time until Capture: " + remainingTime);
+					
+					if(remainingTime <= 0) {
+						// Reset timer when captured - for Debug.
+						isBeingCaptured = false;
+					}
+				} else {
+					/**
+					 * Starting to be Captured.
+					 */
+					isBeingCaptured = true;
+					pointTimerStart = System.currentTimeMillis();
+					pointTimerCurrent = pointTimerStart;
+					remainingTime = captureTime - ((pointTimerCurrent - pointTimerStart)/1000);
+					Log.info("Player in range of Capture Point.  Time until Capture: " + remainingTime);
+				}
+			} else {
+				/**
+				 * If no one is on the point, it is not being captured.
+				 */
+				isBeingCaptured = false;
+			}
 		}
 	}
 }

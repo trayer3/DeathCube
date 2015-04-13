@@ -14,6 +14,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class ModNetwork {
@@ -23,14 +24,13 @@ public class ModNetwork {
 	public static void init() {
 		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
 
-		// Message to Server
-		//simpleNetworkWrapper.registerMessage(DeathCubeMessageInputToServerHandler.class, DeathCubeMessageInputToServer.class, 0, Side.SERVER);
+		/**
+		 * Register Messages
+		 */
 		simpleNetworkWrapper.registerMessage(MessageHandleGuiButtonPress.class, MessageHandleGuiButtonPress.class, 0, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 1, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 2, Side.CLIENT);
-
-		// Message to Client
-		
+		simpleNetworkWrapper.registerMessage(MessageRequestTextUpdate_Client.class, MessageRequestTextUpdate_Client.class, 3, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}

@@ -43,11 +43,11 @@ public class GuiCapturePoint extends GuiDeathCube {
 		text_PointTeam = new GuiTextField(20, fontRendererObj, x + 90, y + 20, 90, 12);
 		text_PointTeam.setMaxStringLength(40);
 		text_PointTeam.setText(capture_point.getCapturePointTeamColor());
-		
-		Log.info("Opened Capture Point GUI - Team Color: " + capture_point.getCapturePointTeamColor());
+
+		Log.info("Capture Point GUI Init - Team Color: " + capture_point.getCapturePointTeamColor());
 		// True = Client
 		Log.info("This is a client instance:" + String.valueOf(capture_point.getWorld().isRemote));
-		
+
 		text_PointName = new GuiTextField(20, fontRendererObj, x + 90, y + 40, 90, 12);
 		text_PointName.setMaxStringLength(40);
 		text_PointName.setText(capture_point.getCapturePointName());
@@ -62,31 +62,32 @@ public class GuiCapturePoint extends GuiDeathCube {
 	}
 
 	@Override
-    public void onTextfieldUpdate(int fieldID){
-        if(fieldID == Reference.MESSAGE_FIELD1_ID) {
-        	text_PointName.setText(capture_point.getCapturePointName());
-        } else if(fieldID == Reference.MESSAGE_FIELD2_ID) {
-        	text_PointTeam.setText(capture_point.getCapturePointTeamColor());
-        } else if(fieldID == Reference.MESSAGE_FIELD3_ID) {
-        	text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
-        } else if(fieldID == Reference.MESSAGE_FIELD4_ID) {
-        	text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
-        }
-    }
-	
+	public void onTextfieldUpdate(int fieldID) {
+		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
+			text_PointName.setText(capture_point.getCapturePointName());
+		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
+			text_PointTeam.setText(capture_point.getCapturePointTeamColor());
+		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
+			text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
+		} else if (fieldID == Reference.MESSAGE_FIELD4_ID) {
+			text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
+		}
+	}
+
 	/**
-     * Called when the mouse is clicked.
-	 * @throws IOException 
-     */
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException{
-        super.mouseClicked(mouseX, mouseY, button);
-        text_PointName.mouseClicked(mouseX, mouseY, button);
-        text_PointTeam.mouseClicked(mouseX, mouseY, button);
-        text_PointRadius.mouseClicked(mouseX, mouseY, button);
-        text_PointCaptureOrderNumber.mouseClicked(mouseX, mouseY, button);
-    }
-	
+	 * Called when the mouse is clicked.
+	 * 
+	 * @throws IOException
+	 */
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+		super.mouseClicked(mouseX, mouseY, button);
+		text_PointName.mouseClicked(mouseX, mouseY, button);
+		text_PointTeam.mouseClicked(mouseX, mouseY, button);
+		text_PointRadius.mouseClicked(mouseX, mouseY, button);
+		text_PointCaptureOrderNumber.mouseClicked(mouseX, mouseY, button);
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partTicks) {
 		this.drawDefaultBackground();
@@ -109,13 +110,13 @@ public class GuiCapturePoint extends GuiDeathCube {
 		// Text Fields
 		mc.fontRendererObj.drawString("Team Color", x + 20, y + 22, 4210752);
 		text_PointTeam.drawTextBox();
-		
+
 		mc.fontRendererObj.drawString("Point Name", x + 20, y + 42, 4210752);
 		text_PointName.drawTextBox();
-		
+
 		mc.fontRendererObj.drawString("Point Radius", x + 20, y + 62, 4210752);
 		text_PointRadius.drawTextBox();
-		
+
 		mc.fontRendererObj.drawString("Capture Time", x + 20, y + 82, 4210752);
 		text_PointCaptureOrderNumber.drawTextBox();
 
@@ -135,7 +136,8 @@ public class GuiCapturePoint extends GuiDeathCube {
 
 	/**
 	 * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Override
 	protected void keyTyped(char chr, int keyCode) throws IOException {
@@ -162,6 +164,6 @@ public class GuiCapturePoint extends GuiDeathCube {
 		 * Save data from Gui to server.
 		 */
 		Log.info("Capture Point Gui - Exited");
-		//ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, text_PointName.getText(), text_PointTeam.getText(), text_PointRadius.getText(), text_PointCaptureOrderNumber.getText()));
+		// ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, text_PointName.getText(), text_PointTeam.getText(), text_PointRadius.getText(), text_PointCaptureOrderNumber.getText()));
 	}
 }
