@@ -13,6 +13,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	//public int capturePointID;
 	public int captureOrderNumber;
 	public int captureRadius;
+	public int captureTime;
 	public String capturePointTeamColor = "Blue";
 	public String capturePointName;
 	//public boolean isActive;
@@ -109,18 +110,18 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		return captureOrderNumber;
 	}
 	
-	@Override
+	//@Override
     public void readFromNBT(NBTTagCompound tag){
-        super.readFromNBT(tag);
+        //super.readFromNBT(tag);
         capturePointName = tag.getString("name");
         capturePointTeamColor = tag.getString("team");
         captureRadius = tag.getInteger("radius");
         captureOrderNumber = tag.getInteger("order");
     }
 
-    @Override
+    //@Override
     public void writeToNBT(NBTTagCompound tag){
-        super.writeToNBT(tag);
+        //super.writeToNBT(tag);
         tag.setString("name", capturePointName);
         tag.setString("team", capturePointTeamColor);
         tag.setInteger("radius", captureRadius);
@@ -133,7 +134,14 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		 * Check if players are nearby.  
 		 * 
 		 * If in radius and on proper Team, run count-down timer.
+		 * 
+		 * Built-in function for Mob Spawner checks for any player not in Spectate mode.  Copy class and
+		 * 		add in check for Team.  Also, track which player and how many players are on point.
+		 * 		See:  BlockMobSpawner
+		 * 			  TileEntityMobSpawner
 		 */
-		
+		if(this.worldObj.func_175636_b((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, (double)this.captureRadius)) {
+			Log.info("Player in range of Capture Point: " + capturePointName);
+		}
 	}
 }
