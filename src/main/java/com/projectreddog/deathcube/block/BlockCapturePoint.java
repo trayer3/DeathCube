@@ -14,6 +14,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
+import com.projectreddog.deathcube.utility.Log;
 
 public class BlockCapturePoint extends BlockContainer {
 
@@ -41,6 +42,7 @@ public class BlockCapturePoint extends BlockContainer {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te != null && !playerIn.isSneaking()) {
+			Log.info("Capture Point Block Clicked!");
 			playerIn.openGui(DeathCube.instance, Reference.GUI_CAPTURE_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 		} else {

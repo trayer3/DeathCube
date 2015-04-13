@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.utility.Log;
@@ -31,6 +32,11 @@ public class GuiCapturePoint extends GuiDeathCube {
 	public void initGui() {
 		super.initGui();
 
+		/**
+		 * Need a better spot for this.  Or wait a short time?
+		 */
+		ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(capture_point.getPos()));
+		
 		/**
 		 * Find GUI upper-left corner.
 		 */

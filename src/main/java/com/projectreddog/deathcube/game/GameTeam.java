@@ -2,8 +2,13 @@ package com.projectreddog.deathcube.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+
+import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
+import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 
 /**
  * Original DeathCube used this Class for:
@@ -19,8 +24,9 @@ import net.minecraft.entity.player.EntityPlayer;
 public class GameTeam {
 
 	private List<EntityPlayer> playerList = new ArrayList<EntityPlayer>();
+	private List<TileEntitySpawnPoint> spawnPointsList = new ArrayList<TileEntitySpawnPoint>();
+	private List<TileEntityCapturePoint> capturePointsList = new ArrayList<TileEntityCapturePoint>();
 	
-	private int numPlayers = 0;
 	private String teamColor;
 	private int teamHandicap = 0;
 	
@@ -30,6 +36,10 @@ public class GameTeam {
 	
 	public String getTeamColor() {
 		return teamColor;
+	}
+	
+	public int getTeamSize() {
+		return playerList.size();
 	}
 	
 	/**
@@ -49,7 +59,6 @@ public class GameTeam {
 	 */
 	public void addPlayer(EntityPlayer player) {
 		playerList.add(player);
-		numPlayers++;
 	}
 	
 	/**
@@ -58,7 +67,6 @@ public class GameTeam {
 	public void removePlayer(EntityPlayer player) {
 		if(playerList.contains(player)){
 			playerList.remove(player);
-			numPlayers--;
 		}
 	}
 	
@@ -67,9 +75,29 @@ public class GameTeam {
 	 *  - TODO: Check:  Do EntityPlayers change over time?  Will the current player equal the one originally added to the list?
 	 */
 	public boolean isPlayerOnTeam(EntityPlayer player) {
-		if(playerList.contains(player))
+		if(playerList.contains(player)){
 			return true;
-		else
+		} else {
 			return false;
+		}
+	}
+	
+	
+	/**
+	 * Just make these public static instead of these methods?  Especially if there will ever be
+	 * 		a need to clear and re-populate the list?
+	 */
+	public void addSpawnPoint(TileEntitySpawnPoint spawnPoint) {
+		this.spawnPointsList.add(spawnPoint);
+	}
+	
+	public void addCapturePoint(TileEntityCapturePoint capturePoint) {
+		this.capturePointsList.add(capturePoint);
+	}
+
+	public BlockPos getSpawnLocation() {
+		int numSpawnPoints = spawnPointsList.size();
+		Random rand = new Random();
+		return spawnPointsList.get(rand.nextInt(numSpawnPoints)).getPos();
 	}
 }

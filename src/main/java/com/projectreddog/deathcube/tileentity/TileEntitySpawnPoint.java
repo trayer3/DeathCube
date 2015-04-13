@@ -17,4 +17,8 @@ public class TileEntitySpawnPoint extends TileEntityDeathCube implements IUpdate
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Object getSpawnPointTeamColor() {
+		return spawnPointTeamColor;
+	}
 }

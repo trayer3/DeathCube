@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
@@ -40,8 +41,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public static FieldStates fieldState = FieldStates.Off;
 	public static int gameTimer = -1;
 	
+	/**
+	 * Team variables
+	 */
 	private GameTeam[] gameTeams;
 	private int numPossibleTeams = 4;
+	
+	/**
+	 * Spawn Point Variables
+	 */
+	private List<TileEntitySpawnPoint> spawnPointsList = new ArrayList<TileEntitySpawnPoint>();
+	
+	/**
+	 * Capture Point Variables
+	 */
+	private List<TileEntityCapturePoint> capturePointsList = new ArrayList<TileEntityCapturePoint>();
 
 	public TileEntityGameController() {
 		
@@ -84,6 +98,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Or store this information elsewhere?  A game setup Tile Entity?  Game Controller
 			 * 		used only by players when starting the game.
 			 */
+			spawnPointsList.clear();
+			capturePointsList.clear();
 			
 			List<TileEntity> tileEntities = this.worldObj.loadedTileEntityList;
 			for(TileEntity te : tileEntities) {
@@ -91,12 +107,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * Track Spawn Points
 					 */
+					spawnPointsList.add((TileEntitySpawnPoint) te);
+					
+					Log.info("Number of Spawn Points: " + spawnPointsList.size());
 				}
-				//else if(te instanceof TileEntitySpawnPoint) {
+				else if(te instanceof TileEntityCapturePoint) {
 					/**
 					 * Track Capture Points
 					 */
-				//}
+					//if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
+						capturePointsList.add((TileEntityCapturePoint) te);
+					//}
+					
+					Log.info("Number of Capture Points: " + capturePointsList.size());
+					
+				}
 			}
 			
 		} else if (gameState == GameStates.GameWarmup) {
@@ -190,6 +215,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		
 		/**
 		 * Create Team Objects
+		 *  - Array of Possible Teams by Color
+		 *  - List of Colors used.  (Not random)
 		 */
 		gameTeams = new GameTeam[numPossibleTeams];
 		List<String> usedColors = new ArrayList<String>();
@@ -203,12 +230,29 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			else if(i==2)
 				color = Reference.TEAM_GREEN;
 			else if(i==3)
-			color = Reference.TEAM_YELLOW;
+				color = Reference.TEAM_YELLOW;
 				
 			gameTeams[i] = new GameTeam(color);
 			usedColors.add(color);
 			
 			Log.info("Team added, color: " + gameTeams[i].getTeamColor());
+		}
+		
+		/**
+		 * Add Spawn and Capture Points to GameTeam objects.
+		 *  - TODO: Make sure there is at least 1 point of each kind for each team.
+		 */
+		for(GameTeam team : gameTeams) {
+			for(TileEntitySpawnPoint point : spawnPointsList) {
+				if(point.getSpawnPointTeamColor().equals(team.getTeamColor())){
+					team.addSpawnPoint(point);
+				}
+			}
+			for(TileEntityCapturePoint point : capturePointsList) {
+				if(point.getCapturePointTeamColor().equals(team.getTeamColor())){
+					team.addCapturePoint(point);
+				}
+			}
 		}
 
 		/**
@@ -243,12 +287,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 *  TODO: Teleport Players to Team Spawn Locations.
 			 */
-			//SpawnPlayerInGame(p);
-			//player.playerLocation = this.pos;
-			player.setPositionAndUpdate(this.pos.getX() + 0.5d, this.pos.getY() + 1, this.pos.getZ() + 0.5d);
+			BlockPos spawnLocation = gameTeams[teamIndex].getSpawnLocation();
+			player.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
 			
 			/**
 			 * Play sound at Game Start
+			 *  - TODO: Get Custom sound.  This call doesn't work.
 			 */
 			player.playSound("mob.bat.death", 1.0f, 1.0f);
 		}

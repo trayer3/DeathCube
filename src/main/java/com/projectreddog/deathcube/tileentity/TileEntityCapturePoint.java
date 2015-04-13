@@ -42,21 +42,22 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		//captureOrderNumber = 1;
 		//captureTime = 5;
 		Log.info("Capture Point Constructor");
-		if(this.worldObj != null) {
-			if(this.worldObj.isRemote) {
-				Log.info("Client requesting text update.");
-				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.pos));
-			}
-		} else {
-			Log.info("World object null.");
-		}
 	}
 	
 	public void onTextRequest() {
-		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
-		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
-		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
-		ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
+		if(this.worldObj != null) {
+			if(!this.worldObj.isRemote) {
+				Log.info("Server sending requested text. Team color: " + capturePointTeamColor);
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
+			} else {
+				Log.info("World is remote - text request.");
+			}
+		} else {
+			Log.info("World object null - text request.");
+		}
 	}
 	
 	@Override
@@ -141,7 +142,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
         capturePointTeamColor = tag.getString("team");
         captureRadius = tag.getInteger("radius");        
         captureOrderNumber = tag.getInteger("order");
-        Log.info("Capture Point - NBT Read");
+        Log.info("Capture Point - NBT Read :: Team Color: " + capturePointTeamColor);
     }
 
     @Override
@@ -151,7 +152,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
         tag.setString("team", capturePointTeamColor);
         tag.setInteger("radius", captureRadius);
         tag.setInteger("order", captureOrderNumber);
-        Log.info("Capture Point - NBT Write");
+        Log.info("Capture Point - NBT Write :: Team Color: " + capturePointTeamColor);
     }
 	
 	@Override
