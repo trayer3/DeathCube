@@ -1,5 +1,7 @@
 package com.projectreddog.deathcube.block;
 
+import java.util.Random;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,13 +9,17 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.projectreddog.deathcube.reference.Reference;
 
 public class BlockForceField extends BlockDeathCube{
 	public float damageAmount =1;
+	
 	public BlockForceField() {
 		super();
 		// 1.8
@@ -23,6 +29,22 @@ public class BlockForceField extends BlockDeathCube{
 		this.setStepSound(soundTypeAnvil);
 		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
 	}
+	
+	public int quantityDropped(Random random)
+    {
+        return 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
+
+    public boolean isFullCube()
+    {
+        return false;
+    }
 
 	// 	player is touching the block on any face up,down,N,W,S or E
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
