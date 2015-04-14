@@ -23,6 +23,7 @@ public class Reference {
 	public static final int MESSAGE_FIELD2_ID = 2;
 	public static final int MESSAGE_FIELD3_ID = 3;
 	public static final int MESSAGE_FIELD4_ID = 4;
+	public static final int MESSAGE_FIELD5_ID = 5;
 
 	public static final int BUTTON_START_GAME = 1;
 	public static final int BUTTON_TEST = 2;
@@ -31,6 +32,7 @@ public class Reference {
 	public static final int GUI_SPAWN_POINT = 1;
 	public static final int GUI_CAPTURE_POINT = 2;
 
+	public static final int TEAM_NUM_POSSIBLE = 4;
 	public static final String TEAM_RED = "red";
 	public static final String TEAM_BLUE = "blue";
 	public static final String TEAM_GREEN = "green";

@@ -36,11 +36,6 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		 * 
 		 * Other values set by GUI.
 		 */
-		//capturePointTeamColor = "Red";
-		//capturePointName = "Point 1";
-		//captureRadius = 1;
-		//captureOrderNumber = 1;
-		//captureTime = 5;
 		Log.info("Capture Point Constructor");
 	}
 	
@@ -52,6 +47,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
 					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
 					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -70,7 +66,6 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		 *  - textField4 = Point Capture Order Number
 		 */
 		Log.info("Capture Point sees Text Update: " + text);
-		Log.info("This is a client instance:" + this.worldObj.isRemote);
 		if(fieldID == Reference.MESSAGE_FIELD1_ID) {
 			capturePointName = text;
 			if(!this.worldObj.isRemote) {
@@ -116,6 +111,19 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
         		Log.warn("Tried to parse non-Integer: " + text);
         	}
             markDirty();
+        } else if (fieldID == Reference.MESSAGE_FIELD5_ID) {
+        	try {
+        		captureTime = Integer.parseInt(text);
+        		if(!this.worldObj.isRemote) {
+    				/**
+    				 * If a server message (not remote), update the Clients too.
+    				 */
+        			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
+    			}
+        	} catch (NumberFormatException e) {
+        		Log.warn("Tried to parse non-Integer: " + text);
+        	}
+            markDirty();
         }
     }
 
@@ -135,6 +143,10 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		return captureOrderNumber;
 	}
 	
+	public int getCaptureTime() {
+		return captureTime;
+	}
+	
 	@Override
     public void readFromNBT(NBTTagCompound tag){
         super.readFromNBT(tag);
@@ -142,6 +154,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
         capturePointTeamColor = tag.getString("team");
         captureRadius = tag.getInteger("radius");        
         captureOrderNumber = tag.getInteger("order");
+        captureTime = tag.getInteger("time");
         Log.info("Capture Point - NBT Read :: Team Color: " + capturePointTeamColor);
     }
 
@@ -152,13 +165,14 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
         tag.setString("team", capturePointTeamColor);
         tag.setInteger("radius", captureRadius);
         tag.setInteger("order", captureOrderNumber);
+        tag.setInteger("time", captureTime);
         Log.info("Capture Point - NBT Write :: Team Color: " + capturePointTeamColor);
     }
 	
 	@Override
 	public void update() {
 		//Log.info("Capture Point Team: "+ getCapturePointTeamColor());
-		if(this.worldObj.isRemote) {
+		if(!this.worldObj.isRemote) {
 			/**
 			 * Check if players are nearby, only on Server-side.  
 			 * 

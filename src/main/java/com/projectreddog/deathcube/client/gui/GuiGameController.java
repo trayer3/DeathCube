@@ -1,16 +1,20 @@
 package com.projectreddog.deathcube.client.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
+import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
 
-public class GuiGameController extends GuiScreen {
+public class GuiGameController extends GuiDeathCube {
 
 	private TileEntityGameController game_controller;
 	private GuiTextField text_NumTeams;
@@ -19,6 +23,9 @@ public class GuiGameController extends GuiScreen {
 	private int gui_Height = 137;
 	private int x = 0;
 	private int y = 0;
+	private int ySpacing = 20;
+	private int xSpacingLabel = 20;
+	private int xSpacingField = 110;
 
 	public GuiGameController(TileEntityGameController game_controller) {
 		super();
@@ -29,6 +36,11 @@ public class GuiGameController extends GuiScreen {
 	public void initGui() {
 		super.initGui();
 
+		/**
+		 * Need a better spot for this.  Or wait a short time?
+		 */
+		ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(game_controller.getPos()));
+		
 		/**
 		 * Find GUI upper-left corner.
 		 */
@@ -44,9 +56,25 @@ public class GuiGameController extends GuiScreen {
 		/**
 		 * Prepare Text Field
 		 */
-		text_NumTeams = new GuiTextField(20, fontRendererObj, x + 70, y + 20, 70, 12);
+		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing, 90, 12);
 		text_NumTeams.setMaxStringLength(40);
-		text_NumTeams.setText("2");
+		text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
+	}
+	
+	@Override
+	public void onTextfieldUpdate(int fieldID) {
+		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
+			text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
+		}
+	}
+	
+	/**
+	 * Called when the mouse is clicked.
+	 */
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+		super.mouseClicked(mouseX, mouseY, button);
+		text_NumTeams.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -69,10 +97,23 @@ public class GuiGameController extends GuiScreen {
 		mc.fontRendererObj.drawString("DeathCube Game Controller", x + 8, y + 8, 4210752);
 
 		// Text Fields
-		mc.fontRendererObj.drawString("Teams", x + 20, y + 22, 4210752);
+		mc.fontRendererObj.drawString("Number of Teams", x + xSpacingLabel, y + ySpacing + 2, 4210752);
 		text_NumTeams.drawTextBox();
 
 		super.drawScreen(mouseX, mouseY, partTicks);
+	}
+	
+	/**
+	 * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+	 */
+	@Override
+	protected void keyTyped(char chr, int keyCode) throws IOException {
+		Log.info("Key typed: " + chr);
+		if (text_NumTeams.textboxKeyTyped(chr, keyCode)) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD1_ID, text_NumTeams.getText()));
+		} else {
+			super.keyTyped(chr, keyCode);
+		}
 	}
 
 	@Override
@@ -87,7 +128,6 @@ public class GuiGameController extends GuiScreen {
         	 * Start Game
         	 */
         	Log.info("Start Button Pressed");
-        	//ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, String.valueOf(Reference.BUTTON_START_GAME), text_NumTeams.getText(), "", ""));
         	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller, Reference.BUTTON_START_GAME));
         }
     }
@@ -102,8 +142,24 @@ public class GuiGameController extends GuiScreen {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
+		boolean isValid = false;
+		int fieldNumTeams = 0;
+		
+		try {
+			fieldNumTeams = Integer.parseInt(text_NumTeams.getText());
+    	} catch (NumberFormatException e) {
+    		Log.warn("Tried to parse non-Integer: " + text_NumTeams.getText());
+    	}
+		
 		/**
-		 * Save data from Gui to server.
+		 * Verify that the Team Color is valid.
 		 */
+		if(fieldNumTeams > 1 && fieldNumTeams <= Reference.TEAM_NUM_POSSIBLE) {
+			isValid = true;
+		} 
+		
+		if(!isValid) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD1_ID, String.valueOf(Reference.TEAM_NUM_POSSIBLE)));
+		}
 	}
 }

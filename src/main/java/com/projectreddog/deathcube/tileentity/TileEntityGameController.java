@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +15,8 @@ import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 import com.projectreddog.deathcube.utility.RandomChoice;
@@ -61,6 +64,62 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		
 	}
 	
+	public void onTextRequest() {
+		if(this.worldObj != null) {
+			if(!this.worldObj.isRemote) {
+				Log.info("Server sending requested text. Num points: " + numPossibleTeams);
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numPossibleTeams)));
+			} else {
+				Log.info("World is remote - text request.");
+			}
+		} else {
+			Log.info("World object null - text request.");
+		}
+	}
+	
+	@Override
+    public void onGuiTextfieldUpdate(int fieldID, String text){
+		/**
+		 * Save Game Controller Data
+		 */
+		Log.info("Game Controller sees Text Update: " + text);
+		if(fieldID == Reference.MESSAGE_FIELD1_ID) {
+			try {
+				numPossibleTeams = Integer.parseInt(text);
+        		if(!this.worldObj.isRemote) {
+    				/**
+    				 * If a server message (not remote), update the Clients too.
+    				 */
+        			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numPossibleTeams)));
+    			}
+        	} catch (NumberFormatException e) {
+        		Log.warn("Tried to parse non-Integer: " + text);
+        	}
+            markDirty();
+        } 
+	}
+	
+	public int getNumTeams() {
+		return numPossibleTeams;
+	}
+	
+	@Override
+    public void readFromNBT(NBTTagCompound tag){
+        super.readFromNBT(tag);
+        numPossibleTeams = tag.getInteger("team");        
+        Log.info("Game Controller - NBT Read :: Number of Teams: " + numPossibleTeams);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag){
+        super.writeToNBT(tag);
+        tag.setInteger("team", numPossibleTeams);
+        Log.info("Game Controller - NBT Write :: Number of Teams: " + numPossibleTeams);
+    }
+	
+	/**
+	 * Needs to be !isRemote?
+	 */
 	@Override
     public void onGuiButtonPress(int buttonID){
         if(buttonID == Reference.BUTTON_START_GAME) {
@@ -69,6 +128,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 */
 			Log.info("Server sees Start Button Pressed");
 			Log.info("Tile Entity starting game.");
+			Log.info("isRemote? " + this.worldObj.isRemote);
 			if (TileEntityGameController.gameState != null) {
 				if (TileEntityGameController.gameState == GameStates.Lobby) {
 					TileEntityGameController.gameState = GameStates.GameWarmup;
@@ -79,6 +139,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
         }
     }
 
+	/**
+	 * Needs to be !isRemote?
+	 */
 	@Override
 	public void update() {
 		if (gameState == GameStates.Lobby) {
@@ -109,7 +172,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 */
 					spawnPointsList.add((TileEntitySpawnPoint) te);
 					
-					Log.info("Number of Spawn Points: " + spawnPointsList.size());
+					//Log.info("Number of Spawn Points: " + spawnPointsList.size());
 				}
 				else if(te instanceof TileEntityCapturePoint) {
 					/**
@@ -119,7 +182,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						capturePointsList.add((TileEntityCapturePoint) te);
 					//}
 					
-					Log.info("Number of Capture Points: " + capturePointsList.size());
+					//Log.info("Number of Capture Points: " + capturePointsList.size());
 					
 				}
 			}
@@ -244,12 +307,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 */
 		for(GameTeam team : gameTeams) {
 			for(TileEntitySpawnPoint point : spawnPointsList) {
-				if(point.getSpawnPointTeamColor().equals(team.getTeamColor())){
+				if(point.getSpawnPointTeamColor().equals(team.getTeamColor().toLowerCase())){
 					team.addSpawnPoint(point);
 				}
 			}
 			for(TileEntityCapturePoint point : capturePointsList) {
-				if(point.getCapturePointTeamColor().equals(team.getTeamColor())){
+				if(point.getCapturePointTeamColor().equals(team.getTeamColor().toLowerCase())){
 					team.addCapturePoint(point);
 				}
 			}

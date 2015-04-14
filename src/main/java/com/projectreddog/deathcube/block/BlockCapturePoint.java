@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
+import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.utility.Log;

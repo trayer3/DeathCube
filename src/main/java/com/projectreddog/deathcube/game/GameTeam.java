@@ -9,6 +9,7 @@ import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
+import com.projectreddog.deathcube.utility.Log;
 
 /**
  * Original DeathCube used this Class for:
@@ -97,7 +98,14 @@ public class GameTeam {
 
 	public BlockPos getSpawnLocation() {
 		int numSpawnPoints = spawnPointsList.size();
-		Random rand = new Random();
-		return spawnPointsList.get(rand.nextInt(numSpawnPoints)).getPos();
+		if(numSpawnPoints > 1)
+		{
+			Random rand = new Random();
+			return spawnPointsList.get(rand.nextInt(numSpawnPoints)).getPos();
+		} else {
+			Log.info("One spawn point found.");
+			return spawnPointsList.get(numSpawnPoints-1).getPos();
+		}
+		
 	}
 }

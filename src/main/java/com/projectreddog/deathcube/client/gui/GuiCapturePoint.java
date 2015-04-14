@@ -18,10 +18,14 @@ public class GuiCapturePoint extends GuiDeathCube {
 	private GuiTextField text_PointTeam;
 	private GuiTextField text_PointRadius;
 	private GuiTextField text_PointCaptureOrderNumber;
+	private GuiTextField text_PointCaptureTime;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
 	private int x = 0;
 	private int y = 0;
+	private int ySpacing = 20;
+	private int xSpacingLabel = 20;
+	private int xSpacingField = 90;
 
 	public GuiCapturePoint(TileEntityCapturePoint capture_point) {
 		super();
@@ -46,7 +50,7 @@ public class GuiCapturePoint extends GuiDeathCube {
 		/**
 		 * Prepare Text Field
 		 */
-		text_PointTeam = new GuiTextField(20, fontRendererObj, x + 90, y + 20, 90, 12);
+		text_PointTeam = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing, 90, 12);
 		text_PointTeam.setMaxStringLength(40);
 		text_PointTeam.setText(capture_point.getCapturePointTeamColor());
 
@@ -54,17 +58,21 @@ public class GuiCapturePoint extends GuiDeathCube {
 		// True = Client
 		Log.info("This is a client instance:" + String.valueOf(capture_point.getWorld().isRemote));
 
-		text_PointName = new GuiTextField(20, fontRendererObj, x + 90, y + 40, 90, 12);
+		text_PointName = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 2*ySpacing, 90, 12);
 		text_PointName.setMaxStringLength(40);
 		text_PointName.setText(capture_point.getCapturePointName());
 
-		text_PointRadius = new GuiTextField(20, fontRendererObj, x + 90, y + 60, 90, 12);
+		text_PointRadius = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 3*ySpacing, 90, 12);
 		text_PointRadius.setMaxStringLength(40);
 		text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
 
-		text_PointCaptureOrderNumber = new GuiTextField(20, fontRendererObj, x + 90, y + 80, 90, 12);
+		text_PointCaptureOrderNumber = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 4*ySpacing, 90, 12);
 		text_PointCaptureOrderNumber.setMaxStringLength(40);
 		text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
+		
+		text_PointCaptureTime = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 5*ySpacing, 90, 12);
+		text_PointCaptureTime.setMaxStringLength(40);
+		text_PointCaptureTime.setText(String.valueOf(capture_point.getCaptureTime()));
 	}
 
 	@Override
@@ -77,13 +85,13 @@ public class GuiCapturePoint extends GuiDeathCube {
 			text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
 		} else if (fieldID == Reference.MESSAGE_FIELD4_ID) {
 			text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
+		} else if (fieldID == Reference.MESSAGE_FIELD5_ID) {
+			text_PointCaptureTime.setText(String.valueOf(capture_point.getCaptureTime()));
 		}
 	}
 
 	/**
 	 * Called when the mouse is clicked.
-	 * 
-	 * @throws IOException
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
@@ -92,6 +100,7 @@ public class GuiCapturePoint extends GuiDeathCube {
 		text_PointTeam.mouseClicked(mouseX, mouseY, button);
 		text_PointRadius.mouseClicked(mouseX, mouseY, button);
 		text_PointCaptureOrderNumber.mouseClicked(mouseX, mouseY, button);
+		text_PointCaptureTime.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -114,17 +123,20 @@ public class GuiCapturePoint extends GuiDeathCube {
 		mc.fontRendererObj.drawString("Capture Point", x + 8, y + 8, 4210752);
 
 		// Text Fields
-		mc.fontRendererObj.drawString("Team Color", x + 20, y + 22, 4210752);
+		mc.fontRendererObj.drawString("Team Color", x + xSpacingLabel, y + ySpacing + 2, 4210752);
 		text_PointTeam.drawTextBox();
 
-		mc.fontRendererObj.drawString("Point Name", x + 20, y + 42, 4210752);
+		mc.fontRendererObj.drawString("Point Name", x + xSpacingLabel, y + 2*ySpacing + 2, 4210752);
 		text_PointName.drawTextBox();
 
-		mc.fontRendererObj.drawString("Point Radius", x + 20, y + 62, 4210752);
+		mc.fontRendererObj.drawString("Point Radius", x + xSpacingLabel, y + 3*ySpacing + 2, 4210752);
 		text_PointRadius.drawTextBox();
 
-		mc.fontRendererObj.drawString("Capture Time", x + 20, y + 82, 4210752);
+		mc.fontRendererObj.drawString("Capture Order", x + xSpacingLabel, y + 4*ySpacing + 2, 4210752);
 		text_PointCaptureOrderNumber.drawTextBox();
+		
+		mc.fontRendererObj.drawString("Capture Time", x + xSpacingLabel, y + 5*ySpacing + 2, 4210752);
+		text_PointCaptureTime.drawTextBox();
 
 		super.drawScreen(mouseX, mouseY, partTicks);
 	}
@@ -137,7 +149,11 @@ public class GuiCapturePoint extends GuiDeathCube {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-
+		//text_PointName.setText(capture_point.getCapturePointName());
+		//text_PointTeam.setText(capture_point.getCapturePointTeamColor());
+		//text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
+		//text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
+		//text_PointCaptureTime.setText(String.valueOf(capture_point.getCaptureTime()));
 	}
 
 	/**
@@ -152,11 +168,12 @@ public class GuiCapturePoint extends GuiDeathCube {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD1_ID, text_PointName.getText()));
 		} else if (text_PointTeam.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD2_ID, text_PointTeam.getText()));
-			Log.info("Key typed in Team Color box.");
 		} else if (text_PointRadius.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD3_ID, text_PointRadius.getText()));
 		} else if (text_PointCaptureOrderNumber.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD4_ID, text_PointCaptureOrderNumber.getText()));
+		} else if (text_PointCaptureTime.textboxKeyTyped(chr, keyCode)) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD5_ID, text_PointCaptureTime.getText()));
 		} else {
 			super.keyTyped(chr, keyCode);
 		}
@@ -166,10 +183,27 @@ public class GuiCapturePoint extends GuiDeathCube {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
+		boolean isValidColor = false;
+		boolean foundValidColor = false;
 		/**
-		 * Save data from Gui to server.
+		 * Verify that the Team Color is valid.
 		 */
-		Log.info("Capture Point Gui - Exited");
-		// ModNetwork.simpleNetworkWrapper.sendToServer(new DeathCubeMessageInputToServer(Reference.MESSAGE_SOURCE_GUI, Reference.GUI_GAME_CONTROLLER, text_PointName.getText(), text_PointTeam.getText(), text_PointRadius.getText(), text_PointCaptureOrderNumber.getText()));
+		if(text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_RED)) {
+			isValidColor = true;
+			foundValidColor = true;
+		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_BLUE)) {
+			isValidColor = true;
+			foundValidColor = true;
+		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_GREEN)) {
+			isValidColor = true;
+			foundValidColor = true;
+		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_YELLOW)) {
+			isValidColor = true;
+			foundValidColor = true;
+		}
+		
+		if(!isValidColor) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD2_ID, "Red"));
+		}
 	}
 }
