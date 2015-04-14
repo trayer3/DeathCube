@@ -5,12 +5,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.reference.Reference;
 
 public class BlockForceField extends BlockDeathCube{
-	public float DamageAmount =1;
+	public float damageAmount =1;
 	public BlockForceField() {
 		super();
 		// 1.8
@@ -21,16 +22,36 @@ public class BlockForceField extends BlockDeathCube{
 		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
 	}
 
+	// 	player is touching the block on any face up,down,N,W,S or E
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
 		if (!(worldIn.isRemote)){
 			// only run on the server side
 			if (entity instanceof EntityPlayer){
 				EntityPlayer entityPlayer = (EntityPlayer) entity;
-				entityPlayer.attackEntityFrom( DamageSource.generic, this.DamageAmount );
-
+				applyForceFieldDamage(entityPlayer);
 			}
 		}
+	}
+	// 	player Right Clicked the block.. Punish them!
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!(worldIn.isRemote)){
+			// only run on the server side
+			applyForceFieldDamage(playerIn);		
+		}	
+		return true;
+	}
 
+	// 	player Left Clicked the block.. Punish them!
+	@Override
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn){
+		if (!(worldIn.isRemote)){
+			// only run on the server side
+			applyForceFieldDamage(playerIn);		
+		}		
+	}
 
+	public void applyForceFieldDamage(EntityPlayer playerIn){
+		playerIn.attackEntityFrom( DamageSource.generic, this.damageAmount );
 	}
 }
