@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.projectreddog.deathcube.block.BlockCapturePoint;
 import com.projectreddog.deathcube.block.BlockDeathCube;
 import com.projectreddog.deathcube.block.BlockExample;
+import com.projectreddog.deathcube.block.BlockForceField;
 import com.projectreddog.deathcube.block.BlockGameController;
 import com.projectreddog.deathcube.block.BlockSpawnPoint;
 import com.projectreddog.deathcube.reference.Reference;
@@ -20,12 +21,14 @@ public class ModBlocks {
 	public static final Block capturepoint = new BlockCapturePoint();
 	public static final Block spawnpoint = new BlockSpawnPoint();
 	public static final Block gamecontroller = new BlockGameController();
+	public static final Block forcefield = new BlockForceField();
 
 	public static void init() {
 		GameRegistry.registerBlock(example, Reference.MODBLOCK_EXAMPLE);
 		GameRegistry.registerBlock(capturepoint, Reference.MODBLOCK_CAPTURE_POINT);
 		GameRegistry.registerBlock(spawnpoint, Reference.MODBLOCK_SPAWN_POINT);
 		GameRegistry.registerBlock(gamecontroller, Reference.MODBLOCK_GAME_CONTROLLER);
+		GameRegistry.registerBlock(forcefield,Reference.MODBLOCK_FORCE_FIELD);
 		
 		Log.info("Modblocks initialized");
 	}
@@ -35,5 +38,7 @@ public class ModBlocks {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(capturepoint), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_CAPTURE_POINT, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(spawnpoint), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_SPAWN_POINT, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(gamecontroller), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_GAME_CONTROLLER, "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(forcefield), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_FORCE_FIELD, "inventory"));
+
 	}
 }

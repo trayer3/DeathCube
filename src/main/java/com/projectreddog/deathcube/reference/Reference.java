@@ -13,6 +13,8 @@ public class Reference {
 	public static final String MODBLOCK_CAPTURE_POINT = "capturepoint";
 	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
 	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";
+	public static final String MODBLOCK_FORCE_FIELD = "forcefield";
+
 
 	public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/spawnpointgui.png");
 	public static final ResourceLocation GUI_GAME_CONTROLLER_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/gamecontrollergui.png");
