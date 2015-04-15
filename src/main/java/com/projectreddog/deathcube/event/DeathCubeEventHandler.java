@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.WorldSettings;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.command.CommandGame;
+import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
@@ -100,25 +102,47 @@ public class DeathCubeEventHandler {
 		}
 	}
 
+	@SubscribeEvent
 	public void onPlayerJoin(EntityJoinWorldEvent event) {
-		Log.info("Entity joined game.");
-		if (event.entity instanceof EntityPlayer) {
+		//Log.info("Entity joined game.");
+		if (!event.world.isRemote && event.entity instanceof EntityPlayer) {
 			/**
 			 * If Entity is a Player, perform an action based on Gamestate.
-			 * 
-			 * TODO:  This doesn't work.  Wrong event?
 			 */
 			
 			if(DeathCube.gameState != null) {
-				if(DeathCube.gameState == GameStates.Lobby) {
+				if(DeathCube.gameState != GameStates.Running) {
 					/**
-					 * If Lobby state, teleport to Lobby.
+					 * TODO: If not Running state, teleport to Lobby.
 					 */
+					
+					
+					
 					Log.info("Player joined Lobby.");
-				} else if(DeathCube.gameState == GameStates.Running) {
+				} else {
 					/**
 					 * If Running state, add to team and spawn in game.
+					 * - Check if already on team.  This will be called every respawn too.
 					 */
+					if(DeathCube.playerToTeamColor.containsKey(((EntityPlayer) event.entity).getName())){
+						/**
+						 * Player already on a Team.  
+						 * 
+						 * TODO: Perform Death Penalty.  Spectate teammate, or Penalty Box.
+						 * - Not just in spectate mode.
+						 */
+						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
+						
+						/**
+						 * Add to Queue to respawn in game.
+						 */
+						DeathCube.playerAwaitingRespawn.put(((EntityPlayer) event.entity).getName(), System.currentTimeMillis());
+					} else {
+						/**
+						 * Player not on a Team yet.  Assign Team.
+						 */
+						TileEntityGameController.assignPlayerToTeam((EntityPlayer) event.entity);
+					}
 					Log.info("Player joined Running Game.");
 				}
 			}

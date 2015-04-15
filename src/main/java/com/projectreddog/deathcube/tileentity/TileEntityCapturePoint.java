@@ -209,6 +209,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 						isBeingCaptured = false;
 						isActive = false;
 						isCaptured = true;
+						Log.info("Point Captured!");
 					}
 				} else {
 					/**

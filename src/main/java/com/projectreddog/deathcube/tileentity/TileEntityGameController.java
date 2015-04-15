@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
@@ -119,7 +121,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					if (DeathCube.gameState == GameStates.Lobby) {
 						DeathCube.gameState = GameStates.GameWarmup;
 					} else if (DeathCube.gameState == GameStates.Running) {
-						DeathCube.gameState = GameStates.PostGame;
+						stopGame();
 					}
 				}
 			}
@@ -176,7 +178,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 			} else if (DeathCube.gameState == GameStates.GameWarmup) {
 				if (DeathCube.gameTimer < 0) {
-					DeathCube.gameTimer = 200;
+					DeathCube.gameTimer = Reference.TIME_WARMUP;
 					Log.info("Game now Warming Up.");
 				} else if (DeathCube.gameTimer > 0) {
 					/**
@@ -212,6 +214,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					DeathCube.fieldState = FieldStates.Active;
 
 				/**
+				 * Process queue of Players waiting to respawn.
+				 */
+				if(DeathCube.playerAwaitingRespawn.size() > 0) {
+					Set<String> listKeys = DeathCube.playerAwaitingRespawn.keySet();
+					String[] arrayKeys = (String[]) listKeys.toArray();
+					for(int i = 0; i < DeathCube.playerAwaitingRespawn.size(); i++) {
+						Long currentTime = System.currentTimeMillis();
+						Long timeDiff = currentTime - DeathCube.playerAwaitingRespawn.get(arrayKeys[i]);
+						if(timeDiff <= 0) {
+							sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(arrayKeys[i]));
+						}
+					}
+				}
+				
+				/**
 				 * Check if a point has been captured.
 				 * - If so, set the next point as active.
 				 * - Or, check for Game Over condition.
@@ -241,14 +258,14 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				/**
 				 * Post Game actions.
 				 */
-				if (DeathCube.gameTimer < 0 || DeathCube.gameTimer > 200) {
-					DeathCube.gameTimer = 200;
+				if (DeathCube.gameTimer < 0 || DeathCube.gameTimer > Reference.TIME_POSTGAME) {
+					DeathCube.gameTimer = Reference.TIME_POSTGAME;
 
 					if (DeathCube.fieldState != FieldStates.Inactive)
 						DeathCube.fieldState = FieldStates.Inactive;
 
 					Log.info("Game has ended.");
-				} else if (DeathCube.gameTimer > 0 && DeathCube.gameTimer <= 200) {
+				} else if (DeathCube.gameTimer > 0 && DeathCube.gameTimer <= Reference.TIME_POSTGAME) {
 					/**
 					 * Decrement Timer
 					 */
@@ -297,6 +314,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		DeathCube.gameTeams = new GameTeam[numTeamsFromGUI];
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
+		DeathCube.playerAwaitingRespawn = new HashMap<String, Long>();
 		for (int i = 0; i < numTeamsFromGUI; i++) {
 			String color = Reference.TEAM_RED;
 			if (i == 0)
@@ -308,7 +326,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			else if (i == 3)
 				color = Reference.TEAM_YELLOW;
 
-			DeathCube.gameTeams[i] = new GameTeam(color);
+			DeathCube.gameTeams[i] = new GameTeam(color, this.worldObj);
 			DeathCube.teamColorToIndex.put(color, i);
 
 			Log.info("Team added, color: " + DeathCube.gameTeams[i].getTeamColor());
@@ -398,22 +416,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		for (EntityPlayer player : playerList) {
 			/**
-			 * Assign to a Team
+			 * Assign Team.
 			 */
-			Random rand = new Random();
-			int teamIndex = rand.nextInt(DeathCube.gameTeams.length);
-			DeathCube.gameTeams[teamIndex].addPlayer(player);
-			DeathCube.playerToTeamColor.put(player.getName(), DeathCube.gameTeams[teamIndex].getTeamColor());
-
-			Log.info("Added player: " + player.getName() + " to team: " + DeathCube.gameTeams[teamIndex].getTeamColor());
-
-			/**
-			 * Set velocity to zero to avoid death falling.
-			 * Clear any potion effects from Lobby time.
-			 */
-			player.setVelocity(0, 0, 0);
-			player.fallDistance = 0;
-			player.clearActivePotions();
+			assignPlayerToTeam(player);
 
 			/**
 			 * TODO: Initialize Kill Streak Timers
@@ -424,8 +429,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Teleport Players to Team Spawn Locations.
 			 */
-			BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
-			player.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
+			sendPlayerToTeamSpawn(player);
 
 			/**
 			 * Play sound at Game Start
@@ -434,8 +438,61 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			player.playSound("mob.bat.death", 1.0f, 1.0f);
 		}
 	}
+	
+	public static void assignPlayerToTeam(EntityPlayer inPlayer) {
+		/**
+		 * Check if teams are balanced.
+		 */
+		boolean teamsBalanced = true;
+		String smallestTeam = DeathCube.gameTeams[0].getTeamColor();
+		for(GameTeam team : DeathCube.gameTeams) {
+			
+		}
+		
+		if(teamsBalanced) {
+			/**
+			 * If teams are equal, assign player to a Random Team
+			 */
+			Random rand = new Random();
+			int teamIndex = rand.nextInt(DeathCube.gameTeams.length);
+			DeathCube.gameTeams[teamIndex].addPlayer(inPlayer);
+			DeathCube.playerToTeamColor.put(inPlayer.getName(), DeathCube.gameTeams[teamIndex].getTeamColor());
 
-	private void stopGame() {
+			Log.info("Added player: " + inPlayer.getName() + " to random team: " + DeathCube.gameTeams[teamIndex].getTeamColor());
+		} else {
+			/**
+			 * Otherwise, assign player to the smallest team.
+			 * - What if there is a tie for the smallest team?
+			 */
+			int smallestTeamIndex = DeathCube.teamColorToIndex.get(smallestTeam);
+			DeathCube.gameTeams[smallestTeamIndex].addPlayer(inPlayer);
+			DeathCube.playerToTeamColor.put(inPlayer.getName(), DeathCube.gameTeams[smallestTeamIndex].getTeamColor());
+			
+			Log.info("Added player: " + inPlayer.getName() + " to smallest team: " + DeathCube.gameTeams[smallestTeamIndex].getTeamColor());
+		}
+	}
+	
+	public void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
+		/**
+		 * Teleport Players to Team Spawn Locations.
+		 * - Set velocity to zero to avoid death falling.
+		 * - Clear any potion effects from Lobby time.
+		 * - Set to full health and absorption.
+		 */
+		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
+		inPlayer.setVelocity(0, 0, 0);
+		inPlayer.fallDistance = 0;
+		inPlayer.clearActivePotions();
+		inPlayer.setHealth(inPlayer.getMaxHealth());
+		//inPlayer.addPotionEffect();  // Add saturation effect?
+		
+		String teamColor = DeathCube.playerToTeamColor.get(inPlayer); 
+		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
+		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
+		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
+	}
+
+	public void stopGame() {
 		/**
 		 * TODO: Stop Game Processing
 		 * - Set all Capture Points to inactive.
@@ -443,9 +500,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * - Change GameState to PostGame
 		 */
 		for (GameTeam team : DeathCube.gameTeams) {
-			team.setAllPointInactive();
+			team.setAllPointsActive(false);
 		}
 
+		DeathCube.gameTimer = -1;
 		DeathCube.gameState = GameStates.PostGame;
 
 		Log.info(winningTeamColor + " has won!");

@@ -29,12 +29,14 @@ public class GameTeam {
 	private List<BlockPos> pointsCapturedList = new ArrayList<BlockPos>();
 
 	private String teamColor;
+	private World worldObj;
 	private int teamHandicap = 0;
 	private int currentCaptureIndex = 0;
 	private int nextCaptureIndex = 0;
 
-	public GameTeam(String teamColor) {
+	public GameTeam(String teamColor, World inWorldObj) {
 		this.teamColor = teamColor;
+		this.worldObj = inWorldObj;
 	}
 
 	public String getTeamColor() {
@@ -128,7 +130,7 @@ public class GameTeam {
 			if(nextCaptureIndex < capturePointsList.size()) {
 				Log.info("Setting a capture point as active for Team: " + teamColor);
 				BlockPos capturePos = capturePointsList.get(nextCaptureIndex);
-				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) playerList.get(0).worldObj.getTileEntity(capturePos);
+				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(capturePos);
 				captureTE.setIsActive(true);
 				currentCaptureIndex = nextCaptureIndex;
 				nextCaptureIndex++;
@@ -137,7 +139,7 @@ public class GameTeam {
 			/**
 			 * Unordered captures allowed.
 			 */
-			setAllPointInactive();
+			setAllPointsActive(true);
 		}
 	}
 	
@@ -153,7 +155,7 @@ public class GameTeam {
 		boolean capturedAll = true;
 		
 		for(BlockPos pos : capturePointsList) {
-			TileEntityCapturePoint captureTE = (TileEntityCapturePoint) playerList.get(0).worldObj.getTileEntity(pos);
+			TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(pos);
 			
 			if(!captureTE.getIsCaptured()) {
 				capturedAll = false;
@@ -163,9 +165,9 @@ public class GameTeam {
 		return capturedAll;
 	}
 	
-	public void setAllPointInactive() {
+	public void setAllPointsActive(boolean active) {
 		for(BlockPos pos : capturePointsList) {
-			((TileEntityCapturePoint) playerList.get(0).worldObj.getTileEntity(pos)).setIsActive(true);
+			((TileEntityCapturePoint) this.worldObj.getTileEntity(pos)).setIsActive(active);
 		}
 	}
 }

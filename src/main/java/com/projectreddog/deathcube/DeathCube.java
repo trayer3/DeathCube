@@ -33,12 +33,16 @@ public class DeathCube {
 	@Mod.Instance(Reference.MOD_ID)
 	public static DeathCube instance;
 	
+	/**
+	 * Globally used variables.
+	 */
 	public static GameStates gameState;
 	public static FieldStates fieldState;
 	public static int gameTimer;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;
+	public static Map<String, Long> playerAwaitingRespawn;
 	public static boolean isOrderedCapture = true;
 
 	/**

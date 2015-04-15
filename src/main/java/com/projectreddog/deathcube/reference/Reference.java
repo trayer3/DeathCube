@@ -59,4 +59,7 @@ public class Reference {
 	public static final List<String> VERIFY_COLORS_LIST = Arrays.asList(TEAM_RED, TEAM_BLUE, TEAM_GREEN, TEAM_YELLOW);
 	public static final int VERIFY_CAPTURE_RADIUS = 10;
 	public static final int VERIFY_CAPTURE_TIME = 60;
+	
+	public static final int TIME_WARMUP = 20;
+	public static final int TIME_POSTGAME = 200;
 }
