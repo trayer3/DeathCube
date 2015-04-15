@@ -45,6 +45,12 @@ public class BlockForceField extends BlockDeathCube{
     {
         return false;
     }
+    
+
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
 	// 	player is touching the block on any face up,down,N,W,S or E
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
