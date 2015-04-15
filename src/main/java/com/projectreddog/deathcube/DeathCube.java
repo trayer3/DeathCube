@@ -1,5 +1,7 @@
 package com.projectreddog.deathcube;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +21,8 @@ import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.reference.Reference.FieldStates;
+import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.utility.Log;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME)
@@ -29,16 +33,19 @@ public class DeathCube {
 	@Mod.Instance(Reference.MOD_ID)
 	public static DeathCube instance;
 	
+	public static GameStates gameState;
+	public static FieldStates fieldState;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;
+	public static boolean isOrderedCapture = true;
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-
+		
 		// Initialize Classes
 		ModBlocks.init();
 		ModTileEntities.init();

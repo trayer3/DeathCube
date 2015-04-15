@@ -1,5 +1,8 @@
 package com.projectreddog.deathcube.reference;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.util.ResourceLocation;
 
 public class Reference {
@@ -9,12 +12,25 @@ public class Reference {
 	public static final String CLIENT_PROXY_CLASS = "com.projectreddog.deathcube.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.projectreddog.deathcube.proxy.ServerProxy";
 
+	public static enum GameStates {
+		Lobby, GameWarmup, Running, PostGame, GameOver
+	}
+	
+	/**
+	 * Field States:
+	 * Off - Removes Force Field Blocks
+	 * Inactive - Places Force Field Blocks, but they are OK to touch.
+	 * Active - Arms Force Field Blocks as dangerous to touch!
+	 */
+	public static enum FieldStates {
+		Off, Inactive, Active
+	}
+	
 	public static final String MODBLOCK_EXAMPLE = "example";
 	public static final String MODBLOCK_CAPTURE_POINT = "capturepoint";
 	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
 	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";
 	public static final String MODBLOCK_FORCE_FIELD = "forcefield";
-
 
 	public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/spawnpointgui.png");
 	public static final ResourceLocation GUI_GAME_CONTROLLER_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/gamecontrollergui.png");
@@ -39,4 +55,8 @@ public class Reference {
 	public static final String TEAM_BLUE = "Blue";
 	public static final String TEAM_GREEN = "Green";
 	public static final String TEAM_YELLOW = "Yellow";
+	
+	public static final List<String> VERIFY_COLORS_LIST = Arrays.asList(TEAM_RED, TEAM_BLUE, TEAM_GREEN, TEAM_YELLOW);
+	public static final int VERIFY_CAPTURE_RADIUS = 10;
+	public static final int VERIFY_CAPTURE_TIME = 60;
 }

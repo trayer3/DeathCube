@@ -1,9 +1,12 @@
 package com.projectreddog.deathcube.client.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.gui.GuiTextField;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
@@ -183,27 +186,27 @@ public class GuiCapturePoint extends GuiDeathCube {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
-		boolean isValidColor = false;
-		boolean foundValidColor = false;
 		/**
-		 * Verify that the Team Color is valid.
+		 * Validate Team Color
 		 */
-		if(text_PointTeam.getText().equals(Reference.TEAM_RED)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_BLUE)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_GREEN)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_YELLOW)) {
-			isValidColor = true;
-			foundValidColor = true;
+		if (!Reference.VERIFY_COLORS_LIST.contains(text_PointTeam.getText())) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD2_ID, "Red"));
 		}
 		
-		if(!isValidColor) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD2_ID, "Red"));
+		/**
+		 * Validate Capture Point Radius
+		 */
+		int inputRadius = Integer.parseInt(text_PointRadius.getText());
+		if (inputRadius < 1 || inputRadius > Reference.VERIFY_CAPTURE_RADIUS) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD3_ID, "1"));
+		}
+		
+		/**
+		 * Validate Time to Capture
+		 */
+		int inputTime = Integer.parseInt(text_PointCaptureTime.getText());
+		if (inputTime < 1 || inputTime > Reference.VERIFY_CAPTURE_TIME) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD5_ID, "5"));
 		}
 	}
 }

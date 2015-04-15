@@ -111,26 +111,10 @@ public class GuiSpawnPoint extends GuiDeathCube {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		
-		boolean isValidColor = false;
-		boolean foundValidColor = false;
 		/**
-		 * Verify that the Team Color is valid.
+		 * Validate Team Color
 		 */
-		if(text_PointTeam.getText().equals(Reference.TEAM_RED)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_BLUE)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_GREEN)) {
-			isValidColor = true;
-			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_YELLOW)) {
-			isValidColor = true;
-			foundValidColor = true;
-		}
-		
-		if(!isValidColor) {
+		if (!Reference.VERIFY_COLORS_LIST.contains(text_PointTeam.getText())) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(spawn_point.getPos(), Reference.MESSAGE_FIELD1_ID, "Red"));
 		}
 	}

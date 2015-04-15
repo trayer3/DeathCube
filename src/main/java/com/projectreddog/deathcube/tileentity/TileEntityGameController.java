@@ -17,52 +17,43 @@ import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.reference.Reference.FieldStates;
+import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.utility.Log;
 
 public class TileEntityGameController extends TileEntityDeathCube implements IUpdatePlayerListBox {
 
-	public static enum GameStates {
-		Lobby, GameWarmup, Running, PostGame, GameOver
-	}
+	/**
+	 * Game Controller Variables.
+	 */
+	private int gameTimer = -1;
 
 	/**
-	 * Field States:
-	 * Off - Removes Force Field Blocks
-	 * Inactive - Places Force Field Blocks, but they are OK to touch.
-	 * Active - Arms Force Field Blocks as dangerous to touch!
+	 * Team Variables
 	 */
-	private static enum FieldStates {
-		Off, Inactive, Active
-	}
-
-	/**
-	 * Game Controller variables.
-	 */
-	public static GameStates gameState = GameStates.Lobby;
-	public static FieldStates fieldState = FieldStates.Off;
-	public static int gameTimer = -1;
-
-	/**
-	 * Team variables
-	 */
-	// private GameTeam[] gameTeams;
-	private int numPossibleTeams = 4;
+	private int numTeamsFromGUI = 4;
 
 	/**
 	 * Spawn and Capture Point Variables
 	 */
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
+	
+	/**
+	 * Scoring Variables
+	 */
+	private String winningTeamColor = "trayer4";
 
 	public TileEntityGameController() {
-
+		DeathCube.gameState = GameStates.Lobby;
+		DeathCube.fieldState = FieldStates.Off;
 	}
 
 	public void onTextRequest() {
 		if (this.worldObj != null) {
 			if (!this.worldObj.isRemote) {
-				Log.info("Server sending requested text. Num points: " + numPossibleTeams);
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numPossibleTeams)));
+				Log.info("Server sending requested text. Num points: " + numTeamsFromGUI);
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -79,12 +70,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		Log.info("Game Controller sees Text Update: " + text);
 		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
 			try {
-				numPossibleTeams = Integer.parseInt(text);
+				numTeamsFromGUI = Integer.parseInt(text);
 				if (!this.worldObj.isRemote) {
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numPossibleTeams)));
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -94,21 +85,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	}
 
 	public int getNumTeams() {
-		return numPossibleTeams;
+		return numTeamsFromGUI;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		numPossibleTeams = tag.getInteger("team");
-		Log.info("Game Controller - NBT Read :: Number of Teams: " + numPossibleTeams);
+		numTeamsFromGUI = tag.getInteger("team");
+		Log.info("Game Controller - NBT Read :: Number of Teams: " + numTeamsFromGUI);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setInteger("team", numPossibleTeams);
-		Log.info("Game Controller - NBT Write :: Number of Teams: " + numPossibleTeams);
+		tag.setInteger("team", numTeamsFromGUI);
+		Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
 	}
 
 	/**
@@ -123,11 +114,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			Log.info("Server sees Start Button Pressed");
 			Log.info("Tile Entity starting game.");
 			Log.info("isRemote? " + this.worldObj.isRemote);
-			if (TileEntityGameController.gameState != null) {
-				if (TileEntityGameController.gameState == GameStates.Lobby) {
-					TileEntityGameController.gameState = GameStates.GameWarmup;
-				} else if (TileEntityGameController.gameState == GameStates.Running) {
-					TileEntityGameController.gameState = GameStates.PostGame;
+			if (DeathCube.gameState != null) {
+				if (DeathCube.gameState == GameStates.Lobby) {
+					DeathCube.gameState = GameStates.GameWarmup;
+				} else if (DeathCube.gameState == GameStates.Running) {
+					DeathCube.gameState = GameStates.PostGame;
 				}
 			}
 		}
@@ -138,19 +129,19 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	@Override
 	public void update() {
-		if (gameState == GameStates.Lobby) {
+		if (DeathCube.gameState == GameStates.Lobby) {
 			/**
 			 * Lobby actions:
 			 * Make sure the force field is Inactive.
 			 * Make sure the timer is not running.
 			 */
-			if (fieldState != FieldStates.Inactive)
-				fieldState = FieldStates.Inactive;
+			if (DeathCube.fieldState != FieldStates.Inactive)
+				DeathCube.fieldState = FieldStates.Inactive;
 			if (gameTimer >= 0)
 				gameTimer = -1;
 
 			/**
-			 * TODO: Count the number of Spawn Points in current DeathCube Force Field boundaries.
+			 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
 			 * 
 			 * Or store this information elsewhere? A game setup Tile Entity? Game Controller
 			 * used only by players when starting the game.
@@ -180,7 +171,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				}
 			}
 
-		} else if (gameState == GameStates.GameWarmup) {
+		} else if (DeathCube.gameState == GameStates.GameWarmup) {
 			if (gameTimer < 0) {
 				gameTimer = 200;
 				Log.info("Game now Warming Up.");
@@ -199,33 +190,59 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				 * Timer is Up - Start Game!
 				 */
 				gameTimer = -1;
-				gameState = GameStates.Running;
+				DeathCube.gameState = GameStates.Running;
 
 				Log.info("Game now Running.");
 
-				StartGame();
+				startGame();
 			} else {
 				/**
 				 * This condition show not be reached, ever.
 				 */
-				Log.info("Invalid Game State! " + gameState + " - Timer: " + gameTimer);
+				Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + gameTimer);
 			}
-		} else if (gameState == GameStates.Running) {
+		} else if (DeathCube.gameState == GameStates.Running) {
 			/**
-			 * TODO: Main Game actions.
+			 * Main Game actions.
 			 */
-			if (fieldState != FieldStates.Active)
-				fieldState = FieldStates.Active;
-
-		} else if (gameState == GameStates.PostGame) {
+			if (DeathCube.fieldState != FieldStates.Active)
+				DeathCube.fieldState = FieldStates.Active;
+			
 			/**
-			 * TODO: Post Game actions.
+			 * Check if a point has been captured.  
+			 * - If so, set the next point as active.
+			 * - Or, check for Game Over condition.
+			 */
+			if(DeathCube.isOrderedCapture) {
+				/**
+				 * Check if current point for each team has been captured.
+				 */
+				for(GameTeam team : DeathCube.gameTeams) {
+					TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(team.getCurrentPointPos());
+					if(lookupTE.getIsCaptured()) {
+						if(team.hasCapturedAllPoints()){
+							winningTeamColor = team.getTeamColor();
+							stopGame();
+						} else {
+							team.setNextCapturePointActive();
+						}
+					}
+				}
+			} else {
+				/**
+				 * Check if all points have been captured.
+				 */
+			}
+
+		} else if (DeathCube.gameState == GameStates.PostGame) {
+			/**
+			 * Post Game actions.
 			 */
 			if (gameTimer < 0 || gameTimer > 200) {
 				gameTimer = 200;
 
-				if (fieldState != FieldStates.Inactive)
-					fieldState = FieldStates.Inactive;
+				if (DeathCube.fieldState != FieldStates.Inactive)
+					DeathCube.fieldState = FieldStates.Inactive;
 
 				Log.info("Game has ended.");
 			} else if (gameTimer > 0 && gameTimer <= 200) {
@@ -235,38 +252,36 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				gameTimer--;
 
 				/**
-				 * TODO: Other Post Game Stuff
+				 * Other Post Game Stuff
 				 */
 
 			} else if (gameTimer == 0) {
 				/**
 				 * Timer is Up - Return to Lobby GameState
 				 */
-				gameState = GameStates.Lobby;
+				DeathCube.gameState = GameStates.Lobby;
 
 				Log.info("Game now in Lobby.");
 			} else {
 				/**
 				 * This condition show not be reached, ever.
 				 */
-				Log.info("Invalid Game State! " + gameState + " - Timer: " + gameTimer);
+				Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + gameTimer);
 			}
 
-		} else if (gameState == GameStates.GameOver) {
+		} else if (DeathCube.gameState == GameStates.GameOver) {
 			/**
-			 * TODO: Game Over actions.
+			 * Game Over actions.
 			 * TODO: Vote on next Map?
 			 * 
 			 */
-			spawnPointsList.clear();
-			capturePointsList.clear();
 
-			if (fieldState != FieldStates.Off)
-				fieldState = FieldStates.Off;
+			if (DeathCube.fieldState != FieldStates.Off)
+				DeathCube.fieldState = FieldStates.Off;
 		}
 	}
 
-	public void StartGame() {
+	public void startGame() {
 
 		/**
 		 * Create Team Objects
@@ -276,10 +291,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * designator, e.g. A, B, C... - rather than color. Then, color would be assign during
 		 * the StartGame() method.)
 		 */
-		DeathCube.gameTeams = new GameTeam[numPossibleTeams];
+		DeathCube.gameTeams = new GameTeam[numTeamsFromGUI];
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
-		for (int i = 0; i < numPossibleTeams; i++) {
+		for (int i = 0; i < numTeamsFromGUI; i++) {
 			String color = Reference.TEAM_RED;
 			if (i == 0)
 				color = Reference.TEAM_RED;
@@ -310,14 +325,58 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					Log.info("Point matches team!");
 				}
 			}
+			
+			if(team.getNumSpawnPoints() < 1) {
+				Log.info("No Spawn Points for Team: " + team.getTeamColor());
+				stopGame();
+				break;
+			}
+
+			/**
+			 * Find Capture Points for Team.
+			 */
+			List<BlockPos> tempList = new ArrayList<BlockPos>();
 			for (BlockPos pointPos : capturePointsList) {
 				TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(pointPos);
 				Log.info("Capture Point color: " + lookupTE.getCapturePointTeamColor());
 				if (lookupTE.getCapturePointTeamColor().equals(team.getTeamColor())) {
-					team.addCapturePoint(pointPos);
+					tempList.add(pointPos);
 					Log.info("Point matches team!");
 				}
 			}
+			
+			if(team.getNumCapturePoints() < 1) {
+				Log.info("No Capture Points for Team: " + team.getTeamColor());
+				stopGame();
+				break;
+			}
+
+			/**
+			 * Sort Capture Points by Point Order value.
+			 */
+			if (tempList.size() > 1) {
+				while (tempList.size() > 0) {
+					int indexOfLowest = 0;
+					for (int i = 0; i < tempList.size(); i++) {
+						BlockPos iPos = tempList.get(i);
+						TileEntityCapturePoint iTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(iPos);
+
+						BlockPos lowPos = tempList.get(indexOfLowest);
+						TileEntityCapturePoint lowTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(lowPos);
+
+						if (iTE.captureOrderNumber < lowTE.captureOrderNumber) {
+							indexOfLowest = i;
+						}
+					}
+
+					team.addCapturePoint(tempList.get(indexOfLowest));
+					tempList.remove(indexOfLowest);
+				}
+			} else {
+				team.addCapturePoint(tempList.get(0));
+			}
+			
+			team.setNextCapturePointActive();
 		}
 
 		/**
@@ -362,5 +421,20 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			player.playSound("mob.bat.death", 1.0f, 1.0f);
 		}
 	}
-
+	
+	private void stopGame() {
+		/**
+		 * TODO: Stop Game Processing
+		 * - Set all Capture Points to inactive.
+		 * - Change Spawn Point to Lobby Area?
+		 * - Change GameState to PostGame
+		 */
+		for(GameTeam team : DeathCube.gameTeams) {
+			team.setAllPointInactive();
+		}
+		
+		DeathCube.gameState = GameStates.PostGame;
+		
+		Log.info(winningTeamColor + " has won!");
+	}
 }
