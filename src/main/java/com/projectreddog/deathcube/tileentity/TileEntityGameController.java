@@ -39,6 +39,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
+	private static BlockPos lobbySpawnPos = new BlockPos(0, 60, 0);
 
 	/**
 	 * Scoring Variables
@@ -472,9 +473,30 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		}
 	}
 	
+	public static void sendPlayerToLobby(EntityPlayer inPlayer) {
+		/**
+		 * Teleport Players to Team Spawn Locations.
+		 */
+		preparePlayerToSpawn(inPlayer);
+		
+		inPlayer.setPositionAndUpdate(lobbySpawnPos.getX() + 0.5d, lobbySpawnPos.getY() + 1, lobbySpawnPos.getZ() + 0.5d);
+	}
+	
 	public void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
 		/**
 		 * Teleport Players to Team Spawn Locations.
+		 */
+		preparePlayerToSpawn(inPlayer);
+		
+		String teamColor = DeathCube.playerToTeamColor.get(inPlayer); 
+		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
+		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
+		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
+	}
+	
+	public static void preparePlayerToSpawn(EntityPlayer inPlayer) {
+		/**
+		 * Prepare Player to Spawn in Game or Lobby:
 		 * - Set velocity to zero to avoid death falling.
 		 * - Clear any potion effects from Lobby time.
 		 * - Set to full health and absorption.
@@ -485,11 +507,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		inPlayer.clearActivePotions();
 		inPlayer.setHealth(inPlayer.getMaxHealth());
 		//inPlayer.addPotionEffect();  // Add saturation effect?
-		
-		String teamColor = DeathCube.playerToTeamColor.get(inPlayer); 
-		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
-		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
-		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
 	}
 
 	public void stopGame() {

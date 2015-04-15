@@ -115,8 +115,7 @@ public class DeathCubeEventHandler {
 					/**
 					 * TODO: If not Running state, teleport to Lobby.
 					 */
-					
-					
+					TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 					
 					Log.info("Player joined Lobby.");
 				} else {
