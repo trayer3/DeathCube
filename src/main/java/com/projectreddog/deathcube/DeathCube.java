@@ -35,6 +35,7 @@ public class DeathCube {
 	
 	public static GameStates gameState;
 	public static FieldStates fieldState;
+	public static int gameTimer;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;

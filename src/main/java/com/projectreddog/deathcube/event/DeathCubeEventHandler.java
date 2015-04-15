@@ -14,10 +14,10 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.command.CommandGame;
-import com.projectreddog.deathcube.init.ModCommands;
+import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
-import com.projectreddog.deathcube.tileentity.TileEntityGameController.GameStates;
 import com.projectreddog.deathcube.utility.Log;
 
 public class DeathCubeEventHandler {
@@ -109,23 +109,19 @@ public class DeathCubeEventHandler {
 			 * TODO:  This doesn't work.  Wrong event?
 			 */
 			
-			if(TileEntityGameController.gameState != null) {
-				if(TileEntityGameController.gameState == GameStates.Lobby) {
+			if(DeathCube.gameState != null) {
+				if(DeathCube.gameState == GameStates.Lobby) {
 					/**
 					 * If Lobby state, teleport to Lobby.
 					 */
 					Log.info("Player joined Lobby.");
-				} else if(TileEntityGameController.gameState == GameStates.Running) {
+				} else if(DeathCube.gameState == GameStates.Running) {
 					/**
 					 * If Running state, add to team and spawn in game.
 					 */
 					Log.info("Player joined Running Game.");
 				}
 			}
-			
-			
-			
-			
 		}
 	}
 

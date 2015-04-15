@@ -40,7 +40,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		 * 
 		 * Other values set by GUI.
 		 */
-		Log.info("Capture Point Constructor");
+		//Log.info("Capture Point Constructor");
 	}
 
 	public void onTextRequest() {

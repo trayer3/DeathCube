@@ -128,7 +128,7 @@ public class GuiGameController extends GuiDeathCube {
         	 * Start Game
         	 */
         	Log.info("Start Button Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller, Reference.BUTTON_START_GAME));
+        	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_START_GAME));
         }
     }
 

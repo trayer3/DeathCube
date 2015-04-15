@@ -19,11 +19,11 @@ public class MessageHandleGuiButtonPress implements IMessage, IMessageHandler<Me
 	public MessageHandleGuiButtonPress() {
 	}
 
-	public MessageHandleGuiButtonPress(TileEntityDeathCube te, int id) {
+	public MessageHandleGuiButtonPress(BlockPos pos, int id) {
 		this.buttonID = id;
-		this.x = te.getPos().getX();
-		this.y = te.getPos().getY();
-		this.z = te.getPos().getZ();
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
 	}
 
 	@Override
@@ -61,9 +61,9 @@ public class MessageHandleGuiButtonPress implements IMessage, IMessageHandler<Me
 	}
 
 	public void handleServerSide(MessageHandleGuiButtonPress message, EntityPlayer player) {
-		TileEntity te = message.getTileEntity(player.worldObj);
-		if (te instanceof TileEntityDeathCube) {
-			((TileEntityDeathCube) te).onGuiButtonPress(message.buttonID);
+		TileEntity lookupTE = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+		if (lookupTE instanceof TileEntityDeathCube) {
+			((TileEntityDeathCube) lookupTE).onGuiButtonPress(message.buttonID);
 		}
 	}
 

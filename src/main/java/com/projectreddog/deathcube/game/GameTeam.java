@@ -126,6 +126,7 @@ public class GameTeam {
 	public void setNextCapturePointActive() {
 		if(DeathCube.isOrderedCapture) {
 			if(nextCaptureIndex < capturePointsList.size()) {
+				Log.info("Setting a capture point as active for Team: " + teamColor);
 				BlockPos capturePos = capturePointsList.get(nextCaptureIndex);
 				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) playerList.get(0).worldObj.getTileEntity(capturePos);
 				captureTE.setIsActive(true);
