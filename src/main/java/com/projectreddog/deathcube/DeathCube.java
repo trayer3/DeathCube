@@ -1,5 +1,7 @@
 package com.projectreddog.deathcube;
 
+import java.util.Map;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -10,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import com.projectreddog.deathcube.event.DeathCubeEventHandler;
+import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModCommands;
 import com.projectreddog.deathcube.init.ModNetwork;
@@ -25,9 +28,10 @@ public class DeathCube {
 
 	@Mod.Instance(Reference.MOD_ID)
 	public static DeathCube instance;
-
-	public static int currentAvailableGameID = 1;
-	public static int numGameIDs = 0;
+	
+	public static GameTeam[] gameTeams;
+	public static Map<String, Integer> teamColorToIndex;
+	public static Map<String, String> playerToTeamColor;
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks

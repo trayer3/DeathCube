@@ -35,8 +35,8 @@ public class Reference {
 	public static final int GUI_CAPTURE_POINT = 2;
 
 	public static final int TEAM_NUM_POSSIBLE = 4;
-	public static final String TEAM_RED = "red";
-	public static final String TEAM_BLUE = "blue";
-	public static final String TEAM_GREEN = "green";
-	public static final String TEAM_YELLOW = "yellow";
+	public static final String TEAM_RED = "Red";
+	public static final String TEAM_BLUE = "Blue";
+	public static final String TEAM_GREEN = "Green";
+	public static final String TEAM_YELLOW = "Yellow";
 }

@@ -116,16 +116,16 @@ public class GuiSpawnPoint extends GuiDeathCube {
 		/**
 		 * Verify that the Team Color is valid.
 		 */
-		if(text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_RED)) {
+		if(text_PointTeam.getText().equals(Reference.TEAM_RED)) {
 			isValidColor = true;
 			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_BLUE)) {
+		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_BLUE)) {
 			isValidColor = true;
 			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_GREEN)) {
+		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_GREEN)) {
 			isValidColor = true;
 			foundValidColor = true;
-		} else if(foundValidColor || text_PointTeam.getText().toLowerCase().equals(Reference.TEAM_YELLOW)) {
+		} else if(foundValidColor || text_PointTeam.getText().equals(Reference.TEAM_YELLOW)) {
 			isValidColor = true;
 			foundValidColor = true;
 		}

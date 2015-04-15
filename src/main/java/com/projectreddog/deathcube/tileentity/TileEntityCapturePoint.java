@@ -1,11 +1,13 @@
 package com.projectreddog.deathcube.tileentity;
 
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
-import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 
@@ -177,13 +179,14 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 			 * Check if players are nearby, only on Server-side.  
 			 * 
 			 * If in radius and on proper Team, run count-down timer.
+			 *  - Needs to return a list of players within range.
 			 * 
 			 * Built-in function for Mob Spawner checks for any player not in Spectate mode.  Copy class and
 			 * 		add in check for Team.  Also, track which player and how many players are on point.
 			 * 		See:  BlockMobSpawner
 			 * 			  TileEntityMobSpawner
 			 */
-			if(this.worldObj.func_175636_b((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, (double)this.captureRadius + 0.5D)) {
+			if(nearbyPlayers((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, (double)this.captureRadius + 0.5D) > 0) {
 				if(isBeingCaptured) {
 					/**
 					 * Being Captured - Calculate Time Remaining
@@ -214,4 +217,34 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 			}
 		}
 	}
+	
+	public int nearbyPlayers(double xPos, double yPos, double zPos, double radius)
+    {
+        int playersOnPoint = 0;
+        
+		for (int i = 0; i < this.worldObj.playerEntities.size(); ++i)
+        {
+            EntityPlayer entityplayer = (EntityPlayer)this.worldObj.playerEntities.get(i);
+
+            /**
+             * For all EntityPlayers:
+             *  - If not spectating, and
+             *  - If within range, and
+             *  - If on correct Team
+             */
+            if (IEntitySelector.NOT_SPECTATING.apply(entityplayer))
+            {
+                double d4 = entityplayer.getDistanceSq(xPos, yPos, zPos);
+
+                if (radius < 0.0D || d4 < radius * radius)
+                {
+                    if (DeathCube.playerToTeamColor != null && DeathCube.playerToTeamColor.get(entityplayer.getName()).equals(capturePointTeamColor)) {
+                    	playersOnPoint++;
+                    }
+                }
+            }
+        }
+
+        return playersOnPoint;
+    }
 }
