@@ -25,8 +25,8 @@ import com.projectreddog.deathcube.utility.Log;
 public class GameTeam {
 
 	private List<EntityPlayer> playerList = new ArrayList<EntityPlayer>();
-	private List<TileEntitySpawnPoint> spawnPointsList = new ArrayList<TileEntitySpawnPoint>();
-	private List<TileEntityCapturePoint> capturePointsList = new ArrayList<TileEntityCapturePoint>();
+	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
+	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
 	
 	private String teamColor;
 	private int teamHandicap = 0;
@@ -88,11 +88,11 @@ public class GameTeam {
 	 * Just make these public static instead of these methods?  Especially if there will ever be
 	 * 		a need to clear and re-populate the list?
 	 */
-	public void addSpawnPoint(TileEntitySpawnPoint spawnPoint) {
+	public void addSpawnPoint(BlockPos spawnPoint) {
 		this.spawnPointsList.add(spawnPoint);
 	}
 	
-	public void addCapturePoint(TileEntityCapturePoint capturePoint) {
+	public void addCapturePoint(BlockPos capturePoint) {
 		this.capturePointsList.add(capturePoint);
 	}
 
@@ -101,10 +101,10 @@ public class GameTeam {
 		if(numSpawnPoints > 1)
 		{
 			Random rand = new Random();
-			return spawnPointsList.get(rand.nextInt(numSpawnPoints)).getPos();
+			return spawnPointsList.get(rand.nextInt(numSpawnPoints));
 		} else {
 			Log.info("One spawn point found.");
-			return spawnPointsList.get(numSpawnPoints-1).getPos();
+			return spawnPointsList.get(numSpawnPoints-1);
 		}
 		
 	}
