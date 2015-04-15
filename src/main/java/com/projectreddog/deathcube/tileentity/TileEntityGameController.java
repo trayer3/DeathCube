@@ -39,7 +39,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
-	private static BlockPos lobbySpawnPos = new BlockPos(5, 60, 0);
+	private static BlockPos lobbySpawnPos = new BlockPos(0, 60, 0);
 
 	/**
 	 * Scoring Variables
