@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class BlockForceField extends BlockDeathCube{
-	public float damageAmount =1;
+	public float damageAmount =5;
 	
 	public BlockForceField() {
 		super();
@@ -142,6 +142,13 @@ public class BlockForceField extends BlockDeathCube{
 	}
 
 	public void applyForceFieldDamage(EntityPlayer playerIn){
-		playerIn.attackEntityFrom( DamageSource.generic, this.damageAmount );
+		playerIn.attackEntityFrom( new DamageSource(randomDeathMessage()), this.damageAmount );
 	}
+	
+	public String randomDeathMessage() {
+		Random rand = new Random();
+
+		return Reference.MOD_ID + ":" + "FORCE_FIELD_DEATH_" + (rand.nextInt(5) + 1);
+	}
+
 }
