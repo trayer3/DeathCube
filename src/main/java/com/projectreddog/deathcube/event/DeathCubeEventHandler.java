@@ -129,7 +129,12 @@ public class DeathCubeEventHandler {
 						 * 
 						 * TODO: Perform Death Penalty.  Spectate teammate, or Penalty Box.
 						 * - Not just in spectate mode.
+						 * 
+						 * Debug - Send to Lobby for now.  
+						 * - Then make Spectator.  
+						 * - Then add to queue to rejoin game.
 						 */
+						TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
 						//((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
 						
