@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -17,7 +18,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.command.CommandGame;
-import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
@@ -105,7 +105,7 @@ public class DeathCubeEventHandler {
 	@SubscribeEvent
 	public void onPlayerJoin(EntityJoinWorldEvent event) {
 		//Log.info("Entity joined game.");
-		if (!event.world.isRemote && event.entity instanceof EntityPlayer) {
+		if (!event.world.isRemote && event.entity instanceof EntityPlayer) {  //instanceof EntityPlayerMP
 			/**
 			 * If Entity is a Player, perform an action based on Gamestate.
 			 */
@@ -131,6 +131,7 @@ public class DeathCubeEventHandler {
 						 * - Not just in spectate mode.
 						 */
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
+						//((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
 						
 						/**
 						 * Add to Queue to respawn in game.

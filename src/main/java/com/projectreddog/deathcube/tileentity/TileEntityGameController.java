@@ -8,6 +8,8 @@ import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
@@ -50,6 +52,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		DeathCube.gameState = GameStates.Lobby;
 		DeathCube.fieldState = FieldStates.Off;
 		DeathCube.gameTimer = -1;
+		
+		// Debug - Set lobby position to this TE position
+		lobbySpawnPos = this.pos;
 	}
 
 	public void onTextRequest() {
@@ -432,6 +437,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 */
 			sendPlayerToTeamSpawn(player);
 
+			Log.info("Player sent to Team Spawn.");
 			/**
 			 * Play sound at Game Start
 			 * - TODO: Get Custom sound. This call doesn't work.
@@ -487,8 +493,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * Teleport Players to Team Spawn Locations.
 		 */
 		preparePlayerToSpawn(inPlayer);
+		preparePlayerToSpawn(inPlayer);
+		Log.info("Player attributes set.  Gear given");
 		
-		String teamColor = DeathCube.playerToTeamColor.get(inPlayer); 
+		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName()); 
 		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
 		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
 		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
@@ -499,14 +507,30 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * Prepare Player to Spawn in Game or Lobby:
 		 * - Set velocity to zero to avoid death falling.
 		 * - Clear any potion effects from Lobby time.
-		 * - Set to full health and absorption.
+		 * - Set to full health and saturation to help hunger.
+		 * - Clear inventory.  How to do this?  TODO
 		 */
 		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
 		inPlayer.setVelocity(0, 0, 0);
 		inPlayer.fallDistance = 0;
 		inPlayer.clearActivePotions();
+		inPlayer.extinguish();
 		inPlayer.setHealth(inPlayer.getMaxHealth());
-		//inPlayer.addPotionEffect();  // Add saturation effect?
+		inPlayer.addPotionEffect(new PotionEffect(Potion.saturation.getId(),10));
+	}
+	
+	public void givePlayerGear(EntityPlayer inPlayer) {
+		/**
+		 * Give Player Gear
+		 * - Stone Sword
+		 * - Leather Armor (in team color)
+		 * - Bow
+		 * - Arrows
+		 * - Splash Potion of Poison
+		 * 
+		 ****--This should be customizable.  Use TE with inventory.  Copy inventory to player on respawn.
+		 */
+		
 	}
 
 	public void stopGame() {

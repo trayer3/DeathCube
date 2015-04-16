@@ -184,7 +184,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	@Override
 	public void update() {
 		// Log.info("Capture Point Team: "+ getCapturePointTeamColor());
-		if (!this.worldObj.isRemote && !isCaptured) {
+		if (!this.worldObj.isRemote && !isCaptured && isActive) {
 			/**
 			 * Check if players are nearby, only on Server-side.
 			 * 
