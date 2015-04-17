@@ -57,10 +57,6 @@ public class GuiCapturePoint extends GuiDeathCube {
 		text_PointTeam.setMaxStringLength(40);
 		text_PointTeam.setText(capture_point.getCapturePointTeamColor());
 
-		Log.info("Capture Point GUI Init - Team Color: " + capture_point.getCapturePointTeamColor());
-		// True = Client
-		Log.info("This is a client instance:" + String.valueOf(capture_point.getWorld().isRemote));
-
 		text_PointName = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 2*ySpacing, 90, 12);
 		text_PointName.setMaxStringLength(40);
 		text_PointName.setText(capture_point.getCapturePointName());
@@ -76,6 +72,8 @@ public class GuiCapturePoint extends GuiDeathCube {
 		text_PointCaptureTime = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + 5*ySpacing, 90, 12);
 		text_PointCaptureTime.setMaxStringLength(40);
 		text_PointCaptureTime.setText(String.valueOf(capture_point.getCaptureTime()));
+		
+		Log.info("Capture Point GUI Init - Team Color: " + capture_point.getCapturePointTeamColor());
 	}
 
 	@Override
@@ -152,11 +150,6 @@ public class GuiCapturePoint extends GuiDeathCube {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		//text_PointName.setText(capture_point.getCapturePointName());
-		//text_PointTeam.setText(capture_point.getCapturePointTeamColor());
-		//text_PointRadius.setText(String.valueOf(capture_point.getCaptureRadius()));
-		//text_PointCaptureOrderNumber.setText(String.valueOf(capture_point.getCaptureOrderNumber()));
-		//text_PointCaptureTime.setText(String.valueOf(capture_point.getCaptureTime()));
 	}
 
 	/**

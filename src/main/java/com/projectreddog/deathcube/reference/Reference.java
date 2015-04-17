@@ -42,9 +42,13 @@ public class Reference {
 	public static final int MESSAGE_FIELD3_ID = 3;
 	public static final int MESSAGE_FIELD4_ID = 4;
 	public static final int MESSAGE_FIELD5_ID = 5;
+	public static final int MESSAGE_FIELD6_ID = 6;
 
-	public static final int BUTTON_START_GAME = 1;
-	public static final int BUTTON_TEST = 2;
+	public static final int BUTTON_1 = 1;
+	public static final int BUTTON_2 = 2;
+	public static final int BUTTON_3 = 3;
+	public static final int BUTTON_4 = 4;
+	public static final int BUTTON_5 = 5;
 
 	public static final int GUI_GAME_CONTROLLER = 0;
 	public static final int GUI_SPAWN_POINT = 1;

@@ -29,13 +29,14 @@ import com.projectreddog.deathcube.utility.Log;
 public class TileEntityGameController extends TileEntityDeathCube implements IUpdatePlayerListBox {
 
 	/**
-	 * Game Controller Variables.
-	 */
-
-	/**
-	 * Team Variables
+	 * GUI Variables
 	 */
 	private int numTeamsFromGUI = 4;
+	private int forceFieldx = 10;
+	private int forceFieldz = 10;
+	private int forceFieldyUp = 10;
+	private int forceFieldyDown = 10;
+	private int forceFieldStrength = 10;
 
 	/**
 	 * Spawn and Capture Point Variables
@@ -50,9 +51,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private String winningTeamColor = "trayer4";
 
 	public TileEntityGameController() {
-		DeathCube.gameState = GameStates.Lobby;
-		DeathCube.fieldState = FieldStates.Off;
-		DeathCube.gameTimer = -1;
+		
 	}
 
 	public void onTextRequest() {
@@ -60,6 +59,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			if (!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Num points: " + numTeamsFromGUI);
 				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
+				DeathCube.forceFieldStrength = this.forceFieldStrength;
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -87,17 +92,107 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.warn("Tried to parse non-Integer: " + text);
 			}
 			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
+			try {
+				forceFieldx = Integer.parseInt(text);
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
+			}
+			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
+			try {
+				forceFieldz = Integer.parseInt(text);
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
+			}
+			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD4_ID) {
+			try {
+				forceFieldyUp = Integer.parseInt(text);
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
+			}
+			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD5_ID) {
+			try {
+				forceFieldyDown = Integer.parseInt(text);
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
+			}
+			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD6_ID) {
+			try {
+				forceFieldStrength = Integer.parseInt(text);
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
+			}
+			markDirty();
 		}
 	}
 
 	public int getNumTeams() {
 		return numTeamsFromGUI;
 	}
+	
+	public int getForceFieldx() {
+		return forceFieldx;
+	}
+	
+	public int getForceFieldz() {
+		return forceFieldz;
+	}
+	
+	public int getForceFieldyUp() {
+		return forceFieldyUp;
+	}
+	
+	public int getForceFieldyDown() {
+		return forceFieldyDown;
+	}
+	
+	public int getForceFieldStrength() {
+		return forceFieldStrength;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		numTeamsFromGUI = tag.getInteger("team");
+		forceFieldx = tag.getInteger("x");
+		forceFieldz = tag.getInteger("z");
+		forceFieldyUp = tag.getInteger("y_up");
+		forceFieldyDown = tag.getInteger("y_down");
+		forceFieldStrength = tag.getInteger("strength");
 		Log.info("Game Controller - NBT Read :: Number of Teams: " + numTeamsFromGUI);
 	}
 
@@ -105,6 +200,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setInteger("team", numTeamsFromGUI);
+		tag.setInteger("x", forceFieldx);
+		tag.setInteger("z", forceFieldz);
+		tag.setInteger("y_up", forceFieldyUp);
+		tag.setInteger("y_down", forceFieldyDown);
+		tag.setInteger("strength", forceFieldStrength);
 		Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
 	}
 
@@ -114,13 +214,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	@Override
 	public void onGuiButtonPress(int buttonID) {
 		if (!this.worldObj.isRemote) {
-			if (buttonID == Reference.BUTTON_START_GAME) {
+			if (buttonID == Reference.BUTTON_1) {
 				/**
 				 * Start Button Pressed - Start Game!
 				 */
 				Log.info("Server sees Start Button Pressed");
-				Log.info("Tile Entity starting game.");
-				Log.info("isRemote? " + this.worldObj.isRemote);
 				if (DeathCube.gameState != null) {
 					if (DeathCube.gameState == GameStates.Lobby) {
 						DeathCube.gameState = GameStates.GameWarmup;
@@ -128,7 +226,48 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						stopGame();
 					}
 				}
+			} else if (buttonID == Reference.BUTTON_3) {
+				/**
+				 * Force Field Button Pressed
+				 * - Enable/Disable Force Field for entire game
+				 * - Show/Hide text fields for Force Field
+				 */
+				Log.info("Server sees Force Field Button Pressed");
+				if (DeathCube.useForceField) {
+					DeathCube.useForceField = false;
+				} else {
+					DeathCube.useForceField = true;
+				}
+			} else if (buttonID == Reference.BUTTON_4) {
+				/**
+				 * Force Field Test Toggle Button Pressed
+				 * - Turn Force Field on/off, if in lobby
+				 */
+				Log.info("Server sees Force Field Toggle Button Pressed");
+				if (DeathCube.gameState == GameStates.Lobby) {
+					if (DeathCube.fieldState == FieldStates.Off) {
+						DeathCube.fieldState = FieldStates.Inactive;
+					} else {
+						DeathCube.fieldState = FieldStates.Off;
+					}
+					generateForceField();
+				}
 			}
+		}
+	}
+
+	private void generateForceField() {
+		/**
+		 * Generate the Force Field according to the Dimensions from the GUI.
+		 * - If the field state is not off, generate the field.
+		 * 
+		 * TODO:  Figure out when to call this.  Don't want to check for changes to field state every update().
+		 * - Flag on whether field is currently up?  Generate if false?
+		 */
+		if(DeathCube.fieldState != FieldStates.Off) {
+			/**
+			 * Use TE position and generate the Force Field
+			 */
 		}
 	}
 
@@ -144,8 +283,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				 * Make sure the force field is Inactive.
 				 * Make sure the timer is not running.
 				 */
-				if (DeathCube.fieldState != FieldStates.Inactive)
-					DeathCube.fieldState = FieldStates.Inactive;
 				if (DeathCube.gameTimer >= 0)
 					DeathCube.gameTimer = -1;
 

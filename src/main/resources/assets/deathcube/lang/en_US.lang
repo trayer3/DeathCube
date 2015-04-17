@@ -9,8 +9,12 @@ commands.game.usage=/game <start|end>
 
 
 
-death.attack.deathcube:FORCE_FIELD_DEATH_1=%s tried to hug the force field. It hugged back too hard!
-death.attack.deathcube:FORCE_FIELD_DEATH_2=Remember %s, Force fields hurt! 
-death.attack.deathcube:FORCE_FIELD_DEATH_3=%s, you had one job.. Don't touch the force field!
-death.attack.deathcube:FORCE_FIELD_DEATH_4=%s screamed out in pain, peed himself then died to the force field.
-death.attack.deathcube:FORCE_FIELD_DEATH_5=%s, Next time don't believe Help the force field CAN kill.
+death.attack.deathcube:FORCE_FIELD_DEATH_1=%s tried to hug the Force Field.  It hugged back too hard!
+death.attack.deathcube:FORCE_FIELD_DEATH_2=Remember %s, Force Fields hurt! 
+death.attack.deathcube:FORCE_FIELD_DEATH_3=%s, you had one job...  Don't touch the Force Field!
+death.attack.deathcube:FORCE_FIELD_DEATH_4=%s screamed out in pain, emptied his bladder, and then died to the Force Field.
+death.attack.deathcube:FORCE_FIELD_DEATH_5=%s, next time, don't believe Help; the Force Field CAN kill.
+death.attack.deathcube:FORCE_FIELD_DEATH_6=%s, always respect the personal space of a Force Field.
+death.attack.deathcube:FORCE_FIELD_DEATH_7=%s got fried by pure energy!
+death.attack.deathcube:FORCE_FIELD_DEATH_8=%s sizzled and died.
+death.attack.deathcube:FORCE_FIELD_DEATH_9=And that's why it's called DeathCube, %s.

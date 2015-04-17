@@ -20,6 +20,7 @@ import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModCommands;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
@@ -40,6 +41,8 @@ public class DeathCube {
 	 */
 	public static GameStates gameState;
 	public static FieldStates fieldState;
+	public static boolean useForceField = true;
+	public static int forceFieldStrength = 5;
 	public static int gameTimer;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
@@ -92,9 +95,21 @@ public class DeathCube {
 			
 			for(TileEntity te : teList) {
 				if(te instanceof TileEntityGameController) {
+					/**
+					 * TODO:  Is this a good place for these initial statements?
+					 */
+					DeathCube.gameState = GameStates.Lobby;
+					DeathCube.fieldState = FieldStates.Inactive;
+					DeathCube.gameTimer = -1;
+					
 					TileEntityGameController gameController = (TileEntityGameController) te;
 					Log.info("Game controller found at: " + gameController.getPos().getX() + "x, " + gameController.getPos().getY() + "y, " + gameController.getPos().getZ() + "z");
 					gameController.lobbySpawnPos = gameController.getPos();
+					
+					/**
+					 * TODO: Does this work properly from here?
+					 */
+					ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(gameController.getPos()));
 				}
 			}
 		}
