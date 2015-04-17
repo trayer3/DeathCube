@@ -4,7 +4,7 @@
     "modid": "deathcube",
     "name": "DeathCube",
     "description": "This is a description of DeathCube.  Very informative!",
-    "version": "1.0",
+    "version": "${version}",
     "mcversion": "1.8",
     "url": "",
     "updateUrl": "",
