@@ -117,7 +117,7 @@ public class DeathCubeEventHandler {
 					 */
 					TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 					
-					Log.info("Player joined Lobby.");
+					Log.info("Game not Running: Player joined Lobby.");
 				} else {
 					/**
 					 * If Running state, add to team and spawn in game.
@@ -134,6 +134,7 @@ public class DeathCubeEventHandler {
 						 * - Then make Spectator.  
 						 * - Then add to queue to rejoin game.
 						 */
+						Log.info("Player is on a team.  Spawning in Lobby for now.");
 						TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
 						//((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
@@ -147,6 +148,7 @@ public class DeathCubeEventHandler {
 						 * Player not on a Team yet.  Assign Team.
 						 */
 						TileEntityGameController.assignPlayerToTeam((EntityPlayer) event.entity);
+						Log.info("Assigned new player to a team.");
 					}
 					Log.info("Player joined Running Game.");
 				}
@@ -154,12 +156,13 @@ public class DeathCubeEventHandler {
 		}
 	}
 
+	/**
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		/**
 		 * Register server commands
-		 */
+		 *
 		event.registerServerCommand(new CommandGame());
 		//ModCommands.init();
-	}
+	} */
 }

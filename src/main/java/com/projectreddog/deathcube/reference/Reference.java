@@ -61,5 +61,6 @@ public class Reference {
 	public static final int VERIFY_CAPTURE_TIME = 60;
 	
 	public static final int TIME_WARMUP = 20;
-	public static final int TIME_POSTGAME = 200;
+	public static final int TIME_POSTGAME = 100;
+	public static final int TIME_DEATH_PENALTY = 100;
 }

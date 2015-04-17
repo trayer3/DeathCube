@@ -41,7 +41,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
-	private static BlockPos lobbySpawnPos = new BlockPos(0, 60, 0);
+	public static BlockPos lobbySpawnPos;
 
 	/**
 	 * Scoring Variables
@@ -52,9 +52,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		DeathCube.gameState = GameStates.Lobby;
 		DeathCube.fieldState = FieldStates.Off;
 		DeathCube.gameTimer = -1;
-		
-		// Debug - Set lobby position to this TE position
-		lobbySpawnPos = this.pos;
 	}
 
 	public void onTextRequest() {
@@ -223,13 +220,18 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				 * Process queue of Players waiting to respawn.
 				 */
 				if(DeathCube.playerAwaitingRespawn.size() > 0) {
+					Log.info("Player serving Death Penalty");
 					Set<String> listKeys = DeathCube.playerAwaitingRespawn.keySet();
+					Log.info("listKeys done.");
 					String[] arrayKeys = (String[]) listKeys.toArray();
+					Log.info("arrayKeys done.");
 					for(int i = 0; i < DeathCube.playerAwaitingRespawn.size(); i++) {
 						Long currentTime = System.currentTimeMillis();
-						Long timeDiff = currentTime - DeathCube.playerAwaitingRespawn.get(arrayKeys[i]);
+						Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - DeathCube.playerAwaitingRespawn.get(arrayKeys[i]));
 						if(timeDiff <= 0) {
+							Log.info("Found Player waiting to respawn - time to spawn!");
 							sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(arrayKeys[i]));
+							DeathCube.playerAwaitingRespawn.remove(arrayKeys[i]);
 						}
 					}
 				}
@@ -486,14 +488,15 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		preparePlayerToSpawn(inPlayer);
 		
 		inPlayer.setPositionAndUpdate(lobbySpawnPos.getX() + 0.5d, lobbySpawnPos.getY() + 1, lobbySpawnPos.getZ() + 0.5d);
+		Log.info("GameController LobbyPosition: " + lobbySpawnPos.getX() + "x, " + lobbySpawnPos.getY() + "y, " + lobbySpawnPos.getZ() + "z");
 	}
 	
-	public void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
+	public static void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
 		/**
 		 * Teleport Players to Team Spawn Locations.
 		 */
 		preparePlayerToSpawn(inPlayer);
-		preparePlayerToSpawn(inPlayer);
+		givePlayerGear(inPlayer);
 		Log.info("Player attributes set.  Gear given");
 		
 		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName()); 
@@ -519,7 +522,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		inPlayer.addPotionEffect(new PotionEffect(Potion.saturation.getId(),10));
 	}
 	
-	public void givePlayerGear(EntityPlayer inPlayer) {
+	public static void givePlayerGear(EntityPlayer inPlayer) {
 		/**
 		 * Give Player Gear
 		 * - Stone Sword

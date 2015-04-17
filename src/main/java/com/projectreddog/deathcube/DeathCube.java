@@ -1,9 +1,10 @@
 package com.projectreddog.deathcube;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +24,7 @@ import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME)
@@ -83,6 +85,20 @@ public class DeathCube {
 	public void serverStart (FMLServerStartingEvent event){
 		// Register Commands
 		ModCommands.init(event);
+		Log.info("FMLServerStartingEvent Now.");
+		List<TileEntity> teList = MinecraftServer.getServer().getEntityWorld().tickableTileEntities;
+		if(teList != null) {
+			Log.info("Entities found at serverStart(): " + teList.size());
+			
+			for(TileEntity te : teList) {
+				if(te instanceof TileEntityGameController) {
+					TileEntityGameController gameController = (TileEntityGameController) te;
+					Log.info("Game controller found at: " + gameController.getPos().getX() + "x, " + gameController.getPos().getY() + "y, " + gameController.getPos().getZ() + "z");
+					gameController.lobbySpawnPos = gameController.getPos();
+				}
+			}
+		}
+		
 	}
 	
 	/**
