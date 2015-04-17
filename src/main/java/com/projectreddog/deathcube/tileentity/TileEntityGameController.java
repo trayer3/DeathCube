@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.tileentity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -221,17 +222,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				 */
 				if(DeathCube.playerAwaitingRespawn.size() > 0) {
 					Log.info("Player serving Death Penalty");
-					Set<String> listKeys = DeathCube.playerAwaitingRespawn.keySet();
+					Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
 					Log.info("listKeys done.");
-					String[] arrayKeys = (String[]) listKeys.toArray();
-					Log.info("arrayKeys done.");
-					for(int i = 0; i < DeathCube.playerAwaitingRespawn.size(); i++) {
+					Iterator<String> keyIterator = keySet.iterator();
+					Log.info("keyIterator done.");
+					while(keyIterator.hasNext()) {
+						String playerNameKey = keyIterator.next();
+						Long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
 						Long currentTime = System.currentTimeMillis();
-						Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - DeathCube.playerAwaitingRespawn.get(arrayKeys[i]));
+						Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
+						Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+						Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
 						if(timeDiff <= 0) {
 							Log.info("Found Player waiting to respawn - time to spawn!");
-							sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(arrayKeys[i]));
-							DeathCube.playerAwaitingRespawn.remove(arrayKeys[i]);
+							sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+							DeathCube.playerAwaitingRespawn.remove(playerNameKey);
 						}
 					}
 				}
