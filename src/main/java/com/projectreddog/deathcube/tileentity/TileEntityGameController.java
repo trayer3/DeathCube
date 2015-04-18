@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -18,6 +20,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.block.BlockForceField;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
@@ -247,10 +250,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				if (DeathCube.gameState == GameStates.Lobby) {
 					if (DeathCube.fieldState == FieldStates.Off) {
 						DeathCube.fieldState = FieldStates.Inactive;
+						generateForceField();
 					} else {
 						DeathCube.fieldState = FieldStates.Off;
+						removeForceField();
 					}
-					generateForceField();
+					
 				}
 			}
 		}
@@ -295,6 +300,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		
 		// Select Area based on Min and Max coords and fill
 		//  TODO:  Get block placing function, or try to use /command to select area of cube faces
+		BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
+		Block forceFieldBlock = new BlockForceField();
+		IBlockState state = forceFieldBlock.getDefaultState();
+		Log.info("FF Default: " + state.toString());
+		this.worldObj.setBlockState(tempPos, state);
+		//this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
 		
 	}
 	
@@ -305,7 +316,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * 
 		 * TODO:  Remove field when turned off.  Also, remove every time dimensions are changed.
 		 */
+		BlockPos gameControllerPos = this.getPos();
 		
+		BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
+		this.worldObj.setBlockToAir(tempPos);
 	}
 
 	/**
@@ -634,9 +648,14 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		boolean teamsBalanced = true;
 		String smallestTeam = DeathCube.gameTeams[0].getTeamColor();
 		int smallestTeamSize = DeathCube.gameTeams[0].getTeamSize();
-		for(GameTeam team : DeathCube.gameTeams) {
-			if(team.getTeamSize() < smallestTeamSize) {
-				// Keep a list of teams tied for smallest?  Or pick whichever smallest.
+		for(int i = 1; i < DeathCube.gameTeams.length; i++) {
+			/**
+			 * Loop through all teams.
+			 * - If one has a smaller size, mark it as the smallest.
+			 */
+			if(DeathCube.gameTeams[i].getTeamSize() < smallestTeamSize) {
+				teamsBalanced = false;
+				smallestTeam = DeathCube.gameTeams[i].getTeamColor();
 			}
 		}
 		
@@ -654,6 +673,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Otherwise, assign player to the smallest team.
 			 * - What if there is a tie for the smallest team?
+			 * - Currently, the last team (Yellow) will be populated last.
 			 */
 			int smallestTeamIndex = DeathCube.teamColorToIndex.get(smallestTeam);
 			DeathCube.gameTeams[smallestTeamIndex].addPlayer(inPlayer);

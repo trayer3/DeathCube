@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.block;
 
 import java.util.Random;
 
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +20,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.utility.Log;
 
 public class BlockForceField extends BlockDeathCube {
 	public float damageAmount = 5;
