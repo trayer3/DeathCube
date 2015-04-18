@@ -633,8 +633,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 */
 		boolean teamsBalanced = true;
 		String smallestTeam = DeathCube.gameTeams[0].getTeamColor();
+		int smallestTeamSize = DeathCube.gameTeams[0].getTeamSize();
 		for(GameTeam team : DeathCube.gameTeams) {
-			
+			if(team.getTeamSize() < smallestTeamSize) {
+				// Keep a list of teams tied for smallest?  Or pick whichever smallest.
+			}
 		}
 		
 		if(teamsBalanced) {
