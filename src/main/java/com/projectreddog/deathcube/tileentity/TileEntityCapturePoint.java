@@ -243,11 +243,11 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 			 * - If on correct Team
 			 */
 			if (IEntitySelector.NOT_SPECTATING.apply(entityplayer)) {
-				double d4 = entityplayer.getDistanceSq(xPos, yPos, zPos);
+				if (DeathCube.playerToTeamColor != null) {
+					if (DeathCube.playerToTeamColor.get(entityplayer.getName()).equals(capturePointTeamColor)) {
+						double d4 = entityplayer.getDistanceSq(xPos, yPos, zPos);
 
-				if (radius < 0.0D || d4 < radius * radius) {
-					if (DeathCube.playerToTeamColor != null) {
-						if (DeathCube.playerToTeamColor.get(entityplayer.getName()).equals(capturePointTeamColor)) {
+						if (radius < 0.0D || d4 < radius * radius) {
 							playersOnPoint++;
 						}
 					}
