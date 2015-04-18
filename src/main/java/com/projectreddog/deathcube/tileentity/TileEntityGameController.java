@@ -259,16 +259,53 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private void generateForceField() {
 		/**
 		 * Generate the Force Field according to the Dimensions from the GUI.
-		 * - If the field state is not off, generate the field.
+		 * - Need to know which side of the GameController to generate the field on.  New field/button?
 		 * 
 		 * TODO:  Figure out when to call this.  Don't want to check for changes to field state every update().
 		 * - Flag on whether field is currently up?  Generate if false?
 		 */
-		if(DeathCube.fieldState != FieldStates.Off) {
-			/**
-			 * Use TE position and generate the Force Field
-			 */
+		int halfx, minx, maxx;
+		int halfz, minz, maxz;
+		int miny, maxy;
+		BlockPos gameControllerPos = this.getPos();
+		
+		// Check if x and z field values are even.
+		if(forceFieldx % 2 == 0) {
+			// Even
+			halfx = forceFieldx / 2;
+		} else {
+			// Odd
+			halfx = (forceFieldx - 1) / 2;
+			minx = gameControllerPos.getX() - halfx;
+			maxx = gameControllerPos.getX() + halfx;
 		}
+		
+		if(forceFieldz % 2 == 0) {
+			// Even
+			halfz = forceFieldz / 2;
+		} else {
+			// Odd
+			halfz = (forceFieldz - 1) / 2;
+			minz = gameControllerPos.getZ() - halfz;
+			maxz = gameControllerPos.getZ() + halfz;
+		}
+		
+		miny = gameControllerPos.getY() - forceFieldyDown;
+		maxy = gameControllerPos.getY() - forceFieldyUp;
+		
+		// Select Area based on Min and Max coords and fill
+		//  TODO:  Get block placing function, or try to use /command to select area of cube faces
+		
+	}
+	
+	private void removeForceField() {
+		/**
+		 * Remove the Force Field
+		 * - May need to store "Current Force Field Dimensions" to know where to remove field.
+		 * 
+		 * TODO:  Remove field when turned off.  Also, remove every time dimensions are changed.
+		 */
+		
 	}
 
 	/**
