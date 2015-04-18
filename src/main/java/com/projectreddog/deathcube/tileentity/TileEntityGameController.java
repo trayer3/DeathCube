@@ -301,7 +301,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		// Select Area based on Min and Max coords and fill
 		//  TODO:  Get block placing function, or try to use /command to select area of cube faces
 		BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
-		Block forceFieldBlock = new BlockForceField();
+		BlockForceField forceFieldBlock = new BlockForceField();
 		IBlockState state = forceFieldBlock.getDefaultState();
 		Log.info("FF Default: " + state.toString());
 		this.worldObj.setBlockState(tempPos, state);
