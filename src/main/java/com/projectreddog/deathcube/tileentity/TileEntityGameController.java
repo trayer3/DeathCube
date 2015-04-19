@@ -22,6 +22,7 @@ import net.minecraft.world.WorldSettings;
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.block.BlockForceField;
 import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
@@ -333,7 +334,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			//for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
 			for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
 				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+					this.worldObj.setBlockState(currentPos2, ModBlocks.forcefield.getDefaultState());
 				}
 				if(currentPos2.getX() % 5 == 0) {
 					Log.info("Block-Gen Position: " + currentPos2.toString());
@@ -388,7 +389,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		BlockPos gameControllerPos = this.getPos();
 		
 		BlockPos tempPos = new BlockPos(gameControllerPos.north());
-		if(this.worldObj.getBlockState(tempPos).getBlock() == Blocks.bedrock){
+		if(this.worldObj.getBlockState(tempPos).getBlock() == ModBlocks.forcefield){
 			this.worldObj.setBlockToAir(tempPos);
 		}
 		
@@ -445,7 +446,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		//for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
 			//for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
 			for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.bedrock){
+				if(this.worldObj.getBlockState(currentPos2).getBlock() == ModBlocks.forcefield){
 					this.worldObj.setBlockToAir(currentPos2);  //  Why this no work?  It works above.
 				}
 				if(currentPos2.getX() % 5 == 0) {
