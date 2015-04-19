@@ -307,17 +307,62 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		this.worldObj.setBlockState(tempPos, state);
 		//this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
 		
-		BlockPos startingX = new BlockPos(gameControllerPos.north().west(minx);
+		BlockPos startingPos = new BlockPos(gameControllerPos.north().west(minx).down(forceFieldyDown);
 		BlockPos endingX = new BlockPos(gameControllerPos.north().east(maxx);
-		BlockPos currentX = startingX;
+		BlockPos currentPos1, currentPos2;
 		
-		while(currentX.getX() <= maxx) {
-			if(this.worldObj.getBlockFromPos(currentX).type == AIR){
-				this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
-				currentX = currentX.east();
+		/**
+		 * West-to-East Wall Generation
+		 * - Make into separate function
+		 * - Create North or South Wall based on differing Start BlockPos
+		 * - TODO: Check if West is is smaller X than East
+		 */
+		for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+				if(this.worldObj.getBlockFromPos(currentPos2).type == AIR){
+					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+				}
+				if(currentPos2.getX() % 5 == 0) {
+					Log.info("Block-Gen Position: " + currentPos2.toString());
+				}
 			}
 		}
 		
+		startingPos = new BlockPos(gameControllerPos.north(forceFieldz).west(minx).down(forceFieldyDown);
+		/**
+		 * North-to-South Wall Generation
+		 * - Make into separate function
+		 * - Create West or East Wall based on differing Start BlockPos
+		 * - TODO: Check if North is is larger Z than South
+		 */
+		for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
+				if(this.worldObj.getBlockFromPos(currentPos2).type == AIR){
+					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+				}
+				if(currentPos2.getZ() % 5 == 0) {
+					Log.info("Block-Gen Position: " + currentPos2.toString());
+				}
+			}
+		}
+		
+		startingPos = new BlockPos(gameControllerPos.north().west(minx).down(forceFieldyDown);
+		/**
+		 * Top/Bottom Wall Generation
+		 * - Make into separate function
+		 * - Create Top or Bottom Wall based on differing Start BlockPos
+		 * - TODO: Check if XZ coords to see which is bigger, where
+		 */
+		for(currentPos1 = startingPos, currentPos1.getX() <= maxx, currentPos1 = currentPos1.east()) {
+			for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
+				if(this.worldObj.getBlockFromPos(currentPos2).type == AIR){
+					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+				}
+				if(currentPos2.getZ() % 5 == 0) {
+					Log.info("Block-Gen Position: " + currentPos2.toString());
+				}
+			}
+		}
 	}
 	
 	private void removeForceField() {
