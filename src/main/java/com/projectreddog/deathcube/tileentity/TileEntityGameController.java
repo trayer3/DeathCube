@@ -446,7 +446,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			//for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
 			for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
 				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.bedrock){
-					this.worldObj.setBlockToAir(tempPos);  //  Why this no work?  It works above.
+					this.worldObj.setBlockToAir(currentPos2);  //  Why this no work?  It works above.
 				}
 				if(currentPos2.getX() % 5 == 0) {
 					Log.info("Block-Remove Position: " + currentPos2.toString());
