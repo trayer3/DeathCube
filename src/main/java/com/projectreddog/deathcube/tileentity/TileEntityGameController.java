@@ -307,6 +307,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		this.worldObj.setBlockState(tempPos, state);
 		//this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
 		
+		BlockPos startingX = new BlockPos(gameControllerPos.north().west(minx);
+		BlockPos endingX = new BlockPos(gameControllerPos.north().east(maxx);
+		BlockPos currentX = startingX;
+		
+		while(currentX.getX() <= maxx) {
+			if(this.worldObj.getBlockFromPos(currentX).type == AIR){
+				this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
+				currentX = currentX.east();
+			}
+		}
+		
 	}
 	
 	private void removeForceField() {
