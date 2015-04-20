@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -20,7 +18,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
-import com.projectreddog.deathcube.block.BlockForceField;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
@@ -31,7 +28,7 @@ import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.utility.Log;
 
 public class TileEntityGameController extends TileEntityDeathCube implements IUpdatePlayerListBox {
-	
+
 	/**
 	 * GUI Variables
 	 */
@@ -55,20 +52,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public TileEntityGameController() {
 		Log.info("GameController Constructor Call.");
-		if(DeathCube.gameState == null || DeathCube.lobbySpawnPos == null || DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+		/**
+		if (DeathCube.gameState == null || DeathCube.lobbySpawnPos == null || DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
 			DeathCube.gameTimer = -1;
-			
+
 			Log.info("Constructor Position: " + this.getPos().toString());
-			if(this.getPos() != new BlockPos(0, 0, 0)) {
+			if (this.getPos() != new BlockPos(0, 0, 0)) {
 				DeathCube.lobbySpawnPos = this.getPos();
 				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
 			}
 		} else {
 			Log.info("GameState: " + DeathCube.gameState);
 			Log.info("lobbySpawnPos: " + DeathCube.lobbySpawnPos.toString());
-		}
+		} */
 	}
 
 	public void onTextRequest() {
@@ -180,23 +178,23 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public int getNumTeams() {
 		return numTeamsFromGUI;
 	}
-	
+
 	public int getForceFieldx() {
 		return forceFieldx;
 	}
-	
+
 	public int getForceFieldz() {
 		return forceFieldz;
 	}
-	
+
 	public int getForceFieldyUp() {
 		return forceFieldyUp;
 	}
-	
+
 	public int getForceFieldyDown() {
 		return forceFieldyDown;
 	}
-	
+
 	public int getForceFieldStrength() {
 		return forceFieldStrength;
 	}
@@ -255,25 +253,25 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				} else {
 					DeathCube.useForceField = true;
 				}
-				
+
 				Log.info("Force Field: " + DeathCube.useForceField);
-				
+
 				List<TileEntity> teList = MinecraftServer.getServer().getEntityWorld().tickableTileEntities;
 				List<TileEntity> teList2 = MinecraftServer.getServer().getEntityWorld().getEntities(TileEntityGameController.class, null);
-				
-				if(teList != null) {
+
+				if (teList != null) {
 					Log.info("Entities found on button press: " + teList.size());
-					
-					for(TileEntity te : teList) {
-						//Log.info("Entities type: " + te.getBlockType().toString());
-						if(te instanceof TileEntityGameController) {
+
+					for (TileEntity te : teList) {
+						// Log.info("Entities type: " + te.getBlockType().toString());
+						if (te instanceof TileEntityGameController) {
 							TileEntityGameController gameController = (TileEntityGameController) te;
 							Log.info("Game controller found at: " + gameController.getPos().getX() + "x, " + gameController.getPos().getY() + "y, " + gameController.getPos().getZ() + "z");
 						}
 					}
 				}
 				Log.info("GameControllers found at serverStart(): " + teList2.size());
-				
+
 			} else if (buttonID == Reference.BUTTON_4) {
 				/**
 				 * Force Field Test Toggle Button Pressed
@@ -296,375 +294,381 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private void generateForceField() {
 		/**
 		 * Generate the Force Field according to the Dimensions from the GUI.
-		 * - Need to know which side of the GameController to generate the field on.  New field/button?
+		 * - Need to know which side of the GameController to generate the field on. New field/button?
 		 * 
-		 * TODO:  Figure out when to call this.  Don't want to check for changes to field state every update().
-		 * - Flag on whether field is currently up?  Generate if false?
+		 * TODO: Figure out when to call this. Don't want to check for changes to field state every update().
+		 * - Flag on whether field is currently up? Generate if false?
 		 *
-		int halfx, minx = 0, maxx = 0;
-		int halfz, minz = 0, maxz = 0;
-		int miny, maxy;
-		BlockPos gameControllerPos = this.getPos();
-		
-		Log.info("GameControllerPos: " + gameControllerPos);
-		Log.info("Force Field X: " + forceFieldx);
-		
-		// Check if x and z field values are even.
-		if(forceFieldx % 2 == 0) {
-			// Even
-			halfx = forceFieldx / 2;
-			Log.info("Force Field X: Even");
-		} else {
-			// Odd
-			halfx = (forceFieldx - 1) / 2;
-			Log.info("Force Field X: Odd");
-		}
-		
-		Log.info("Half-X: " + halfx);
-		
-		minx = gameControllerPos.getX() - halfx;
-		maxx = gameControllerPos.getX() + halfx;
-		
-		if(forceFieldz % 2 == 0) {
-			// Even
-			halfz = forceFieldz / 2;
-		} else {
-			// Odd
-			halfz = (forceFieldz - 1) / 2;
-		}
-		
-		minz = gameControllerPos.getZ() - halfz;
-		maxz = gameControllerPos.getZ() + halfz;
-		
-		miny = gameControllerPos.getY() - forceFieldyDown;
-		maxy = gameControllerPos.getY() - forceFieldyUp;
-		
-		// Select Area based on Min and Max coords and fill
-		//  TODO:  Get block placing function, or try to use /command to select area of cube faces
-		BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
-		BlockForceField forceFieldBlock = new BlockForceField();
-		IBlockState state = forceFieldBlock.getDefaultState();
-		Log.info("FF Default: " + state.toString());
-		//this.worldObj.setBlockState(tempPos, state);
-		//this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
-		
-		BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
-		BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
-		BlockPos currentPos1, currentPos2;
-		
-		Log.info("MinX: " + minx + " - MaxX: " + maxx);
-		Log.info("Starting Pos: " + startingPos.toString());
-		
-		/**
+		 * int halfx, minx = 0, maxx = 0;
+		 * int halfz, minz = 0, maxz = 0;
+		 * int miny, maxy;
+		 * BlockPos gameControllerPos = this.getPos();
+		 * 
+		 * Log.info("GameControllerPos: " + gameControllerPos);
+		 * Log.info("Force Field X: " + forceFieldx);
+		 * 
+		 * // Check if x and z field values are even.
+		 * if(forceFieldx % 2 == 0) {
+		 * // Even
+		 * halfx = forceFieldx / 2;
+		 * Log.info("Force Field X: Even");
+		 * } else {
+		 * // Odd
+		 * halfx = (forceFieldx - 1) / 2;
+		 * Log.info("Force Field X: Odd");
+		 * }
+		 * 
+		 * Log.info("Half-X: " + halfx);
+		 * 
+		 * minx = gameControllerPos.getX() - halfx;
+		 * maxx = gameControllerPos.getX() + halfx;
+		 * 
+		 * if(forceFieldz % 2 == 0) {
+		 * // Even
+		 * halfz = forceFieldz / 2;
+		 * } else {
+		 * // Odd
+		 * halfz = (forceFieldz - 1) / 2;
+		 * }
+		 * 
+		 * minz = gameControllerPos.getZ() - halfz;
+		 * maxz = gameControllerPos.getZ() + halfz;
+		 * 
+		 * miny = gameControllerPos.getY() - forceFieldyDown;
+		 * maxy = gameControllerPos.getY() - forceFieldyUp;
+		 * 
+		 * // Select Area based on Min and Max coords and fill
+		 * // TODO: Get block placing function, or try to use /command to select area of cube faces
+		 * BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
+		 * BlockForceField forceFieldBlock = new BlockForceField();
+		 * IBlockState state = forceFieldBlock.getDefaultState();
+		 * Log.info("FF Default: " + state.toString());
+		 * //this.worldObj.setBlockState(tempPos, state);
+		 * //this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
+		 * 
+		 * BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
+		 * BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
+		 * BlockPos currentPos1, currentPos2;
+		 * 
+		 * Log.info("MinX: " + minx + " - MaxX: " + maxx);
+		 * Log.info("Starting Pos: " + startingPos.toString());
+		 * 
+		 * /**
 		 * West-to-East Wall Generation
 		 * - Make into separate function
 		 * - Create North or South Wall based on differing Start BlockPos
 		 * - TODO: Check if West is is smaller X than East
 		 *
-		//for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-			//for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-			for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-				}
-				if(currentPos2.getX() % 5 == 0) {
-					Log.info("Block-Gen Position: " + currentPos2.toString());
-				}
-			}
-		//}
-		/**
-		startingPos = new BlockPos(gameControllerPos.north(forceFieldz).west(minx).down(forceFieldyDown));
-		/**
+		 * //for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+		 * //for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+		 * for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
+		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+		 * }
+		 * if(currentPos2.getX() % 5 == 0) {
+		 * Log.info("Block-Gen Position: " + currentPos2.toString());
+		 * }
+		 * }
+		 * //}
+		 * /**
+		 * startingPos = new BlockPos(gameControllerPos.north(forceFieldz).west(minx).down(forceFieldyDown));
+		 * /**
 		 * North-to-South Wall Generation
 		 * - Make into separate function
 		 * - Create West or East Wall based on differing Start BlockPos
 		 * - TODO: Check if North is is larger Z than South
 		 *
-		for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-			for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
-				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-				}
-				if(currentPos2.getZ() % 5 == 0) {
-					Log.info("Block-Gen Position: " + currentPos2.toString());
-				}
-			}
-		}
-		
-		startingPos = new BlockPos(gameControllerPos.north().west(minx).down(forceFieldyDown));
-		/**
+		 * for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+		 * for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
+		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
+		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+		 * }
+		 * if(currentPos2.getZ() % 5 == 0) {
+		 * Log.info("Block-Gen Position: " + currentPos2.toString());
+		 * }
+		 * }
+		 * }
+		 * 
+		 * startingPos = new BlockPos(gameControllerPos.north().west(minx).down(forceFieldyDown));
+		 * /**
 		 * Top/Bottom Wall Generation
 		 * - Make into separate function
 		 * - Create Top or Bottom Wall based on differing Start BlockPos
 		 * - TODO: Check if XZ coords to see which is bigger, where
 		 *
-		for(currentPos1 = startingPos; currentPos1.getX() <= maxx; currentPos1 = currentPos1.east()) {
-			for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
-				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-					this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-				}
-				if(currentPos2.getZ() % 5 == 0) {
-					Log.info("Block-Gen Position: " + currentPos2.toString());
-				}
-			}
-		} */
+		 * for(currentPos1 = startingPos; currentPos1.getX() <= maxx; currentPos1 = currentPos1.east()) {
+		 * for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
+		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
+		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
+		 * }
+		 * if(currentPos2.getZ() % 5 == 0) {
+		 * Log.info("Block-Gen Position: " + currentPos2.toString());
+		 * }
+		 * }
+		 * }
+		 */
 	}
-	
+
 	private void removeForceField() {
 		/**
 		 * Remove the Force Field
 		 * - May need to store "Current Force Field Dimensions" to know where to remove field.
 		 * 
-		 * TODO:  Remove field when turned off.  Also, remove every time dimensions are changed.
+		 * TODO: Remove field when turned off. Also, remove every time dimensions are changed.
 		 *
-		BlockPos gameControllerPos = this.getPos();
-		
-		BlockPos tempPos = new BlockPos(gameControllerPos.north());
-		if(this.worldObj.getBlockState(tempPos).getBlock() == Blocks.bedrock){
-			this.worldObj.setBlockToAir(tempPos);
-		}
-		
-		int halfx, minx = 0, maxx = 0;
-		int halfz, minz = 0, maxz = 0;
-		int miny, maxy;
-		
-		Log.info("GameControllerPos: " + gameControllerPos);
-		Log.info("Force Field X: " + forceFieldx);
-		
-		// Check if x and z field values are even.
-		if(forceFieldx % 2 == 0) {
-			// Even
-			halfx = forceFieldx / 2;
-			Log.info("Force Field X: Even");
-		} else {
-			// Odd
-			halfx = (forceFieldx - 1) / 2;
-			Log.info("Force Field X: Odd");
-		}
-		
-		Log.info("Half-X: " + halfx);
-		
-		minx = gameControllerPos.getX() - halfx;
-		maxx = gameControllerPos.getX() + halfx;
-		
-		if(forceFieldz % 2 == 0) {
-			// Even
-			halfz = forceFieldz / 2;
-		} else {
-			// Odd
-			halfz = (forceFieldz - 1) / 2;
-		}
-		
-		minz = gameControllerPos.getZ() - halfz;
-		maxz = gameControllerPos.getZ() + halfz;
-		
-		miny = gameControllerPos.getY() - forceFieldyDown;
-		maxy = gameControllerPos.getY() - forceFieldyUp;
-		
-		BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
-		BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
-		BlockPos currentPos1, currentPos2;
-		
-		Log.info("MinX: " + minx + " - MaxX: " + maxx);
-		Log.info("Starting Pos: " + startingPos.toString());
-		
-		/**
+		 * BlockPos gameControllerPos = this.getPos();
+		 * 
+		 * BlockPos tempPos = new BlockPos(gameControllerPos.north());
+		 * if(this.worldObj.getBlockState(tempPos).getBlock() == Blocks.bedrock){
+		 * this.worldObj.setBlockToAir(tempPos);
+		 * }
+		 * 
+		 * int halfx, minx = 0, maxx = 0;
+		 * int halfz, minz = 0, maxz = 0;
+		 * int miny, maxy;
+		 * 
+		 * Log.info("GameControllerPos: " + gameControllerPos);
+		 * Log.info("Force Field X: " + forceFieldx);
+		 * 
+		 * // Check if x and z field values are even.
+		 * if(forceFieldx % 2 == 0) {
+		 * // Even
+		 * halfx = forceFieldx / 2;
+		 * Log.info("Force Field X: Even");
+		 * } else {
+		 * // Odd
+		 * halfx = (forceFieldx - 1) / 2;
+		 * Log.info("Force Field X: Odd");
+		 * }
+		 * 
+		 * Log.info("Half-X: " + halfx);
+		 * 
+		 * minx = gameControllerPos.getX() - halfx;
+		 * maxx = gameControllerPos.getX() + halfx;
+		 * 
+		 * if(forceFieldz % 2 == 0) {
+		 * // Even
+		 * halfz = forceFieldz / 2;
+		 * } else {
+		 * // Odd
+		 * halfz = (forceFieldz - 1) / 2;
+		 * }
+		 * 
+		 * minz = gameControllerPos.getZ() - halfz;
+		 * maxz = gameControllerPos.getZ() + halfz;
+		 * 
+		 * miny = gameControllerPos.getY() - forceFieldyDown;
+		 * maxy = gameControllerPos.getY() - forceFieldyUp;
+		 * 
+		 * BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
+		 * BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
+		 * BlockPos currentPos1, currentPos2;
+		 * 
+		 * Log.info("MinX: " + minx + " - MaxX: " + maxx);
+		 * Log.info("Starting Pos: " + startingPos.toString());
+		 * 
+		 * /**
 		 * West-to-East Wall Generation
 		 * - Make into separate function
 		 * - Create North or South Wall based on differing Start BlockPos
 		 * - TODO: Check if West is is smaller X than East
 		 *
-		//for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-			//for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-			for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-				if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.bedrock){
-					this.worldObj.setBlockToAir(tempPos);  //  Why this no work?  It works above.
-				}
-				if(currentPos2.getX() % 5 == 0) {
-					Log.info("Block-Remove Position: " + currentPos2.toString());
-				}
-			} */
-	} 
+		 * //for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+		 * //for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+		 * for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.bedrock){
+		 * this.worldObj.setBlockToAir(tempPos); // Why this no work? It works above.
+		 * }
+		 * if(currentPos2.getX() % 5 == 0) {
+		 * Log.info("Block-Remove Position: " + currentPos2.toString());
+		 * }
+		 * }
+		 */
+	}
 
 	/**
 	 * Needs to be !isRemote?
 	 */
 	@Override
 	public void update() {
-		if (!this.worldObj.isRemote && DeathCube.gameState != null) {
-			if (DeathCube.gameState == GameStates.Lobby) {
-				/**
-				 * Lobby actions:
-				 * Make sure the force field is Inactive.
-				 * Make sure the timer is not running.
-				 */
-				if (DeathCube.gameTimer >= 0)
-					DeathCube.gameTimer = -1;
-
-				/**
-				 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
-				 * 
-				 * Or store this information elsewhere? A game setup Tile Entity? Game Controller
-				 * used only by players when starting the game.
-				 */
-				spawnPointsList.clear();
-				capturePointsList.clear();
-
-				List<TileEntity> tileEntities = this.worldObj.loadedTileEntityList;
-				for (TileEntity te : tileEntities) {
-					if (te instanceof TileEntitySpawnPoint) {
-						/**
-						 * Track Spawn Points
-						 */
-						spawnPointsList.add(((TileEntitySpawnPoint) te).getPos());
-
-						// Log.info("Number of Spawn Points: " + spawnPointsList.size());
-					} else if (te instanceof TileEntityCapturePoint) {
-						/**
-						 * Track Capture Points
-						 */
-						// if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
-						capturePointsList.add(((TileEntityCapturePoint) te).getPos());
-						// }
-
-						// Log.info("Number of Capture Points: " + capturePointsList.size());
-
-					}
-				}
-
-			} else if (DeathCube.gameState == GameStates.GameWarmup) {
-				if (DeathCube.gameTimer < 0) {
-					DeathCube.gameTimer = Reference.TIME_WARMUP;
-					Log.info("Game now Warming Up.");
-				} else if (DeathCube.gameTimer > 0) {
+		if (!this.worldObj.isRemote) {
+			if (DeathCube.gameState != null) {
+				if (DeathCube.gameState == GameStates.Lobby) {
 					/**
-					 * Decrement Warm-up Timer
+					 * Lobby actions:
+					 * Make sure the force field is Inactive.
+					 * Make sure the timer is not running.
 					 */
-					DeathCube.gameTimer--;
+					if (DeathCube.gameTimer >= 0)
+						DeathCube.gameTimer = -1;
 
 					/**
-					 * TODO: Broadcast Time Until Game Start
+					 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
+					 * 
+					 * Or store this information elsewhere? A game setup Tile Entity? Game Controller
+					 * used only by players when starting the game.
 					 */
+					spawnPointsList.clear();
+					capturePointsList.clear();
 
-				} else if (DeathCube.gameTimer == 0) {
-					/**
-					 * Timer is Up - Start Game!
-					 */
-					DeathCube.gameTimer = -1;
-					DeathCube.gameState = GameStates.Running;
+					List<TileEntity> tileEntities = this.worldObj.loadedTileEntityList;
+					for (TileEntity te : tileEntities) {
+						if (te instanceof TileEntitySpawnPoint) {
+							/**
+							 * Track Spawn Points
+							 */
+							spawnPointsList.add(((TileEntitySpawnPoint) te).getPos());
 
-					Log.info("Game now Running.");
+							// Log.info("Number of Spawn Points: " + spawnPointsList.size());
+						} else if (te instanceof TileEntityCapturePoint) {
+							/**
+							 * Track Capture Points
+							 */
+							// if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
+							capturePointsList.add(((TileEntityCapturePoint) te).getPos());
+							// }
 
-					startGame();
-				} else {
-					/**
-					 * This condition show not be reached, ever.
-					 */
-					Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
-				}
-			} else if (DeathCube.gameState == GameStates.Running) {
-				/**
-				 * Main Game actions.
-				 */
-				if (DeathCube.fieldState != FieldStates.Active)
-					DeathCube.fieldState = FieldStates.Active;
+							// Log.info("Number of Capture Points: " + capturePointsList.size());
 
-				/**
-				 * Process queue of Players waiting to respawn.
-				 */
-				if(DeathCube.playerAwaitingRespawn.size() > 0) {
-					Log.info("Player serving Death Penalty");
-					Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
-					Log.info("listKeys done.");
-					Iterator<String> keyIterator = keySet.iterator();
-					Log.info("keyIterator done.");
-					while(keyIterator.hasNext()) {
-						String playerNameKey = keyIterator.next();
-						Long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
-						Long currentTime = System.currentTimeMillis();
-						Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
-						Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
-						Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
-						if(timeDiff <= 0) {
-							Log.info("Found Player waiting to respawn - time to spawn!");
-							sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
-							DeathCube.playerAwaitingRespawn.remove(playerNameKey);
 						}
 					}
-				}
-				
-				/**
-				 * Check if a point has been captured.
-				 * - If so, set the next point as active.
-				 * - Or, check for Game Over condition.
-				 */
-				if (DeathCube.isOrderedCapture) {
+
+				} else if (DeathCube.gameState == GameStates.GameWarmup) {
+					if (DeathCube.gameTimer < 0) {
+						DeathCube.gameTimer = Reference.TIME_WARMUP;
+						Log.info("Game now Warming Up.");
+					} else if (DeathCube.gameTimer > 0) {
+						/**
+						 * Decrement Warm-up Timer
+						 */
+						DeathCube.gameTimer--;
+
+						/**
+						 * TODO: Broadcast Time Until Game Start
+						 */
+
+					} else if (DeathCube.gameTimer == 0) {
+						/**
+						 * Timer is Up - Start Game!
+						 */
+						DeathCube.gameTimer = -1;
+						DeathCube.gameState = GameStates.Running;
+
+						Log.info("Game now Running.");
+
+						startGame();
+					} else {
+						/**
+						 * This condition show not be reached, ever.
+						 */
+						Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
+					}
+				} else if (DeathCube.gameState == GameStates.Running) {
 					/**
-					 * Check if current point for each team has been captured.
+					 * Main Game actions.
 					 */
-					for (GameTeam team : DeathCube.gameTeams) {
-						TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(team.getCurrentPointPos());
-						if (lookupTE.getIsCaptured()) {
-							if (team.hasCapturedAllPoints()) {
-								winningTeamColor = team.getTeamColor();
-								stopGame();
-							} else {
-								team.setNextCapturePointActive();
+					if (DeathCube.fieldState != FieldStates.Active)
+						DeathCube.fieldState = FieldStates.Active;
+
+					/**
+					 * Process queue of Players waiting to respawn.
+					 */
+					if (DeathCube.playerAwaitingRespawn.size() > 0) {
+						Log.info("Player serving Death Penalty");
+						Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
+						Log.info("listKeys done.");
+						Iterator<String> keyIterator = keySet.iterator();
+						Log.info("keyIterator done.");
+						while (keyIterator.hasNext()) {
+							String playerNameKey = keyIterator.next();
+							Long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
+							Long currentTime = System.currentTimeMillis();
+							Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
+							Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+							Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
+							if (timeDiff <= 0) {
+								Log.info("Found Player waiting to respawn - time to spawn!");
+								sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+								DeathCube.playerAwaitingRespawn.remove(playerNameKey);
 							}
 						}
 					}
-				} else {
+
 					/**
-					 * Check if all points have been captured.
+					 * Check if a point has been captured.
+					 * - If so, set the next point as active.
+					 * - Or, check for Game Over condition.
 					 */
+					if (DeathCube.isOrderedCapture) {
+						/**
+						 * Check if current point for each team has been captured.
+						 */
+						for (GameTeam team : DeathCube.gameTeams) {
+							TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(team.getCurrentPointPos());
+							if (lookupTE.getIsCaptured()) {
+								if (team.hasCapturedAllPoints()) {
+									winningTeamColor = team.getTeamColor();
+									stopGame();
+								} else {
+									team.setNextCapturePointActive();
+								}
+							}
+						}
+					} else {
+						/**
+						 * Check if all points have been captured.
+						 */
+					}
+
+				} else if (DeathCube.gameState == GameStates.PostGame) {
+					/**
+					 * Post Game actions.
+					 */
+					if (DeathCube.gameTimer < 0 || DeathCube.gameTimer > Reference.TIME_POSTGAME) {
+						DeathCube.gameTimer = Reference.TIME_POSTGAME;
+
+						if (DeathCube.fieldState != FieldStates.Inactive)
+							DeathCube.fieldState = FieldStates.Inactive;
+
+						Log.info("Game has ended.");
+					} else if (DeathCube.gameTimer > 0 && DeathCube.gameTimer <= Reference.TIME_POSTGAME) {
+						/**
+						 * Decrement Timer
+						 */
+						DeathCube.gameTimer--;
+
+						/**
+						 * Other Post Game Stuff
+						 */
+
+					} else if (DeathCube.gameTimer == 0) {
+						/**
+						 * Timer is Up - Return to Lobby GameState
+						 */
+						DeathCube.gameState = GameStates.Lobby;
+
+						Log.info("Game now in Lobby.");
+					} else {
+						/**
+						 * This condition show not be reached, ever.
+						 */
+						Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
+					}
+
+				} else if (DeathCube.gameState == GameStates.GameOver) {
+					/**
+					 * Game Over actions.
+					 * TODO: Vote on next Map?
+					 */
+
+					if (DeathCube.fieldState != FieldStates.Off)
+						DeathCube.fieldState = FieldStates.Off;
 				}
-
-			} else if (DeathCube.gameState == GameStates.PostGame) {
-				/**
-				 * Post Game actions.
-				 */
-				if (DeathCube.gameTimer < 0 || DeathCube.gameTimer > Reference.TIME_POSTGAME) {
-					DeathCube.gameTimer = Reference.TIME_POSTGAME;
-
-					if (DeathCube.fieldState != FieldStates.Inactive)
-						DeathCube.fieldState = FieldStates.Inactive;
-
-					Log.info("Game has ended.");
-				} else if (DeathCube.gameTimer > 0 && DeathCube.gameTimer <= Reference.TIME_POSTGAME) {
-					/**
-					 * Decrement Timer
-					 */
-					DeathCube.gameTimer--;
-
-					/**
-					 * Other Post Game Stuff
-					 */
-
-				} else if (DeathCube.gameTimer == 0) {
-					/**
-					 * Timer is Up - Return to Lobby GameState
-					 */
-					DeathCube.gameState = GameStates.Lobby;
-
-					Log.info("Game now in Lobby.");
-				} else {
-					/**
-					 * This condition show not be reached, ever.
-					 */
-					Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
-				}
-
-			} else if (DeathCube.gameState == GameStates.GameOver) {
-				/**
-				 * Game Over actions.
-				 * TODO: Vote on next Map?
-				 */
-
-				if (DeathCube.fieldState != FieldStates.Off)
-					DeathCube.fieldState = FieldStates.Off;
+			} else {
+				// Log.info("TE GameController GameState is null.");
+				Log.info("GameController Update() Position: " + this.pos.toString());
+				Log.info("DeathCube.lobby Position: " + DeathCube.lobbySpawnPos.toString());
 			}
-		} else {
-			//Log.info("TE GameController GameState is null.");
 		}
 	}
 
@@ -806,7 +810,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			player.playSound("mob.bat.death", 1.0f, 1.0f);
 		}
 	}
-	
+
 	public static void assignPlayerToTeam(EntityPlayer inPlayer) {
 		/**
 		 * Check if teams are balanced.
@@ -814,18 +818,18 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		boolean teamsBalanced = true;
 		String smallestTeam = DeathCube.gameTeams[0].getTeamColor();
 		int smallestTeamSize = DeathCube.gameTeams[0].getTeamSize();
-		for(int i = 1; i < DeathCube.gameTeams.length; i++) {
+		for (int i = 1; i < DeathCube.gameTeams.length; i++) {
 			/**
 			 * Loop through all teams.
 			 * - If one has a smaller size, mark it as the smallest.
 			 */
-			if(DeathCube.gameTeams[i].getTeamSize() < smallestTeamSize) {
+			if (DeathCube.gameTeams[i].getTeamSize() < smallestTeamSize) {
 				teamsBalanced = false;
 				smallestTeam = DeathCube.gameTeams[i].getTeamColor();
 			}
 		}
-		
-		if(teamsBalanced) {
+
+		if (teamsBalanced) {
 			/**
 			 * If teams are equal, assign player to a Random Team
 			 */
@@ -844,24 +848,24 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			int smallestTeamIndex = DeathCube.teamColorToIndex.get(smallestTeam);
 			DeathCube.gameTeams[smallestTeamIndex].addPlayer(inPlayer);
 			DeathCube.playerToTeamColor.put(inPlayer.getName(), DeathCube.gameTeams[smallestTeamIndex].getTeamColor());
-			
+
 			Log.info("Added player: " + inPlayer.getName() + " to smallest team: " + DeathCube.gameTeams[smallestTeamIndex].getTeamColor());
 		}
 	}
-	
+
 	public static void sendPlayerToLobby(EntityPlayer inPlayer) {
 		/**
 		 * Teleport Players to Team Spawn Locations.
 		 */
 		preparePlayerToSpawn(inPlayer);
-		
-		if(DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
-			//DeathCube.lobbySpawnPos = this.getPos();
+
+		if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+			// DeathCube.lobbySpawnPos = this.getPos();
 		}
 		inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
 		Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
 	}
-	
+
 	public static void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
 		/**
 		 * Teleport Players to Team Spawn Locations.
@@ -869,20 +873,20 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		preparePlayerToSpawn(inPlayer);
 		givePlayerGear(inPlayer);
 		Log.info("Player attributes set.  Gear given");
-		
-		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName()); 
+
+		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
 		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
 		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
 		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
 	}
-	
+
 	public static void preparePlayerToSpawn(EntityPlayer inPlayer) {
 		/**
 		 * Prepare Player to Spawn in Game or Lobby:
 		 * - Set velocity to zero to avoid death falling.
 		 * - Clear any potion effects from Lobby time.
 		 * - Set to full health and saturation to help hunger.
-		 * - Clear inventory.  How to do this?  TODO
+		 * - Clear inventory. How to do this? TODO
 		 */
 		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
 		inPlayer.setVelocity(0, 0, 0);
@@ -890,9 +894,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		inPlayer.clearActivePotions();
 		inPlayer.extinguish();
 		inPlayer.setHealth(inPlayer.getMaxHealth());
-		inPlayer.addPotionEffect(new PotionEffect(Potion.saturation.getId(),10));
+		inPlayer.addPotionEffect(new PotionEffect(Potion.saturation.getId(), 10));
 	}
-	
+
 	public static void givePlayerGear(EntityPlayer inPlayer) {
 		/**
 		 * Give Player Gear
@@ -902,9 +906,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * - Arrows
 		 * - Splash Potion of Poison
 		 * 
-		 ****--This should be customizable.  Use TE with inventory.  Copy inventory to player on respawn.
+		 **** --This should be customizable. Use TE with inventory. Copy inventory to player on respawn.
 		 */
-		
+
 	}
 
 	public void stopGame() {

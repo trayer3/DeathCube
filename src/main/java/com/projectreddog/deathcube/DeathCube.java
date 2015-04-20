@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -49,6 +50,7 @@ public class DeathCube {
 	public static Map<String, String> playerToTeamColor;
 	public static Map<String, Long> playerAwaitingRespawn;
 	public static boolean isOrderedCapture = true;
+	public static BlockPos lobbySpawnPos;
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
@@ -105,7 +107,7 @@ public class DeathCube {
 					
 					TileEntityGameController gameController = (TileEntityGameController) te;
 					Log.info("Game controller found at: " + gameController.getPos().getX() + "x, " + gameController.getPos().getY() + "y, " + gameController.getPos().getZ() + "z");
-					gameController.lobbySpawnPos = gameController.getPos();
+					this.lobbySpawnPos = gameController.getPos();
 					
 					/**
 					 * TODO: Does this work properly from here?
@@ -114,7 +116,6 @@ public class DeathCube {
 				}
 			}
 		}
-		
 	}
 	
 	/**
