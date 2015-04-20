@@ -20,16 +20,9 @@ public class BlockSpawnPoint extends BlockContainer {
 	protected BlockSpawnPoint(Material material) {
 		super(material);
 
-		// can override later ;)
-		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
-
-		// 1.8
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_SPAWN_POINT);
-		// this.setBlockTextureName(Reference.MODBLOCK_MACHINE_BLASTED_STONE);
-		// this.setHardness(15f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
 		this.setHardness(1.5f);
-
 	}
 
 	public BlockSpawnPoint() {
@@ -51,13 +44,17 @@ public class BlockSpawnPoint extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 
-		// NEED TO return the TE here
 		return new TileEntitySpawnPoint();
 	}
 
 	@Override
 	public int getRenderType() {
-		// 3 for normal block 2 for TESR 1 liquid -1 nothing ( like air)
+		/**
+		 *  1 = Liquid
+		 *  2 = TESR
+		 *  3 = Normal
+		 * -1 = Nothing (air)
+		 */
 		return 3;
 	}
 

@@ -52,21 +52,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public TileEntityGameController() {
 		Log.info("GameController Constructor Call.");
-		/**
-		if (DeathCube.gameState == null || DeathCube.lobbySpawnPos == null || DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+		
+		if (DeathCube.gameState == null) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
 			DeathCube.gameTimer = -1;
 
-			Log.info("Constructor Position: " + this.getPos().toString());
-			if (this.getPos() != new BlockPos(0, 0, 0)) {
-				DeathCube.lobbySpawnPos = this.getPos();
-				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
-			}
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+			Log.info("GameController States Initialized.  Text update request sent.");
 		} else {
 			Log.info("GameState: " + DeathCube.gameState);
-			Log.info("lobbySpawnPos: " + DeathCube.lobbySpawnPos.toString());
-		} */
+		}
 	}
 
 	public void onTextRequest() {
@@ -665,9 +661,19 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						DeathCube.fieldState = FieldStates.Off;
 				}
 			} else {
-				// Log.info("TE GameController GameState is null.");
-				Log.info("GameController Update() Position: " + this.pos.toString());
-				Log.info("DeathCube.lobby Position: " + DeathCube.lobbySpawnPos.toString());
+				Log.info("Null Gamestate - GameController Update() Position: " + this.pos.toString());
+				
+				DeathCube.gameState = GameStates.Lobby;
+				DeathCube.fieldState = FieldStates.Inactive;
+				DeathCube.gameTimer = -1;
+
+				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+				Log.info("GameController States Initialized.  Text update request sent.");
+			}
+			
+			if(DeathCube.lobbySpawnPos == new BlockPos(0,0,0) && this.pos != new BlockPos(0,0,0)) {
+				DeathCube.lobbySpawnPos = this.pos;
+				Log.info("Update() - Set Lobby Pos to: " + this.pos.toString());
 			}
 		}
 	}
@@ -855,24 +861,31 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public static void sendPlayerToLobby(EntityPlayer inPlayer) {
 		/**
-		 * Teleport Players to Team Spawn Locations.
+		 * Teleport Players to Lobby Location.
 		 */
 		preparePlayerToSpawn(inPlayer);
 
-		if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
-			// DeathCube.lobbySpawnPos = this.getPos();
+		if (DeathCube.lobbySpawnPos == null) {
+			/**
+			 * Get Lobby Spawn from data file?
+			 */
+			Log.info("GameController LobbyPosition: NULL");
+		} else if(DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+			Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
+		} else {
+			inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
+			Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
 		}
-		inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
-		Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
+			
 	}
 
 	public static void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
 		/**
-		 * Teleport Players to Team Spawn Locations.
+		 * Teleport Players to Team Spawn Location(s).
 		 */
 		preparePlayerToSpawn(inPlayer);
 		givePlayerGear(inPlayer);
-		Log.info("Player attributes set.  Gear given");
+		Log.info("Player attributes set.  Gear given.");
 
 		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
 		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
@@ -886,7 +899,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * - Set velocity to zero to avoid death falling.
 		 * - Clear any potion effects from Lobby time.
 		 * - Set to full health and saturation to help hunger.
-		 * - Clear inventory. How to do this? TODO
 		 */
 		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
 		inPlayer.setVelocity(0, 0, 0);
@@ -899,7 +911,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public static void givePlayerGear(EntityPlayer inPlayer) {
 		/**
-		 * Give Player Gear
+		 * TODO: Give Player Gear
+		 * - Clear inventory. How to do this?
 		 * - Stone Sword
 		 * - Leather Armor (in team color)
 		 * - Bow
@@ -913,9 +926,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public void stopGame() {
 		/**
-		 * TODO: Stop Game Processing
+		 * Stop Game Processing
 		 * - Set all Capture Points to inactive.
-		 * - Change Spawn Point to Lobby Area?
 		 * - Change GameState to PostGame
 		 */
 		for (GameTeam team : DeathCube.gameTeams) {

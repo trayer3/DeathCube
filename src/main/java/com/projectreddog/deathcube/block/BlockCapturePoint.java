@@ -3,6 +3,7 @@ package com.projectreddog.deathcube.block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
@@ -23,16 +24,9 @@ public class BlockCapturePoint extends BlockContainer {
 	protected BlockCapturePoint(Material material) {
 		super(material);
 
-		// can override later ;)
-		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
-
-		// 1.8
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_CAPTURE_POINT);
-		// this.setBlockTextureName(Reference.MODBLOCK_MACHINE_BLASTED_STONE);
-		// this.setHardness(15f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
-		this.setHardness(-1.0f);
-
+		this.setBlockUnbreakable();
 	}
 
 	public BlockCapturePoint() {
@@ -50,18 +44,33 @@ public class BlockCapturePoint extends BlockContainer {
 		} else {
 			return false;
 		}
-	};
+	}
 
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+		/**
+		 * Write position to config file here.  ???
+		 */
+		
+		
+        return this.getStateFromMeta(meta);
+    }
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 
-		// NEED TO return the TE here
 		return new TileEntityCapturePoint();
 	}
 
 	@Override
 	public int getRenderType() {
-		// 3 for normal block 2 for TESR 1 liquid -1 nothing ( like air)
+		/**
+		 *  1 = Liquid
+		 *  2 = TESR
+		 *  3 = Normal
+		 * -1 = Nothing (air)
+		 */
 		return 3;
 	}
 

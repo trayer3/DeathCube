@@ -134,7 +134,7 @@ public class DeathCubeEventHandler {
 						 * - Then make Spectator.  
 						 * - Then add to queue to rejoin game.
 						 */
-						Log.info("Player is on a team.  Spawning in Lobby for now.");
+						Log.info("Player is on a team.  Debug: Spawning in Lobby for now.");
 						TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
 						//((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
@@ -155,14 +155,4 @@ public class DeathCubeEventHandler {
 			}
 		}
 	}
-
-	/**
-	@EventHandler
-	public void serverStart(FMLServerStartingEvent event) {
-		/**
-		 * Register server commands
-		 *
-		event.registerServerCommand(new CommandGame());
-		//ModCommands.init();
-	} */
 }

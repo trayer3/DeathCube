@@ -102,6 +102,7 @@ public class GameTeam {
 	public BlockPos getSpawnLocation() {
 		int numSpawnPoints = spawnPointsList.size();
 		if (numSpawnPoints > 1) {
+			Log.info("Multiple spawn points found.");
 			Random rand = new Random();
 			return spawnPointsList.get(rand.nextInt(numSpawnPoints));
 		} else {

@@ -19,15 +19,8 @@ public class BlockGameController extends BlockContainer {
 	protected BlockGameController(Material material) {
 		super(material);
 
-		// can override later ;)
-		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
-
-		// 1.8
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_GAME_CONTROLLER);
-		// this.setBlockTextureName(Reference.MODBLOCK_MACHINE_BLASTED_STONE);
-		// this.setHardness(15f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
-		//this.setHardness(1.5f);
 		this.setBlockUnbreakable();
 
 	}
@@ -57,7 +50,12 @@ public class BlockGameController extends BlockContainer {
 
 	@Override
 	public int getRenderType() {
-		// 3 for normal block 2 for TESR 1 liquid -1 nothing ( like air)
+		/**
+		 *  1 = Liquid
+		 *  2 = TESR
+		 *  3 = Normal
+		 * -1 = Nothing (air)
+		 */
 		return 3;
 	}
 

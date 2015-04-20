@@ -27,10 +27,11 @@ public class BlockForceField extends BlockDeathCube {
 
 	public BlockForceField() {
 		super();
+		
 		this.setUnlocalizedName(Reference.MODBLOCK_FORCE_FIELD);
-		this.setHardness(-1.0f);
 		this.setStepSound(soundTypeAnvil);
 		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
+		this.setBlockUnbreakable();
 	}
 
 	public int quantityDropped(Random random) {

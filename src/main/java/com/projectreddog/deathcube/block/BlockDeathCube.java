@@ -11,7 +11,6 @@ public class BlockDeathCube extends Block{
 	protected BlockDeathCube(Material material) {
 		super(material);
 
-		// can override later ;)
 		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
 	}
 
@@ -25,15 +24,6 @@ public class BlockDeathCube extends Block{
 		return String.format("tile.%s%s", Reference.MOD_ID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
-	// 1.8 not needed?
-	// @Override
-	// @SideOnly(Side.CLIENT)
-	// public void registerBlockIcons(IIconRegister iconRegister)
-	// {
-	// blockIcon =
-	// iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".")+1));
-	// }
-	//
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
