@@ -19,6 +19,7 @@ public class BlockGameController extends BlockContainer {
 	protected BlockGameController(Material material) {
 		super(material);
 
+		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_GAME_CONTROLLER);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();

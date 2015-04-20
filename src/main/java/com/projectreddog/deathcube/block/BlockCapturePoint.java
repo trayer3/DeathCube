@@ -24,6 +24,7 @@ public class BlockCapturePoint extends BlockContainer {
 	protected BlockCapturePoint(Material material) {
 		super(material);
 
+		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_CAPTURE_POINT);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();

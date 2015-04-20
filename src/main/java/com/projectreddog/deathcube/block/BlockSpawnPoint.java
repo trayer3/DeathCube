@@ -20,9 +20,10 @@ public class BlockSpawnPoint extends BlockContainer {
 	protected BlockSpawnPoint(Material material) {
 		super(material);
 
+		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_SPAWN_POINT);
 		this.setStepSound(soundTypeMetal);
-		this.setHardness(1.5f);
+		this.setBlockUnbreakable();
 	}
 
 	public BlockSpawnPoint() {
