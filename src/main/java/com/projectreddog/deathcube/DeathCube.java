@@ -94,6 +94,7 @@ public class DeathCube {
 			Log.info("Entities found at serverStart(): " + teList.size());
 			
 			for(TileEntity te : teList) {
+				Log.info("Entities type: " + te.getBlockType().toString());
 				if(te instanceof TileEntityGameController) {
 					/**
 					 * TODO:  Is this a good place for these initial statements?

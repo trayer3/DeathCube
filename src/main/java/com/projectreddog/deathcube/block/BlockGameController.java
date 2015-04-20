@@ -27,7 +27,8 @@ public class BlockGameController extends BlockContainer {
 		// this.setBlockTextureName(Reference.MODBLOCK_MACHINE_BLASTED_STONE);
 		// this.setHardness(15f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
-		this.setHardness(1.5f);
+		//this.setHardness(1.5f);
+		this.setBlockUnbreakable();
 
 	}
 
