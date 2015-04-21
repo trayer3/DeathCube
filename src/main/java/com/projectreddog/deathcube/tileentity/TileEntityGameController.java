@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -18,7 +21,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.block.BlockForceField;
 import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
@@ -44,6 +49,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
+	private Block forceFieldBlock = ModBlocks.forcefield;
 
 	/**
 	 * Scoring Variables
@@ -52,7 +58,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public TileEntityGameController() {
 		Log.info("GameController Constructor Call.");
-		
+
 		if (DeathCube.gameState == null) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
@@ -294,115 +300,113 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * 
 		 * TODO: Figure out when to call this. Don't want to check for changes to field state every update().
 		 * - Flag on whether field is currently up? Generate if false?
-		 *
-		 * int halfx, minx = 0, maxx = 0;
-		 * int halfz, minz = 0, maxz = 0;
-		 * int miny, maxy;
-		 * BlockPos gameControllerPos = this.getPos();
-		 * 
-		 * Log.info("GameControllerPos: " + gameControllerPos);
-		 * Log.info("Force Field X: " + forceFieldx);
-		 * 
-		 * // Check if x and z field values are even.
-		 * if(forceFieldx % 2 == 0) {
-		 * // Even
-		 * halfx = forceFieldx / 2;
-		 * Log.info("Force Field X: Even");
-		 * } else {
-		 * // Odd
-		 * halfx = (forceFieldx - 1) / 2;
-		 * Log.info("Force Field X: Odd");
-		 * }
-		 * 
-		 * Log.info("Half-X: " + halfx);
-		 * 
-		 * minx = gameControllerPos.getX() - halfx;
-		 * maxx = gameControllerPos.getX() + halfx;
-		 * 
-		 * if(forceFieldz % 2 == 0) {
-		 * // Even
-		 * halfz = forceFieldz / 2;
-		 * } else {
-		 * // Odd
-		 * halfz = (forceFieldz - 1) / 2;
-		 * }
-		 * 
-		 * minz = gameControllerPos.getZ() - halfz;
-		 * maxz = gameControllerPos.getZ() + halfz;
-		 * 
-		 * miny = gameControllerPos.getY() - forceFieldyDown;
-		 * maxy = gameControllerPos.getY() - forceFieldyUp;
-		 * 
-		 * // Select Area based on Min and Max coords and fill
-		 * // TODO: Get block placing function, or try to use /command to select area of cube faces
-		 * BlockPos tempPos = new BlockPos(gameControllerPos.north().up());
-		 * BlockForceField forceFieldBlock = new BlockForceField();
-		 * IBlockState state = forceFieldBlock.getDefaultState();
-		 * Log.info("FF Default: " + state.toString());
-		 * //this.worldObj.setBlockState(tempPos, state);
-		 * //this.worldObj.setBlockState(tempPos, Blocks.bedrock.getDefaultState());
-		 * 
-		 * BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
-		 * BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
-		 * BlockPos currentPos1, currentPos2;
-		 * 
-		 * Log.info("MinX: " + minx + " - MaxX: " + maxx);
-		 * Log.info("Starting Pos: " + startingPos.toString());
-		 * 
-		 * /**
+		 */
+
+		int halfx, minx = 0, maxx = 0;
+		int halfz, minz = 0, maxz = 0;
+		int miny, maxy;
+		BlockPos gameControllerPos = this.getPos();
+
+		Log.info("GameControllerPos: " + gameControllerPos);
+		Log.info("Force Field X: " + forceFieldx);
+
+		// Check if x and z field values are even.
+		if (forceFieldx % 2 == 0) {
+			// Even
+			halfx = forceFieldx / 2;
+			Log.info("Force Field X: Even");
+		} else {
+			// Odd
+			halfx = (forceFieldx - 1) / 2;
+			Log.info("Force Field X: Odd");
+		}
+
+		Log.info("Half-X: " + halfx);
+
+		minx = gameControllerPos.getX() - halfx;
+		maxx = gameControllerPos.getX() + halfx;
+
+		if (forceFieldz % 2 == 0) {
+			// Even
+			halfz = forceFieldz / 2;
+		} else {
+			// Odd
+			halfz = (forceFieldz - 1) / 2;
+		}
+
+		minz = gameControllerPos.getZ() - halfz;
+		//maxz = gameControllerPos.getZ() + halfz;
+		maxz = gameControllerPos.north().getZ();
+
+		miny = gameControllerPos.getY() - forceFieldyDown;
+		maxy = gameControllerPos.getY() + forceFieldyUp;
+
+		// Select Area based on Min and Max coords and fill
+		// TODO: Get block placing function, or try to use /command to select area of cube faces
+
+		BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx).down(forceFieldyDown));
+		BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
+		BlockPos currentPos1, currentPos2;
+
+		Log.info("MinX: " + minx + " - MaxX: " + maxx);
+		Log.info("MinZ: " + minz + " - MaxZ: " + maxz);
+		Log.info("MinY: " + miny + " - MaxY: " + maxy);
+		Log.info("Starting Pos: " + startingPos.toString());
+
+		/**
 		 * West-to-East Wall Generation
 		 * - Make into separate function
 		 * - Create North or South Wall based on differing Start BlockPos
 		 * - TODO: Check if West is is smaller X than East
-		 *
-		 * //for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-		 * //for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-		 * for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-		 * }
-		 * if(currentPos2.getX() % 5 == 0) {
-		 * Log.info("Block-Gen Position: " + currentPos2.toString());
-		 * }
-		 * }
-		 * //}
-		 * /**
-		 * startingPos = new BlockPos(gameControllerPos.north(forceFieldz).west(minx).down(forceFieldyDown));
-		 * /**
+		 */
+		for (currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for (currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+				// for (currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air) {
+					this.worldObj.setBlockState(currentPos2, forceFieldBlock.getDefaultState());
+				}
+				if (currentPos2.getX() % 5 == 0) {
+					Log.info("YX Block-Gen Position: " + currentPos2.toString());
+				}
+			}
+		}
+
+		startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyDown));
+		/**
 		 * North-to-South Wall Generation
 		 * - Make into separate function
 		 * - Create West or East Wall based on differing Start BlockPos
-		 * - TODO: Check if North is is larger Z than South
-		 *
-		 * for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-		 * for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
-		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-		 * }
-		 * if(currentPos2.getZ() % 5 == 0) {
-		 * Log.info("Block-Gen Position: " + currentPos2.toString());
-		 * }
-		 * }
-		 * }
-		 * 
-		 * startingPos = new BlockPos(gameControllerPos.north().west(minx).down(forceFieldyDown));
-		 * /**
+		 * - North = Negative Z
+		 * - South = Positive Z
+		 */
+		for (currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for (currentPos2 = currentPos1; currentPos2.getZ() <= maxz; currentPos2 = currentPos2.south()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air) {
+					this.worldObj.setBlockState(currentPos2, forceFieldBlock.getDefaultState());
+				}
+				if (currentPos2.getZ() % 5 == 0) {
+					Log.info("YZ Block-Gen Position: " + currentPos2.toString());
+				}
+			}
+		}
+
+		startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).up(forceFieldyUp));
+		/**
 		 * Top/Bottom Wall Generation
 		 * - Make into separate function
 		 * - Create Top or Bottom Wall based on differing Start BlockPos
 		 * - TODO: Check if XZ coords to see which is bigger, where
-		 *
-		 * for(currentPos1 = startingPos; currentPos1.getX() <= maxx; currentPos1 = currentPos1.east()) {
-		 * for(currentPos2 = currentPos1; currentPos2.getZ() >= minz; currentPos2 = currentPos2.south()) {
-		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air){
-		 * this.worldObj.setBlockState(currentPos2, Blocks.bedrock.getDefaultState());
-		 * }
-		 * if(currentPos2.getZ() % 5 == 0) {
-		 * Log.info("Block-Gen Position: " + currentPos2.toString());
-		 * }
-		 * }
-		 * }
 		 */
+		for (currentPos1 = startingPos; currentPos1.getX() <= maxx; currentPos1 = currentPos1.east()) {
+			for (currentPos2 = currentPos1; currentPos2.getZ() <= maxz; currentPos2 = currentPos2.south()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.air) {
+					this.worldObj.setBlockState(currentPos2, forceFieldBlock.getDefaultState());
+				}
+				if (currentPos2.getZ() % 5 == 0) {
+					Log.info("XZ Block-Gen Position: " + currentPos2.toString());
+				}
+			}
+		}
 	}
 
 	private void removeForceField() {
@@ -411,75 +415,109 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * - May need to store "Current Force Field Dimensions" to know where to remove field.
 		 * 
 		 * TODO: Remove field when turned off. Also, remove every time dimensions are changed.
-		 *
-		 * BlockPos gameControllerPos = this.getPos();
-		 * 
-		 * BlockPos tempPos = new BlockPos(gameControllerPos.north());
-		 * if(this.worldObj.getBlockState(tempPos).getBlock() == Blocks.bedrock){
-		 * this.worldObj.setBlockToAir(tempPos);
-		 * }
-		 * 
-		 * int halfx, minx = 0, maxx = 0;
-		 * int halfz, minz = 0, maxz = 0;
-		 * int miny, maxy;
-		 * 
-		 * Log.info("GameControllerPos: " + gameControllerPos);
-		 * Log.info("Force Field X: " + forceFieldx);
-		 * 
-		 * // Check if x and z field values are even.
-		 * if(forceFieldx % 2 == 0) {
-		 * // Even
-		 * halfx = forceFieldx / 2;
-		 * Log.info("Force Field X: Even");
-		 * } else {
-		 * // Odd
-		 * halfx = (forceFieldx - 1) / 2;
-		 * Log.info("Force Field X: Odd");
-		 * }
-		 * 
-		 * Log.info("Half-X: " + halfx);
-		 * 
-		 * minx = gameControllerPos.getX() - halfx;
-		 * maxx = gameControllerPos.getX() + halfx;
-		 * 
-		 * if(forceFieldz % 2 == 0) {
-		 * // Even
-		 * halfz = forceFieldz / 2;
-		 * } else {
-		 * // Odd
-		 * halfz = (forceFieldz - 1) / 2;
-		 * }
-		 * 
-		 * minz = gameControllerPos.getZ() - halfz;
-		 * maxz = gameControllerPos.getZ() + halfz;
-		 * 
-		 * miny = gameControllerPos.getY() - forceFieldyDown;
-		 * maxy = gameControllerPos.getY() - forceFieldyUp;
-		 * 
-		 * BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx)); //.down(forceFieldyDown));
-		 * BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
-		 * BlockPos currentPos1, currentPos2;
-		 * 
-		 * Log.info("MinX: " + minx + " - MaxX: " + maxx);
-		 * Log.info("Starting Pos: " + startingPos.toString());
-		 * 
-		 * /**
+		 */
+		BlockPos gameControllerPos = this.getPos();
+
+		int halfx, minx = 0, maxx = 0;
+		int halfz, minz = 0, maxz = 0;
+		int miny, maxy;
+
+		Log.info("GameControllerPos: " + gameControllerPos);
+		Log.info("Force Field X: " + forceFieldx);
+
+		// Check if x and z field values are even.
+		if (forceFieldx % 2 == 0) {
+			// Even
+			halfx = forceFieldx / 2;
+			Log.info("Force Field X: Even");
+		} else {
+			// Odd
+			halfx = (forceFieldx - 1) / 2;
+			Log.info("Force Field X: Odd");
+		}
+
+		Log.info("Half-X: " + halfx);
+
+		minx = gameControllerPos.getX() - halfx;
+		maxx = gameControllerPos.getX() + halfx;
+
+		if (forceFieldz % 2 == 0) {
+			// Even
+			halfz = forceFieldz / 2;
+		} else {
+			// Odd
+			halfz = (forceFieldz - 1) / 2;
+		}
+
+		minz = gameControllerPos.getZ() - halfz;
+		//maxz = gameControllerPos.getZ() + halfz;
+		maxz = gameControllerPos.north().getZ();
+
+		miny = gameControllerPos.getY() - forceFieldyDown;
+		maxy = gameControllerPos.getY() + forceFieldyUp;
+
+		BlockPos startingPos = new BlockPos(gameControllerPos.north().west(halfx).down(forceFieldyDown));
+		BlockPos endingX = new BlockPos(gameControllerPos.north().east(halfx));
+		BlockPos currentPos1, currentPos2;
+
+		Log.info("MinX: " + minx + " - MaxX: " + maxx);
+		Log.info("Starting Pos: " + startingPos.toString());
+
+		/**
 		 * West-to-East Wall Generation
 		 * - Make into separate function
 		 * - Create North or South Wall based on differing Start BlockPos
 		 * - TODO: Check if West is is smaller X than East
-		 *
-		 * //for(currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
-		 * //for(currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-		 * for(currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
-		 * if(this.worldObj.getBlockState(currentPos2).getBlock() == Blocks.bedrock){
-		 * this.worldObj.setBlockToAir(tempPos); // Why this no work? It works above.
-		 * }
-		 * if(currentPos2.getX() % 5 == 0) {
-		 * Log.info("Block-Remove Position: " + currentPos2.toString());
-		 * }
-		 * }
 		 */
+		for (currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for (currentPos2 = currentPos1; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+				// for (currentPos2 = startingPos; currentPos2.getX() <= maxx; currentPos2 = currentPos2.east()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == forceFieldBlock) {
+					this.worldObj.setBlockToAir(currentPos2);
+					// Log.info("Block-Remove Bedrock to Air: " + currentPos2.toString());
+				}
+				if (currentPos2.getX() % 5 == 0) {
+					Log.info("YX Block-Remove Position: " + currentPos2.toString());
+				}
+			}
+		}
+		
+		startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyDown));
+		/**
+		 * North-to-South Wall Generation
+		 * - Make into separate function
+		 * - Create West or East Wall based on differing Start BlockPos
+		 * - North = Negative Z
+		 * - South = Positive Z
+		 */
+		for (currentPos1 = startingPos; currentPos1.getY() <= maxy; currentPos1 = currentPos1.up()) {
+			for (currentPos2 = currentPos1; currentPos2.getZ() <= maxz; currentPos2 = currentPos2.south()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == forceFieldBlock) {
+					this.worldObj.setBlockToAir(currentPos2);
+				}
+				if (currentPos2.getZ() % 5 == 0) {
+					Log.info("YZ Block-Remove Position: " + currentPos2.toString());
+				}
+			}
+		}
+		
+		startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).up(forceFieldyUp));
+		/**
+		 * Top/Bottom Wall Generation
+		 * - Make into separate function
+		 * - Create Top or Bottom Wall based on differing Start BlockPos
+		 * - TODO: Check if XZ coords to see which is bigger, where
+		 */
+		for (currentPos1 = startingPos; currentPos1.getX() <= maxx; currentPos1 = currentPos1.east()) {
+			for (currentPos2 = currentPos1; currentPos2.getZ() <= maxz; currentPos2 = currentPos2.south()) {
+				if (this.worldObj.getBlockState(currentPos2).getBlock() == forceFieldBlock) {
+					this.worldObj.setBlockToAir(currentPos2);
+				}
+				if (currentPos2.getZ() % 5 == 0) {
+					Log.info("XZ Block-Remove Position: " + currentPos2.toString());
+				}
+			}
+		}
 	}
 
 	/**
@@ -662,7 +700,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				}
 			} else {
 				Log.info("Null Gamestate - GameController Update() Position: " + this.pos.toString());
-				
+
 				DeathCube.gameState = GameStates.Lobby;
 				DeathCube.fieldState = FieldStates.Inactive;
 				DeathCube.gameTimer = -1;
@@ -670,11 +708,25 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
-			
-			if(DeathCube.lobbySpawnPos == new BlockPos(0,0,0) && this.pos != new BlockPos(0,0,0)) {
+
+			if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0) && this.pos != new BlockPos(0, 0, 0)) {
 				DeathCube.lobbySpawnPos = this.pos;
 				Log.info("Update() - Set Lobby Pos to: " + this.pos.toString());
 			}
+			
+			/**
+			 * Make always day, never raining.
+			 */
+			if(MinecraftServer.getServer().worldServers[0].getWorldInfo().getCleanWeatherTime() <= 10) {
+				MinecraftServer.getServer().worldServers[0].getWorldInfo().setCleanWeatherTime(5000);
+				MinecraftServer.getServer().worldServers[0].getWorldInfo().setRaining(false);
+				MinecraftServer.getServer().worldServers[0].getWorldInfo().setThundering(false);
+			}
+			
+			for (int j = 0; j < MinecraftServer.getServer().worldServers.length; ++j)
+	        {
+	            MinecraftServer.getServer().worldServers[j].setWorldTime((long)6000);
+	        }
 		}
 	}
 
@@ -870,13 +922,13 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Get Lobby Spawn from data file?
 			 */
 			Log.info("GameController LobbyPosition: NULL");
-		} else if(DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+		} else if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
 			Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
 		} else {
 			inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
 			Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
 		}
-			
+
 	}
 
 	public static void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
