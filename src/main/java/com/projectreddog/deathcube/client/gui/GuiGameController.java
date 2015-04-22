@@ -298,28 +298,38 @@ public class GuiGameController extends GuiDeathCube {
 		 * Verify that the Force Field dimensions are valid.
 		 */
 		int fieldx = Integer.parseInt(text_ForceFieldx.getText());
-		if(fieldx < 5 || fieldx > 500) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(20)));
+		if(fieldx < 5) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(5)));
+		} else if (fieldx > 500) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(500)));
 		}
 		
 		int fieldz = Integer.parseInt(text_ForceFieldz.getText());
-		if(fieldz < 5 || fieldz > 500) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(20)));
+		if(fieldz < 5) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(5)));
+		} else if (fieldx > 500) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(500)));
 		}
 		
 		int fieldyUp = Integer.parseInt(text_ForceFieldyUp.getText());
-		if(fieldyUp < 5 || fieldyUp > 256) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(20)));
+		if(fieldyUp < 5) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(5)));
+		} else if (fieldx > 256) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(256)));
 		}
 		
 		int fieldyDown = Integer.parseInt(text_ForceFieldyDown.getText());
-		if(fieldyDown < 5 || fieldyDown > 256) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(20)));
+		if(fieldyDown < 5) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(5)));
+		} else if (fieldx > 256) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(256)));
 		}
 		
 		int field_strength = Integer.parseInt(text_ForceFieldStrength.getText());
-		if(field_strength < 5 || field_strength > 999) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(20)));
+		if(field_strength < 0) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(0)));
+		} else if (fieldx > 999) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(999)));
 		}
 		
 	}

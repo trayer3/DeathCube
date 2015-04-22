@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,7 +41,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private int forceFieldz = 10;
 	private int forceFieldyUp = 5;
 	private int forceFieldyDown = 5;
-	private int forceFieldStrength = 10;
+	private int forceFieldStrength = 100;
 
 	/**
 	 * Spawn and Capture Point Variables
@@ -94,8 +95,16 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public void onGuiTextfieldUpdate(int fieldID, String text) {
 		/**
 		 * Save Game Controller Data
+		 * Text Fields
+		 * - private GuiTextField text_NumTeams;
+		 * - private GuiTextField text_ForceFieldx;
+		 * - private GuiTextField text_ForceFieldz;
+		 * - private GuiTextField text_ForceFieldyUp;
+		 * - private GuiTextField text_ForceFieldyDown;
+		 * - private GuiTextField text_ForceFieldStrength;
 		 */
 		Log.info("Game Controller sees Text Update: " + text);
+		toggleForceField(false);
 		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
 			try {
 				numTeamsFromGUI = Integer.parseInt(text);
@@ -296,9 +305,38 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			BlockPos startingPos, endingPos;
 			BlockPos gameControllerPos = this.getPos();
 
+			/**
+			 * Double-check Force Field Dimensions:
+			 */
+			if(forceFieldx < 5) {
+				forceFieldx = 5;
+			} else if (forceFieldx > 500) {
+				forceFieldx = 500;
+			}
+			if(forceFieldz < 5) {
+				forceFieldz = 5;
+			} else if (forceFieldz > 500) {
+				forceFieldz = 500;
+			}
+			if(forceFieldyUp < 5) {
+				forceFieldyUp = 5;
+			} else if (forceFieldyUp > 256) {
+				forceFieldyUp = 256;
+			}
+			if(forceFieldyDown < 5) {
+				forceFieldyDown = 5;
+			} else if (forceFieldyDown > 256) {
+				forceFieldyDown = 256;
+			}
+			if(forceFieldStrength < 0) {
+				forceFieldStrength = 5;
+			} else if (forceFieldStrength > 999) {
+				forceFieldStrength = 999;
+			}
+			
 			Log.info("GameControllerPos: " + gameControllerPos);
-			Log.info("Force Field X: " + forceFieldx);
-			Log.info("Force Field Z: " + forceFieldz);
+			Log.info("Force Field X-width: " + forceFieldx);
+			Log.info("Force Field Z-width: " + forceFieldz);
 
 			if (forceFieldx % 2 == 0) {
 				// Even X
@@ -373,7 +411,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Top Cube Face
 			 */
-			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyUp));
+			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).up(forceFieldyUp));
 			endingPos = new BlockPos(gameControllerPos.north().east(halfx).up(forceFieldyUp));
 
 			Log.info("Half X: " + halfx);
@@ -388,7 +426,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Bottom Cube Face
 			 */
 			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyDown));
-			endingPos = new BlockPos(gameControllerPos.north().east(halfx).up(forceFieldyDown));
+			endingPos = new BlockPos(gameControllerPos.north().east(halfx).down(forceFieldyDown));
 
 			Log.info("Half X: " + halfx);
 			Log.info("Half Z: " + halfz);
