@@ -23,16 +23,17 @@ public class BlockGameController extends BlockContainer {
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_GAME_CONTROLLER);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
-
 	}
 
 	public BlockGameController() {
-		// Generic constructor (set to rock by default)
 		this(Material.rock);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+		/**
+		 * Can only open GUI if in Creative Mode and GameState is Lobby.
+		 */
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te != null && !playerIn.isSneaking()) {
 			playerIn.openGui(DeathCube.instance, Reference.GUI_GAME_CONTROLLER, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -44,8 +45,6 @@ public class BlockGameController extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-
-		// NEED TO return the TE here
 		return new TileEntityGameController();
 	}
 

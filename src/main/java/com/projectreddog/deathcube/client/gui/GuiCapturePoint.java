@@ -190,16 +190,20 @@ public class GuiCapturePoint extends GuiDeathCube {
 		 * Validate Capture Point Radius
 		 */
 		int inputRadius = Integer.parseInt(text_PointRadius.getText());
-		if (inputRadius < 1 || inputRadius > Reference.VERIFY_CAPTURE_RADIUS) {
+		if (inputRadius < Reference.VERIFY_CAPTURE_RADIUS_MIN) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD3_ID, "1"));
+		} else if (inputRadius > Reference.VERIFY_CAPTURE_RADIUS_MAX) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(Reference.VERIFY_CAPTURE_RADIUS_MAX)));
 		}
 		
 		/**
 		 * Validate Time to Capture
 		 */
 		int inputTime = Integer.parseInt(text_PointCaptureTime.getText());
-		if (inputTime < 1 || inputTime > Reference.VERIFY_CAPTURE_TIME) {
+		if (inputTime < Reference.VERIFY_CAPTURE_TIME_MIN) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD5_ID, "5"));
+		} else if (inputRadius > Reference.VERIFY_CAPTURE_TIME_MAX) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(capture_point.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(Reference.VERIFY_CAPTURE_TIME_MAX)));
 		}
 	}
 }

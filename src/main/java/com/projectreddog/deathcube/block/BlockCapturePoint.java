@@ -13,9 +13,8 @@ import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
-import com.projectreddog.deathcube.init.ModNetwork;
-import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.utility.Log;
 
@@ -31,33 +30,37 @@ public class BlockCapturePoint extends BlockContainer {
 	}
 
 	public BlockCapturePoint() {
-		// Generic constructor (set to rock by default)
 		this(Material.rock);
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te != null && !playerIn.isSneaking()) {
-			Log.info("Capture Point Block Clicked!");
-			playerIn.openGui(DeathCube.instance, Reference.GUI_CAPTURE_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
-			return true;
+		if (playerIn.capabilities.isCreativeMode && DeathCube.gameState == GameStates.Lobby) {
+			/**
+			 * Can only open GUI if in Creative Mode and GameState is Lobby.
+			 */
+			TileEntity te = worldIn.getTileEntity(pos);
+			if (te != null && !playerIn.isSneaking()) {
+				Log.info("Capture Point Block Clicked!");
+				playerIn.openGui(DeathCube.instance, Reference.GUI_CAPTURE_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		/**
-		 * Write position to config file here.  ???
+		 * Write position to config file here. ???
 		 */
-		
-		
-        return this.getStateFromMeta(meta);
-    }
-	
+
+		return this.getStateFromMeta(meta);
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 
@@ -67,9 +70,9 @@ public class BlockCapturePoint extends BlockContainer {
 	@Override
 	public int getRenderType() {
 		/**
-		 *  1 = Liquid
-		 *  2 = TESR
-		 *  3 = Normal
+		 * 1 = Liquid
+		 * 2 = TESR
+		 * 3 = Normal
 		 * -1 = Nothing (air)
 		 */
 		return 3;

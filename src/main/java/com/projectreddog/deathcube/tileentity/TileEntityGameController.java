@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,10 +36,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 * GUI Variables
 	 */
 	private int numTeamsFromGUI = 4;
-	private int forceFieldx = 10;
-	private int forceFieldz = 10;
-	private int forceFieldyUp = 5;
-	private int forceFieldyDown = 5;
+	private int forceFieldx = Reference.FORCE_FIELD_MIN_DIMENSION;
+	private int forceFieldz = Reference.FORCE_FIELD_MIN_DIMENSION;
+	private int forceFieldyUp = Reference.FORCE_FIELD_MIN_DIMENSION;
+	private int forceFieldyDown = Reference.FORCE_FIELD_MIN_DIMENSION;
 	private int forceFieldStrength = 100;
 
 	/**
@@ -308,30 +307,30 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Double-check Force Field Dimensions:
 			 */
-			if(forceFieldx < 5) {
-				forceFieldx = 5;
-			} else if (forceFieldx > 500) {
-				forceFieldx = 500;
+			if(forceFieldx < Reference.FORCE_FIELD_MIN_DIMENSION) {
+				forceFieldx = Reference.FORCE_FIELD_MIN_DIMENSION;
+			} else if (forceFieldx > Reference.FORCE_FIELD_MAX_DIMENSION) {
+				forceFieldx = Reference.FORCE_FIELD_MAX_DIMENSION;
 			}
-			if(forceFieldz < 5) {
-				forceFieldz = 5;
-			} else if (forceFieldz > 500) {
-				forceFieldz = 500;
+			if(forceFieldz < Reference.FORCE_FIELD_MIN_DIMENSION) {
+				forceFieldz = Reference.FORCE_FIELD_MIN_DIMENSION;
+			} else if (forceFieldz > Reference.FORCE_FIELD_MAX_DIMENSION) {
+				forceFieldz = Reference.FORCE_FIELD_MAX_DIMENSION;
 			}
-			if(forceFieldyUp < 5) {
-				forceFieldyUp = 5;
-			} else if (forceFieldyUp > 256) {
-				forceFieldyUp = 256;
+			if(forceFieldyUp < Reference.FORCE_FIELD_MIN_DIMENSION) {
+				forceFieldyUp = Reference.FORCE_FIELD_MIN_DIMENSION;
+			} else if (forceFieldyUp > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
+				forceFieldyUp = Reference.FORCE_FIELD_MAX_DIMENSION_Y;
 			}
-			if(forceFieldyDown < 5) {
-				forceFieldyDown = 5;
-			} else if (forceFieldyDown > 256) {
-				forceFieldyDown = 256;
+			if(forceFieldyDown < Reference.FORCE_FIELD_MIN_DIMENSION) {
+				forceFieldyDown = Reference.FORCE_FIELD_MIN_DIMENSION;
+			} else if (forceFieldyDown > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
+				forceFieldyDown = Reference.FORCE_FIELD_MAX_DIMENSION_Y;
 			}
-			if(forceFieldStrength < 0) {
-				forceFieldStrength = 5;
-			} else if (forceFieldStrength > 999) {
-				forceFieldStrength = 999;
+			if(forceFieldStrength < Reference.FORCE_FIELD_MIN_STRENGTH) {
+				forceFieldStrength = Reference.FORCE_FIELD_MIN_STRENGTH;
+			} else if (forceFieldStrength > Reference.FORCE_FIELD_MAX_STRENGTH) {
+				forceFieldStrength = Reference.FORCE_FIELD_MAX_STRENGTH;
 			}
 			
 			Log.info("GameControllerPos: " + gameControllerPos);

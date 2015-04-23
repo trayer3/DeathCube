@@ -2,7 +2,9 @@ package com.projectreddog.deathcube.block;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
@@ -14,21 +16,17 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
-import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
+import com.projectreddog.deathcube.tileentity.TileEntityStartingGearConfig;
 
-public class BlockSpawnPoint extends BlockContainer {
+public class BlockStartingGearConfig extends BlockContainer {
 
-	protected BlockSpawnPoint(Material material) {
+	protected BlockStartingGearConfig(Material material) {
 		super(material);
 
 		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
-		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_SPAWN_POINT);
+		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_STARTING_GEAR_CONFIG);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
-	}
-
-	public BlockSpawnPoint() {
-		this(Material.rock);
 	}
 
 	@Override
@@ -39,7 +37,7 @@ public class BlockSpawnPoint extends BlockContainer {
 			 */
 			TileEntity te = worldIn.getTileEntity(pos);
 			if (te != null && !playerIn.isSneaking()) {
-				playerIn.openGui(DeathCube.instance, Reference.GUI_SPAWN_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
+				playerIn.openGui(DeathCube.instance, Reference.GUI_STARTING_GEAR_CONFIG, worldIn, pos.getX(), pos.getY(), pos.getZ());
 				return true;
 			} else {
 				return false;
@@ -49,9 +47,22 @@ public class BlockSpawnPoint extends BlockContainer {
 		}
 	};
 
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		/**
+		 * Write position to config file here. ???
+		 */
+		
+		
+		return null;
+	}
+
+	public BlockStartingGearConfig() {
+		this(Material.rock);
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntitySpawnPoint();
+		return new TileEntityStartingGearConfig();
 	}
 
 	@Override
@@ -62,7 +73,7 @@ public class BlockSpawnPoint extends BlockContainer {
 		 * 3 = Normal
 		 * -1 = Nothing (air)
 		 */
-		return 3;
+		return 2;
 	}
 
 	@Override
@@ -72,14 +83,11 @@ public class BlockSpawnPoint extends BlockContainer {
 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-
-		/**
-		 * Not needed if not using an inventory.
-		 */
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
 		if (tileentity instanceof IInventory) {
 			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
+			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 
 		super.breakBlock(worldIn, pos, state);
