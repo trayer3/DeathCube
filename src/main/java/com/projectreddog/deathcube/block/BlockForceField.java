@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -115,20 +116,37 @@ public class BlockForceField extends BlockDeathCube {
 		}
 	}
 
-	/**
-	 * Player Right-Clicked the block:
-	 * - If Lobby, pass through Force Field
-	 * -- Check that other side is valid spawning point.
-	 * -- Allow horizontal and vertical pass-through
-	 * -- OP / Creative-Only?
-	 * - If Running, do nothing.
-	 */
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (!(worldIn.isRemote)) {
-			// Server-side Only
+		
+		if (!(worldIn.isRemote) && playerIn.capabilities.isCreativeMode) {
 			if (DeathCube.gameState == GameStates.Lobby) {
-				// TODO: Pass-through block.
+				/**
+				 * Player Right-Clicked the block:
+				 * - If Lobby, pass through Force Field
+				 * -- Check that other side is valid spawning point.
+				 * -- Allow both horizontal and vertical pass-through
+				 */
+				
+				BlockPos destination = pos;
+				
+				if(side.getName().equals("down")) {
+					destination = pos.up();
+				} else if(side.getName().equals("up")) {
+					destination = pos.down(2);
+				} else if(side.getName().equals("north")) {
+					destination = pos.south();
+				} else if(side.getName().equals("south")) {
+					destination = pos.north();
+				} else if(side.getName().equals("east")) {
+					destination = pos.west();
+				} else if(side.getName().equals("west")) {
+					destination = pos.east();
+				}
+				
+				if(worldIn.getBlockState(destination).getBlock() == Blocks.air && worldIn.getBlockState(destination.up()).getBlock() == Blocks.air) {
+					playerIn.setPositionAndUpdate(destination.getX() + 0.5d, destination.getY(), destination.getZ() + 0.5d);
+				}
 			}
 		}
 		return true;
