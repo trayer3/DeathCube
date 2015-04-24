@@ -24,6 +24,8 @@ public class GuiStartingGearConfig extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
+		this.xSize = gui_Width;
+		this.ySize = gui_Height;
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class GuiStartingGearConfig extends GuiContainer {
 		y = (this.height - this.gui_Height) / 2;
 		
 		this.mc.renderEngine.bindTexture(Reference.GUI_STARTING_GEAR_CONFIG_BACKGROUND);
-		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		this.drawTexturedModalRect(x, y, 0, 0, this.gui_Width, this.gui_Height);
 	}
 	
 	@Override

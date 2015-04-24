@@ -18,10 +18,14 @@ public class ContainerStartingGearConfig extends Container {
 	public ContainerStartingGearConfig(InventoryPlayer inventoryPlayer, TileEntityStartingGearConfig fermenter) {
 		this.startingGearTE = fermenter;
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(fermenter, j + i * 9, 8 + j * 18, 18 + i * 18));
 			}
+		}
+		
+		for (int i = 0; i < 9; i++) {
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 58, 197));
 		}
 
 		/**
@@ -93,7 +97,7 @@ public class ContainerStartingGearConfig extends Container {
 
 	/**
 	 * Looks for changes made in the container, sends them to every listener.
-	 */
+	 *
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 
@@ -106,12 +110,12 @@ public class ContainerStartingGearConfig extends Container {
 			}
 		}
 
-		this.lastFuelStorage = this.startingGearTE.getField(0); */
+		this.lastFuelStorage = this.startingGearTE.getField(0); 
 
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int data) {
 		this.startingGearTE.setField(id, data);
-	}
+	}*/
 }

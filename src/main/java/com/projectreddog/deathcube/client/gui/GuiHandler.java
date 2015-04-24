@@ -10,6 +10,7 @@ import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
+import com.projectreddog.deathcube.tileentity.TileEntityStartingGearConfig;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -44,6 +45,14 @@ public class GuiHandler implements IGuiHandler {
 			if (entity != null) {
 				if (entity instanceof TileEntityCapturePoint) {
 					return new GuiCapturePoint((TileEntityCapturePoint) entity);
+				}
+			}
+		} else if (ID == Reference.GUI_STARTING_GEAR_CONFIG) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntityStartingGearConfig) {
+					return new GuiStartingGearConfig(player.inventory, (TileEntityStartingGearConfig) entity);
 				}
 			}
 		}

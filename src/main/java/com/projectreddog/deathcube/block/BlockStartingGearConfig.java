@@ -53,7 +53,7 @@ public class BlockStartingGearConfig extends BlockContainer {
 		 */
 		
 		
-		return null;
+		return this.getStateFromMeta(meta);
 	}
 
 	public BlockStartingGearConfig() {
@@ -73,7 +73,7 @@ public class BlockStartingGearConfig extends BlockContainer {
 		 * 3 = Normal
 		 * -1 = Nothing (air)
 		 */
-		return 2;
+		return 3;
 	}
 
 	@Override

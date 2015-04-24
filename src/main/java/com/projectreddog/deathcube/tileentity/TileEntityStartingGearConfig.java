@@ -1,8 +1,7 @@
 package com.projectreddog.deathcube.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,9 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 
-import com.projectreddog.deathcube.reference.Reference;
-
-public class TileEntityStartingGearConfig extends TileEntity implements IUpdatePlayerListBox, ISidedInventory {
+public class TileEntityStartingGearConfig extends TileEntity implements IUpdatePlayerListBox, IInventory {
 	protected ItemStack[] inventory;
 	private static int[] sideSlots = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	public AxisAlignedBB boundingBox;
@@ -244,30 +241,5 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 		for (int i = 0; i < inventory.length; ++i) {
 			inventory[i] = null;
 		}
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		if (side == EnumFacing.NORTH || side == EnumFacing.SOUTH || side == EnumFacing.EAST || side == EnumFacing.WEST) {
-			return sideSlots;
-		}
-		int[] topSlots2 = new int[] { 0 };
-		return topSlots2;
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStackIn, EnumFacing direction) {
-		if (slot < inventorySize && (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH || direction == EnumFacing.EAST || direction == EnumFacing.WEST)) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
-		if (slot < inventorySize && (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH || direction == EnumFacing.EAST || direction == EnumFacing.WEST)) {
-			return true;
-		}
-		return false;
 	}
 }
