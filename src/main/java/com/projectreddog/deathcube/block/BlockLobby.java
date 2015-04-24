@@ -16,6 +16,7 @@ public class BlockLobby extends BlockDeathCube{
 		this.setUnlocalizedName(Reference.MODBLOCK_EXAMPLE);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
+		this.setResistance(18000004.0f);
 	}
 	
 	@Override

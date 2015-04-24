@@ -46,6 +46,11 @@ public class Reference {
 	public static final int FORCE_FIELD_MIN_STRENGTH = 0;
 	public static final int FORCE_FIELD_MAX_STRENGTH = 999;
 
+	public static final int GEAR_INVENTORY_SIZE = 36;
+	public static final String GEAR_CLASS_WARRIOR = "Warrior";
+	public static final String GEAR_CLASS_ARCHER = "Archer";
+	public static final String GEAR_CLASS_HYBRID = "Hybrid";
+	
 	public static final int GUI_GAME_CONTROLLER = 0;
 	public static final int GUI_SPAWN_POINT = 1;
 	public static final int GUI_CAPTURE_POINT = 2;

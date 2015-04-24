@@ -947,7 +947,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		/**
 		 * Teleport Players to Lobby Location.
 		 */
-		preparePlayerToSpawn(inPlayer);
 
 		if (DeathCube.lobbySpawnPos == null) {
 			/**
@@ -957,6 +956,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		} else if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
 			Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
 		} else {
+			preparePlayerToSpawn(inPlayer);
 			inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
 			Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
 		}

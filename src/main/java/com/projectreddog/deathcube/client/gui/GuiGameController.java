@@ -36,7 +36,7 @@ public class GuiGameController extends GuiDeathCube {
 	private int ySpacing = 20;
 	private int xSpacingLabel = 20;
 	private int xSpacingField = 60;
-	private int fieldWidth = 25;
+	private int fieldWidth = 27;
 	private int fieldHeight = 12;
 	private int buttonWidth;
 	private int pageNumber = 1;
@@ -50,11 +50,6 @@ public class GuiGameController extends GuiDeathCube {
 	public void initGui() {
 		super.initGui();
 
-		/**
-		 * Need a better spot for this.  Or wait a short time?
-		 * - Moved to DeathCube.serverStart()
-		 */
-		//ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(game_controller.getPos()));
 		pageNumber = 1;
 		
 		/**

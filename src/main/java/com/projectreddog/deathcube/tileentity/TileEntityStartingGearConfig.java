@@ -8,23 +8,28 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 
+import com.projectreddog.deathcube.reference.Reference;
+
 public class TileEntityStartingGearConfig extends TileEntity implements IUpdatePlayerListBox, IInventory {
+	
 	protected ItemStack[] inventory;
 	private static int[] sideSlots = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 	public AxisAlignedBB boundingBox;
-
-	public final int maxFuelStorage = 1000; // store up to 1k
-	public int fuelStorage = 0;
-	public final int inventorySize = 9;
-	public final int fuelAmountFromCorn = 250;
-	public final int coolDownReset = 1200;
-	public int cooldown = coolDownReset;
+	
+	private String inventoryClass = Reference.GEAR_CLASS_WARRIOR;
 
 	public TileEntityStartingGearConfig() {
-		inventory = new ItemStack[inventorySize];
+		inventory = new ItemStack[Reference.GEAR_INVENTORY_SIZE];
+	}
+	
+	public void setInventoryClass(String inventoryClass) {
+		this.inventoryClass = inventoryClass;
+	}
+	
+	public String getInventoryClass() {
+		return this.inventoryClass;
 	}
 
 	@Override
@@ -86,8 +91,8 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 		super.readFromNBT(compound);
 
 		// inventory
-		fuelStorage = compound.getInteger("FUEL_STORAGE");
-		cooldown = compound.getInteger("COOL_DOWN");
+		//fuelStorage = compound.getInteger("FUEL_STORAGE");
+		//cooldown = compound.getInteger("COOL_DOWN");
 
 		NBTTagList tagList = compound.getTagList("Inventory", compound.getId());
 		for (int i = 0; i < tagList.tagCount(); i++) {
@@ -105,8 +110,8 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 
 		// inventory
 
-		compound.setInteger("FUEL_STORAGE", fuelStorage);
-		compound.setInteger("COOL_DOWN", cooldown);
+		//compound.setInteger("FUEL_STORAGE", fuelStorage);
+		//compound.setInteger("COOL_DOWN", cooldown);
 
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < inventory.length; i++) {
@@ -211,7 +216,7 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 	public int getField(int id) {
 		switch (id) {
 		case 0:
-			return this.fuelStorage;
+			//return this.fuelStorage;
 
 		default:
 			break;
@@ -223,7 +228,7 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 	public void setField(int id, int value) {
 		switch (id) {
 		case 0:
-			this.fuelStorage = value;
+			//this.fuelStorage = value;
 			break;
 
 		default:

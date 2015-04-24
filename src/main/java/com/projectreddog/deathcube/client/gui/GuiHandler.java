@@ -6,6 +6,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import com.projectreddog.deathcube.container.ContainerStartingGearConfig;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
@@ -16,7 +17,18 @@ public class GuiHandler implements IGuiHandler {
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		// TODO Auto-generated method stub
+		
+		if (ID == Reference.GUI_STARTING_GEAR_CONFIG) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntityStartingGearConfig) {
+
+					return new ContainerStartingGearConfig(player.inventory, (TileEntityStartingGearConfig) entity);
+				}
+			}
+		}
+		
 		return null;
 	}
 

@@ -33,6 +33,7 @@ public class BlockForceField extends BlockDeathCube {
 		this.setStepSound(soundTypeAnvil);
 		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
 		this.setBlockUnbreakable();
+		this.setResistance(18000004.0f);
 	}
 
 	public int quantityDropped(Random random) {

@@ -27,6 +27,7 @@ public class BlockStartingGearConfig extends BlockContainer {
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_STARTING_GEAR_CONFIG);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
+		this.setResistance(18000004.0f);
 	}
 
 	@Override

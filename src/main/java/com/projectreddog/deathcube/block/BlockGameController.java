@@ -23,6 +23,7 @@ public class BlockGameController extends BlockContainer {
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_GAME_CONTROLLER);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
+		this.setResistance(18000004.0f);
 	}
 
 	public BlockGameController() {

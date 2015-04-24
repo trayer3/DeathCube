@@ -27,6 +27,7 @@ public class BlockCapturePoint extends BlockContainer {
 		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_CAPTURE_POINT);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
+		this.setResistance(18000004.0f);
 	}
 
 	public BlockCapturePoint() {
