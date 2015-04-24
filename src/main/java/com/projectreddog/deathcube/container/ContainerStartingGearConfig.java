@@ -71,8 +71,8 @@ public class ContainerStartingGearConfig extends Container {
 			/**
 			 * Merges the item into player inventory since it's in the Entity
 			 */
-			if (slot < 9) {
-				if (!this.mergeItemStack(stackInSlot, 9, this.inventorySlots.size(), true)) {
+			if (slot < 36) {
+				if (!this.mergeItemStack(stackInSlot, 36, this.inventorySlots.size(), true)) {
 					return null;
 				}
 			}
@@ -81,7 +81,7 @@ public class ContainerStartingGearConfig extends Container {
 			 * Places the item into the tileEntity
 			 * - Possible since its in the player inventory
 			 */
-			else if (!this.mergeItemStack(stackInSlot, 0, 9, false)) {
+			else if (!this.mergeItemStack(stackInSlot, 0, 36, false)) {
 				return null;
 			}
 

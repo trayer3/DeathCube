@@ -37,7 +37,7 @@ public class GuiStartingGearConfig extends GuiContainer {
 		 * Prepare Button
 		 * - Page 1 Buttons
 		 */
-		buttonWidth = 80;
+		buttonWidth = 20;
 		button_ToggleClass = new GuiButton(Reference.BUTTON_1, ((this.width - buttonWidth) / 2), ((this.height - 20) / 2) + 50, buttonWidth, 20, "Start Game!");
 		buttonList.add(button_ToggleClass);
 		

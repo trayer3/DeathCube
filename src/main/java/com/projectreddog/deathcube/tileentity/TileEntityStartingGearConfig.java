@@ -15,8 +15,6 @@ import com.projectreddog.deathcube.reference.Reference;
 public class TileEntityStartingGearConfig extends TileEntity implements IUpdatePlayerListBox, IInventory {
 	
 	protected ItemStack[] inventory;
-	private static int[] sideSlots = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-	public AxisAlignedBB boundingBox;
 	
 	private String inventoryClass = Reference.GEAR_CLASS_WARRIOR;
 
@@ -90,10 +88,6 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 
 		super.readFromNBT(compound);
 
-		// inventory
-		//fuelStorage = compound.getInteger("FUEL_STORAGE");
-		//cooldown = compound.getInteger("COOL_DOWN");
-
 		NBTTagList tagList = compound.getTagList("Inventory", compound.getId());
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
@@ -107,11 +101,6 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-
-		// inventory
-
-		//compound.setInteger("FUEL_STORAGE", fuelStorage);
-		//compound.setInteger("COOL_DOWN", cooldown);
 
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < inventory.length; i++) {
@@ -214,31 +203,28 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 
 	@Override
 	public int getField(int id) {
-		switch (id) {
-		case 0:
-			//return this.fuelStorage;
-
-		default:
-			break;
-		}
+		/**
+		 * Do nothing
+		 * - No GUI updates to send to client or receive from server
+		 */
 		return 0;
 	}
 
 	@Override
 	public void setField(int id, int value) {
-		switch (id) {
-		case 0:
-			//this.fuelStorage = value;
-			break;
-
-		default:
-			break;
-		}
+		/**
+		 * Do nothing
+		 * - No GUI updates to send to client or receive from server
+		 */
 	}
 
 	@Override
 	public int getFieldCount() {
-		return 1;
+		/**
+		 * Return 0 
+		 * - No gui updates to send server ->client
+		 */
+		return 0;
 	}
 
 	@Override
