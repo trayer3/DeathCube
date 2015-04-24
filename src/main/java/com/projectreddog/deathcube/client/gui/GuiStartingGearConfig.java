@@ -14,7 +14,7 @@ public class GuiStartingGearConfig extends GuiContainer {
 
 	private TileEntityStartingGearConfig startingGearTE;
 	private int x = 0, y = 0;
-	private int gui_Width = 176;
+	private int gui_Width = 197;
 	private int gui_Height = 192;
 	
 	private GuiButton button_ToggleClass;
@@ -37,8 +37,8 @@ public class GuiStartingGearConfig extends GuiContainer {
 		 * Prepare Button
 		 * - Page 1 Buttons
 		 */
-		buttonWidth = 20;
-		button_ToggleClass = new GuiButton(Reference.BUTTON_1, ((this.width - buttonWidth) / 2), ((this.height - 20) / 2) + 50, buttonWidth, 20, "Start Game!");
+		buttonWidth = 40;
+		button_ToggleClass = new GuiButton(Reference.BUTTON_1, x + gui_Width + 3, y + 5, buttonWidth, 20, "Class");
 		buttonList.add(button_ToggleClass);
 		
 		this.xSize = gui_Width;
@@ -48,8 +48,8 @@ public class GuiStartingGearConfig extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-		fontRendererObj.drawString("Starting Inventory: " + startingGearTE.getInventoryClass(), 8, 8, 4210752);
-		fontRendererObj.drawString("Inventory", 8, 99, 4210752);
+		fontRendererObj.drawString("Starting Inventory: " + startingGearTE.getInventoryClass(), 21 + 8, 8, 4210752);
+		fontRendererObj.drawString("Inventory", 21 + 8, 99, 4210752);
 	}
 
 	@Override

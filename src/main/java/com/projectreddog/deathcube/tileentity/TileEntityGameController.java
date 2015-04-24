@@ -62,11 +62,18 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			DeathCube.fieldState = FieldStates.Inactive;
 			DeathCube.gameTimer = -1;
 
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+			if(this.worldObj != null && this.worldObj.isRemote) {
+				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+			}
+			
 			Log.info("GameController States Initialized.  Text update request sent.");
 		} else {
 			Log.info("GameState: " + DeathCube.gameState);
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+			
+			if(this.worldObj != null && this.worldObj.isRemote) {
+				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
+			}
+			
 			Log.info("GC Text update request sent.");
 		}
 	}
