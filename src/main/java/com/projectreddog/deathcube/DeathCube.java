@@ -45,13 +45,13 @@ public class DeathCube {
 	public static boolean useForceField = true;
 	public static int forceFieldStrength = 5;
 	public static boolean isOrderedCapture = true;
-	
+
 	public static int gameTimer;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;
 	public static Map<String, Long> playerAwaitingRespawn;
-	
+
 	public static BlockPos gameControllerPos;
 	public static BlockPos lobbySpawnPos;
 	public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
@@ -103,12 +103,12 @@ public class DeathCube {
 		 * - GameController Position
 		 * - Position of every Capture and Spawn Point?
 		 * 
-		 * TODO: Then set initial variables.  And send a request for text update for all TE's.
+		 * TODO: Then set initial variables. And send a request for text update for all TE's.
 		 * 
 		 * TODO: Write to config file
 		 * - When and where?
 		 * - On block placed?
-		 * - Constructors (Block / TE)? 
+		 * - Constructors (Block / TE)?
 		 * 
 		 ***************************************************************************************************
 		 * 
