@@ -16,35 +16,38 @@ public class ContainerStartingGearConfig extends Container {
 
 	protected TileEntityStartingGearConfig startingGearTE;
 
-	public ContainerStartingGearConfig(InventoryPlayer inventoryPlayer, TileEntityStartingGearConfig startingGearTE) {
+	public ContainerStartingGearConfig(final InventoryPlayer inventoryPlayer, TileEntityStartingGearConfig startingGearTE) {
 		this.startingGearTE = startingGearTE;
-		int y_offset = 0;
 		
-		for (int i = 0; i < 4; i++) {
+		/**
+		 * Visible hot-bar is indexes 0-8.
+		 */
+		for (int j = 0; j < 9; j++) {
+			addSlotToContainer(new Slot(startingGearTE, j * 9, 21 + 8 + j * 18, 23 + 3 * 18));
+		}
+		
+		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				if(i == 3) {
-					y_offset = 4;
-				}
-				addSlotToContainer(new Slot(startingGearTE, j + i * 9, 21 + 8 + j * 18, y_offset  + 19 + i * 18));
+				addSlotToContainer(new Slot(startingGearTE, 9 + j + i * 9, 21 + 8 + j * 18, 19 + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 4; i++) {
 			final int k = i;
 			addSlotToContainer(new Slot(startingGearTE, 36 + i, 8, 21 + i * 18)
-		/**	{
+			{
                 private static final String __OBFID = "CL_00001755";
                 /**
                  * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1
                  * in the case of armor slots)
-                 *
+                 */
                 public int getSlotStackLimit()
                 {
                     return 1;
                 }
                 /**
                  * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
-                 *
+                 */
                 public boolean isItemValid(ItemStack stack)
                 {
                     if (stack == null) return false;
@@ -55,7 +58,7 @@ public class ContainerStartingGearConfig extends Container {
                 {
                     return ItemArmor.EMPTY_SLOT_NAMES[k];
                 }
-            }*/);
+            });
 		}
 
 		/**

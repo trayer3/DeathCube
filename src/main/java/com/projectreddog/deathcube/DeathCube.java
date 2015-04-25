@@ -56,6 +56,7 @@ public class DeathCube {
 	public static BlockPos lobbySpawnPos;
 	public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
 	public static List<BlockPos> capturePoints = new ArrayList<BlockPos>();
+	public static List<BlockPos> gearTEPos = new ArrayList<BlockPos>();
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks

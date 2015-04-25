@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
@@ -516,7 +517,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					} else {
 						Log.info("YZ Block-Remove Position: " + currentPosZ.toString());
 					}
-
 				}
 			}
 		}
@@ -584,6 +584,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 */
 					spawnPointsList.clear();
 					capturePointsList.clear();
+					DeathCube.gearTEPos.clear();
 
 					List<TileEntity> tileEntities = this.worldObj.loadedTileEntityList;
 					for (TileEntity te : tileEntities) {
@@ -603,6 +604,16 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 							// }
 
 							// Log.info("Number of Capture Points: " + capturePointsList.size());
+
+						} else if (te instanceof TileEntityStartingGearConfig) {
+							/**
+							 * Track Gear Config TE's
+							 */
+							// if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
+							DeathCube.gearTEPos.add(((TileEntityStartingGearConfig) te).getPos());
+							// }
+
+							// Log.info("Number of Gear Config Blocks: " + gearTEPosList.size());
 
 						}
 					}
@@ -806,6 +817,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 */
 		Log.info("Spawn Point list size: " + spawnPointsList.size());
 		Log.info("Capture Point list size: " + capturePointsList.size());
+		Log.info("Gear TE list size: " + DeathCube.gearTEPos.size());
 
 		for (GameTeam team : DeathCube.gameTeams) {
 			Log.info("Loop for team: " + team.getTeamColor());
@@ -1012,7 +1024,24 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * 
 		 **** --This should be customizable. Use TE with inventory. Copy inventory to player on respawn.
 		 */
-
+		Log.info("Give Gear - Start");
+		World world = MinecraftServer.getServer().worldServers[0];
+		String playerInventoryClass = Reference.GEAR_CLASS_WARRIOR;  // Get from player somehow.
+		
+		for (BlockPos pointPos : DeathCube.gearTEPos) {
+			TileEntityStartingGearConfig lookupTE = (TileEntityStartingGearConfig) world.getTileEntity(pointPos);
+			Log.info("Gear TE Location - " + pointPos.toString());
+			if (lookupTE.getInventoryClass().equals(playerInventoryClass)) {
+				for(int i = 0; i < 4; i++) {
+					inPlayer.inventory.armorInventory[i] = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i];
+				}
+				
+				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
+					inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i];
+				}
+			}
+		}
+		Log.info("Give Gear - Success");
 	}
 
 	public void stopGame() {

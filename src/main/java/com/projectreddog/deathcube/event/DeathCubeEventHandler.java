@@ -153,6 +153,8 @@ public class DeathCubeEventHandler {
 					Log.info("Player joined Running Game.");
 				}
 			}
+		} else if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
+			Log.info("Entity is EntityPlayerMP.");
 		}
 	}
 }
