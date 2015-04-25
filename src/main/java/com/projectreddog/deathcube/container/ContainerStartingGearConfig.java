@@ -18,10 +18,11 @@ public class ContainerStartingGearConfig extends Container {
 
 	public ContainerStartingGearConfig(final InventoryPlayer inventoryPlayer, TileEntityStartingGearConfig startingGearTE) {
 		this.startingGearTE = startingGearTE;
+		int y_offset = 0;
 		
 		/**
 		 * Visible hot-bar is indexes 0-8.
-		 */
+		 *
 		for (int j = 0; j < 9; j++) {
 			addSlotToContainer(new Slot(startingGearTE, j * 9, 21 + 8 + j * 18, 23 + 3 * 18));
 		}
@@ -29,6 +30,18 @@ public class ContainerStartingGearConfig extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(startingGearTE, 9 + j + i * 9, 21 + 8 + j * 18, 19 + i * 18));
+			}
+		}*/
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 9; j++) {
+				if(i == 0) {
+					y_offset = 77;
+				} else {
+					y_offset = 1;
+				}
+				
+				addSlotToContainer(new Slot(startingGearTE, j + i * 9, 21 + 8 + j * 18, y_offset + i * 18));
 			}
 		}
 		

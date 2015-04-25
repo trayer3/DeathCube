@@ -10,6 +10,9 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -1033,7 +1036,41 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			Log.info("Gear TE Location - " + pointPos.toString());
 			if (lookupTE.getInventoryClass().equals(playerInventoryClass)) {
 				for(int i = 0; i < 4; i++) {
-					inPlayer.inventory.armorInventory[i] = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i];
+					/**
+					 * Color Armor if Leather - TODO: Get better color values
+					 * Red: 9843760
+					 * Blue: 3029133
+					 * Green: 3491355
+					 * Yellow: 11642407
+					 * Black: 1644054
+					 * White: 14540253
+					 */
+					int color = 0;
+					String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
+					
+					if(teamColor.equals(Reference.TEAM_RED)) {
+						color = 9843760;
+					} else if(teamColor.equals(Reference.TEAM_BLUE)) {
+						color = 3029133;
+					} else if(teamColor.equals(Reference.TEAM_GREEN)) {
+						color = 3491355;
+					} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
+						color = 11642407;
+					}
+					
+					ItemStack armorPiece = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i];
+					
+					if(armorPiece != null && armorPiece.getItem().equals(Items.leather_helmet)) {
+						Items.leather_helmet.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_chestplate)) {
+						Items.leather_chestplate.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_leggings)) {
+						Items.leather_leggings.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_boots)) {
+						Items.leather_boots.setColor(armorPiece, color);
+					}
+					
+					inPlayer.inventory.armorInventory[i] = armorPiece;
 				}
 				
 				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
