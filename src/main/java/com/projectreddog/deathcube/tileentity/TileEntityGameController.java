@@ -1080,11 +1080,13 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						Items.leather_boots.setColor(armorPiece, color);
 					}
 					
-					inPlayer.inventory.armorInventory[i] = armorPiece;
+					inPlayer.inventory.setInventorySlotContents(i, armorPiece);
+					//inPlayer.inventory.armorInventory[i] = armorPiece;
 				}
 				
 				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
-					inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i];
+					//inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i];
+					inPlayer.inventory.setInventorySlotContents(i, lookupTE.inventory[i]);
 				}
 			}
 		}
@@ -1103,6 +1105,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 		DeathCube.gameTimeStart = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;
+		
+		if (DeathCube.fieldState != FieldStates.Inactive)
+			DeathCube.fieldState = FieldStates.Inactive;
 
 		Log.info(winningTeamColor + " has won!");
 	}

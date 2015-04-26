@@ -13,7 +13,7 @@ public class BlockLobby extends BlockDeathCube{
 	public BlockLobby() {
 		super();
 
-		this.setUnlocalizedName(Reference.MODBLOCK_EXAMPLE);
+		this.setUnlocalizedName(Reference.MODBLOCK_LOBBY);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
 		this.setResistance(18000004.0f);
