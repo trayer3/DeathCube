@@ -302,28 +302,28 @@ public class GuiGameController extends GuiDeathCube {
 		int fieldz = Integer.parseInt(text_ForceFieldz.getText());
 		if(fieldz < Reference.FORCE_FIELD_MIN_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldx > Reference.FORCE_FIELD_MAX_DIMENSION) {
+		} else if (fieldz > Reference.FORCE_FIELD_MAX_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION)));
 		}
 		
 		int fieldyUp = Integer.parseInt(text_ForceFieldyUp.getText());
 		if(fieldyUp < Reference.FORCE_FIELD_MIN_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldx > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
+		} else if (fieldyUp > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION_Y)));
 		}
 		
 		int fieldyDown = Integer.parseInt(text_ForceFieldyDown.getText());
 		if(fieldyDown < Reference.FORCE_FIELD_MIN_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldx > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
+		} else if (fieldyDown > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION_Y)));
 		}
 		
 		int field_strength = Integer.parseInt(text_ForceFieldStrength.getText());
 		if(field_strength < Reference.FORCE_FIELD_MIN_STRENGTH) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(Reference.FORCE_FIELD_MIN_STRENGTH)));
-		} else if (fieldx > Reference.FORCE_FIELD_MAX_STRENGTH) {
+		} else if (field_strength > Reference.FORCE_FIELD_MAX_STRENGTH) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(Reference.FORCE_FIELD_MAX_STRENGTH)));
 		}
 		
