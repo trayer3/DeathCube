@@ -10,6 +10,7 @@ import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.utility.Log;
 
 public class CommandGame extends CommandBase {
 
@@ -37,13 +38,15 @@ public class CommandGame extends CommandBase {
 			if (args[0].equals("start")) {
 				if (DeathCube.gameState == GameStates.Lobby) {
 					DeathCube.gameState = GameStates.GameWarmup;
+					DeathCube.gameTimeStart = System.currentTimeMillis();
+					Log.info("Game now Warming Up.");
 				} else {
 					throw new WrongUsageException("Game must be in Lobby to start.", new Object[0]);
 				}
 			} else if (args[0].equals("end")) {
 				if (DeathCube.gameState == GameStates.Running) {
 					DeathCube.gameState = GameStates.PostGame;
-					DeathCube.gameTimer = -1;
+					DeathCube.gameTimeStart = -1;
 				} else {
 					throw new WrongUsageException("Game must be Running to end.", new Object[0]);
 				}

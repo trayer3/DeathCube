@@ -46,6 +46,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private int forceFieldyDown = Reference.FORCE_FIELD_MIN_DIMENSION;
 	private int forceFieldStrength = 100;
 
+	long currentTime;
+	long timeRemaining;
+	
 	/**
 	 * Spawn and Capture Point Variables
 	 */
@@ -64,7 +67,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		if (DeathCube.gameState == null) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
-			DeathCube.gameTimer = -1;
+			DeathCube.gameTimeStart = -1;
 
 			if(this.worldObj != null && this.worldObj.isRemote) {
 				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
@@ -258,6 +261,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				if (DeathCube.gameState != null) {
 					if (DeathCube.gameState == GameStates.Lobby) {
 						DeathCube.gameState = GameStates.GameWarmup;
+						DeathCube.gameTimeStart = System.currentTimeMillis();
+						Log.info("Game now Warming Up.");
 					} else if (DeathCube.gameState == GameStates.Running) {
 						stopGame();
 					}
@@ -571,20 +576,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		if (!this.worldObj.isRemote) {
 			if (DeathCube.gameState != null) {
 				if (DeathCube.gameState == GameStates.Lobby) {
-					/**
-					 * Lobby actions:
-					 * Make sure the force field is Inactive.
-					 * Make sure the timer is not running.
-					 */
-					if (DeathCube.gameTimer >= 0)
-						DeathCube.gameTimer = -1;
-
-					/**
-					 * Count the number of Spawn Points in current DeathCube Force Field boundaries.
+					/******************************************************************************************
 					 * 
-					 * Or store this information elsewhere? A game setup Tile Entity? Game Controller
-					 * used only by players when starting the game.
-					 */
+					 * Lobby actions:
+					 * Count the number of Spawn Points, Capture Points, Gear Config Blocks
+					 *   in current DeathCube Force Field boundaries.
+					 *   
+					 * Better way/time to count and track these things?
+					 * 
+					 * ######  Not currently tracking at DeathCube.java level.  Just locally.  ######
+					 * 
+					 *****************************************************************************************/
 					spawnPointsList.clear();
 					capturePointsList.clear();
 					DeathCube.gearTEPos.clear();
@@ -596,181 +598,187 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 							 * Track Spawn Points
 							 */
 							spawnPointsList.add(((TileEntitySpawnPoint) te).getPos());
-
 							// Log.info("Number of Spawn Points: " + spawnPointsList.size());
 						} else if (te instanceof TileEntityCapturePoint) {
 							/**
 							 * Track Capture Points
 							 */
-							// if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
 							capturePointsList.add(((TileEntityCapturePoint) te).getPos());
-							// }
-
 							// Log.info("Number of Capture Points: " + capturePointsList.size());
-
 						} else if (te instanceof TileEntityStartingGearConfig) {
 							/**
 							 * Track Gear Config TE's
 							 */
-							// if(!capturePointsList.contains((TileEntityCapturePoint) te)) {
 							DeathCube.gearTEPos.add(((TileEntityStartingGearConfig) te).getPos());
-							// }
-
 							// Log.info("Number of Gear Config Blocks: " + gearTEPosList.size());
-
 						}
 					}
 
 				} else if (DeathCube.gameState == GameStates.GameWarmup) {
-					if (DeathCube.gameTimer < 0) {
-						DeathCube.gameTimer = Reference.TIME_WARMUP;
-						Log.info("Game now Warming Up.");
-					} else if (DeathCube.gameTimer > 0) {
-						/**
-						 * Decrement Warm-up Timer
-						 */
-						DeathCube.gameTimer--;
+					/******************************************************************************************
+					 * 
+					 * Warm-up Actions:
+					 * 
+					 * Check Time
+					 *****************************************************************************************/
+					currentTime = System.currentTimeMillis();
+					timeRemaining = Reference.TIME_WARMUP - (currentTime - DeathCube.gameTimeStart);
 
-						/**
-						 * TODO: Broadcast Time Until Game Start
-						 */
-
-					} else if (DeathCube.gameTimer == 0) {
+					if (timeRemaining <= 0) {
 						/**
 						 * Timer is Up - Start Game!
 						 */
-						DeathCube.gameTimer = -1;
+						DeathCube.gameTimeStart = System.currentTimeMillis();;
 						DeathCube.gameState = GameStates.Running;
+						
+						if (DeathCube.fieldState != FieldStates.Active)
+							DeathCube.fieldState = FieldStates.Active;
 
 						Log.info("Game now Running.");
 
 						startGame();
 					} else {
 						/**
-						 * This condition show not be reached, ever.
+						 * TODO: Periodically Broadcast Time Until Game Start ?
 						 */
-						Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
+						//Log.info("GameState: " + DeathCube.gameState + " - Time Remaining: " + timeRemaining);
 					}
 				} else if (DeathCube.gameState == GameStates.Running) {
-					/**
+					/******************************************************************************************
+					 * 
 					 * Main Game actions.
-					 */
-					if (DeathCube.fieldState != FieldStates.Active)
-						DeathCube.fieldState = FieldStates.Active;
-
+					 * 
+					 * Check Time
+					 * - If done, end game
+					 * - Else, process game
+					 * 
+					 * On game over, empty playerAwaitingRespawn list and respawn players?
+					 * 
+					 *****************************************************************************************/
+					
 					/**
-					 * Process queue of Players waiting to respawn.
+					 * Check Time
 					 */
-					if (DeathCube.playerAwaitingRespawn.size() > 0) {
-						Log.info("Player serving Death Penalty");
-						Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
-						Log.info("listKeys done.");
-						Iterator<String> keyIterator = keySet.iterator();
-						Log.info("keyIterator done.");
-						while (keyIterator.hasNext()) {
-							String playerNameKey = keyIterator.next();
-							Long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
-							Long currentTime = System.currentTimeMillis();
-							Long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
-							Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
-							Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
-							if (timeDiff <= 0) {
-								Log.info("Found Player waiting to respawn - time to spawn!");
-								sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
-								DeathCube.playerAwaitingRespawn.remove(playerNameKey);
-							}
-						}
-					}
-
-					/**
-					 * Check if a point has been captured.
-					 * - If so, set the next point as active.
-					 * - Or, check for Game Over condition.
-					 */
-					if (DeathCube.isOrderedCapture) {
+					currentTime = System.currentTimeMillis();
+					timeRemaining = Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart);
+					
+					if (timeRemaining <= 0) {
 						/**
-						 * Check if current point for each team has been captured.
+						 * Timer is Up - Stop Game!
 						 */
-						for (GameTeam team : DeathCube.gameTeams) {
-							TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(team.getCurrentPointPos());
-							if (lookupTE.getIsCaptured()) {
-								if (team.hasCapturedAllPoints()) {
-									winningTeamColor = team.getTeamColor();
-									stopGame();
-								} else {
-									team.setNextCapturePointActive();
+						if (DeathCube.fieldState != FieldStates.Inactive)
+							DeathCube.fieldState = FieldStates.Inactive;
+						
+						Log.info("Game has ended.");
+						
+						stopGame();
+					} else {
+						/**
+						 * Process queue of Players waiting to respawn.
+						 */
+						if (DeathCube.playerAwaitingRespawn.size() > 0) {
+							Log.info("Player serving Death Penalty");
+							Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
+							//Log.info("listKeys done.");
+							Iterator<String> keyIterator = keySet.iterator();
+							//Log.info("keyIterator done.");
+							while (keyIterator.hasNext()) {
+								String playerNameKey = keyIterator.next();
+								long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
+								currentTime = System.currentTimeMillis();
+								long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
+								Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+								Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
+								if (timeDiff <= 0) {
+									Log.info("Found Player waiting to respawn - time to spawn!");
+									sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+									DeathCube.playerAwaitingRespawn.remove(playerNameKey);
 								}
 							}
 						}
-					} else {
+
 						/**
-						 * Check if all points have been captured.
+						 * Check if a point has been captured.
+						 * - If so, set the next point as active.
+						 * - Or, check for Game Over condition.
 						 */
+						if (DeathCube.isOrderedCapture) {
+							/**
+							 * Check if current point for each team has been captured.
+							 */
+							for (GameTeam team : DeathCube.gameTeams) {
+								TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(team.getCurrentPointPos());
+								if (lookupTE.getIsCaptured()) {
+									if (team.hasCapturedAllPoints()) {
+										winningTeamColor = team.getTeamColor();
+										stopGame();
+									} else {
+										team.setNextCapturePointActive();
+									}
+								}
+							}
+						} else {
+							/**
+							 * Check if all points have been captured.
+							 */
+						}
 					}
-
 				} else if (DeathCube.gameState == GameStates.PostGame) {
-					/**
+					/*****************************************************************************************
+					 * 
 					 * Post Game actions.
+					 * 
+					 *****************************************************************************************/
+					/**
+					 * Check Time
 					 */
-					if (DeathCube.gameTimer < 0 || DeathCube.gameTimer > Reference.TIME_POSTGAME) {
-						DeathCube.gameTimer = Reference.TIME_POSTGAME;
-
-						if (DeathCube.fieldState != FieldStates.Inactive)
-							DeathCube.fieldState = FieldStates.Inactive;
-
-						Log.info("Game has ended.");
-					} else if (DeathCube.gameTimer > 0 && DeathCube.gameTimer <= Reference.TIME_POSTGAME) {
-						/**
-						 * Decrement Timer
-						 */
-						DeathCube.gameTimer--;
-
-						/**
-						 * Other Post Game Stuff
-						 */
-
-					} else if (DeathCube.gameTimer == 0) {
+					currentTime = System.currentTimeMillis();
+					timeRemaining = Reference.TIME_POSTGAME - (currentTime - DeathCube.gameTimeStart);
+					
+					if (timeRemaining <= 0) {
 						/**
 						 * Timer is Up - Return to Lobby GameState
 						 */
 						DeathCube.gameState = GameStates.Lobby;
 
 						Log.info("Game now in Lobby.");
-					} else {
-						/**
-						 * This condition show not be reached, ever.
-						 */
-						Log.info("Invalid Game State! " + DeathCube.gameState + " - Timer: " + DeathCube.gameTimer);
 					}
-
 				} else if (DeathCube.gameState == GameStates.GameOver) {
-					/**
+					/******************************************************************************************
+					 * 
 					 * Game Over actions.
 					 * TODO: Vote on next Map?
-					 */
+					 * 
+					 *****************************************************************************************/
 
 					if (DeathCube.fieldState != FieldStates.Off)
 						DeathCube.fieldState = FieldStates.Off;
 				}
 			} else {
+				/******************************************************************************************
+				 * Null Game State
+				 *****************************************************************************************/
 				Log.info("Null Gamestate - GameController Update() Position: " + this.pos.toString());
 
 				DeathCube.gameState = GameStates.Lobby;
 				DeathCube.fieldState = FieldStates.Inactive;
-				DeathCube.gameTimer = -1;
+				DeathCube.gameTimeStart = -1;
 
 				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
 
+			/******************************************************************************************
+			 * Other Actions:
+			 * - Make Sure Lobby Position is set
+			 * - Make it always Day - Could use a flag on processing day timer?
+			 * - Make it never raining - Could use a flag on processing weather timer?
+			 *****************************************************************************************/
 			if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0) && this.pos != new BlockPos(0, 0, 0)) {
 				DeathCube.lobbySpawnPos = this.pos;
 				Log.info("Update() - Set Lobby Pos to: " + this.pos.toString());
 			}
 
-			/**
-			 * Make always day, never raining.
-			 */
 			if (MinecraftServer.getServer().worldServers[0].getWorldInfo().getCleanWeatherTime() <= 10) {
 				MinecraftServer.getServer().worldServers[0].getWorldInfo().setCleanWeatherTime(5000);
 				MinecraftServer.getServer().worldServers[0].getWorldInfo().setRaining(false);
@@ -1017,8 +1025,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 	public static void givePlayerGear(EntityPlayer inPlayer) {
 		/**
-		 * TODO: Give Player Gear
-		 * - Clear inventory. How to do this?
+		 * Give Player Gear
+		 * - Clear inventory. Happens automatically with assignment of new inventory?
 		 * - Stone Sword
 		 * - Leather Armor (in team color)
 		 * - Bow
@@ -1091,7 +1099,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			team.setAllPointsActive(false);
 		}
 
-		DeathCube.gameTimer = -1;
+		DeathCube.gameTimeStart = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;
 
 		Log.info(winningTeamColor + " has won!");

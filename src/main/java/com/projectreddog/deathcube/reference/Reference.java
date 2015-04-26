@@ -59,6 +59,7 @@ public class Reference {
 	public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/spawnpointgui.png");
 	public static final ResourceLocation GUI_GAME_CONTROLLER_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/gamecontrollergui.png");
 	public static final ResourceLocation GUI_STARTING_GEAR_CONFIG_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/startinggeargui.png");
+	public static final ResourceLocation HUD_SCORE_TEAM_POINTS = new ResourceLocation(Reference.MOD_ID, "textures/hud/hudscorebackground.png");
 	
 	public static final int MESSAGE_SOURCE_GUI = 0;
 
@@ -75,8 +76,9 @@ public class Reference {
 	public static final String TEAM_GREEN = "Green";
 	public static final String TEAM_YELLOW = "Yellow";
 	
-	public static final int TIME_WARMUP = 20;
-	public static final int TIME_POSTGAME = 100;
+	public static final int TIME_WARMUP = 1000;
+	public static final int TIME_MAINGAME = 600000;
+	public static final int TIME_POSTGAME = 5000;
 	public static final int TIME_DEATH_PENALTY = 5000;
 	
 	public static final List<String> VERIFY_COLORS_LIST = Arrays.asList(TEAM_RED, TEAM_BLUE, TEAM_GREEN, TEAM_YELLOW);

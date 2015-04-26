@@ -46,7 +46,7 @@ public class DeathCube {
 	public static int forceFieldStrength = 5;
 	public static boolean isOrderedCapture = true;
 
-	public static int gameTimer;
+	public static long gameTimeStart = 0;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;

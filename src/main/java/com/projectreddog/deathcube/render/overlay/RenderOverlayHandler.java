@@ -3,6 +3,7 @@ package com.projectreddog.deathcube.render.overlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -15,6 +16,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 
 public class RenderOverlayHandler extends Gui {
 	private final FontRenderer fontRenderer;
@@ -36,8 +38,8 @@ public class RenderOverlayHandler extends Gui {
 		}
 		// Log.info(event.type);
 
-		int xPos = 2;
-		int yPos = 2;
+		int xPos = 0;
+		int yPos = 0;
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -51,29 +53,57 @@ public class RenderOverlayHandler extends Gui {
 		/**
 		 * Example drawing a texture :
 		 */
-		this.mc.renderEngine.bindTexture(getTextureLocationMarker());
-		int yOffset = 0;
-		// this.drawTexturedModalRect(xPos + 10, yPos + yOffset, 0, 0, 6, 3);
+		
 
 		/**
 		 * Example drawing a a string:
 		 */
 		int depth = 1;
 		int fontColor = 14737632;
+		int x_margin = 4;
 		int x_spacing = 40;
-		//this.fontRenderer.drawString("Team:  Point:", 2, 2, 14737632);
-		//this.fontRenderer.drawString("Red    " + depth, 2, 12, 14737632);
 
 		if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
 			if (DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
-				this.fontRenderer.drawString("Team:", 2, 2, fontColor);
-				this.fontRenderer.drawString("Point:", 2 + x_spacing, 2, fontColor);
+				/**
+				 * Background.  Supposed to be 50% transparent.
+				 */
+				this.mc.renderEngine.bindTexture(getTextureLocationMarker());
+				int width = 85;
+				int height = 60;
+				this.drawTexturedModalRect(xPos, yPos, 0, 0, width, height);
+				
+				/**
+				 * Scoreboard Text
+				 */
+				this.fontRenderer.drawString("Team:", x_margin, 2, fontColor);
+				this.fontRenderer.drawString("Point:", x_margin + x_spacing, 2, fontColor);
 				int y_spacing = 1;
 				for (GameTeam team : DeathCube.gameTeams) {
-					this.fontRenderer.drawString(team.getTeamColor(), 2, 2 + y_spacing*10, fontColor);
-					this.fontRenderer.drawString(String.valueOf(team.getCurrentCaptureIndex() + 1), 2 + x_spacing, 2 + y_spacing*10, fontColor);
+					this.fontRenderer.drawString(team.getTeamColor(), x_margin, 2 + y_spacing*10, fontColor);
+					this.fontRenderer.drawString(String.valueOf(team.getCurrentCaptureIndex() + 1), x_margin + x_spacing, 2 + y_spacing*10, fontColor);
+					
+					/**
+					 * Display Time until Point Captured (Count-down)
+					 */
+					if(team.getCurrentPointPos() != null) {
+						TileEntityCapturePoint captureTE = (TileEntityCapturePoint) MinecraftServer.getServer().worldServers[0].getTileEntity(team.getCurrentPointPos());
+						if(captureTE != null && captureTE.getIsActive() && captureTE.getIsBeingCaptured()) {
+							String remainingTime = String.format("%.2f", captureTE.getRemainingCaptureTime());
+							this.fontRenderer.drawString(remainingTime, x_margin + x_spacing + 20, 2 + y_spacing*10, fontColor);
+						}
+					}
+					
 					y_spacing++;
 				}
+				
+				long currentTime = System.currentTimeMillis();
+				float timeRemaining = ((float) (Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart))) / 1000.0f;
+				int remainingMinutes = (int) (timeRemaining / 60);
+				int remainingSeconds = (int) (timeRemaining % 60);
+				
+				this.fontRenderer.drawString("GameTime:", x_margin, 2 + y_spacing*10, fontColor);
+				this.fontRenderer.drawString(String.valueOf(remainingMinutes) + ":" + remainingSeconds, x_margin + x_spacing + 10, 2 + y_spacing*10, fontColor);
 			}
 		}
 	}
@@ -83,7 +113,7 @@ public class RenderOverlayHandler extends Gui {
 	protected ResourceLocation getTextureLocationGage() {
 		// Original design was to cause it to only load this guageRL 1 time
 		if (guageRL == null) {
-			guageRL = Reference.GUI_STARTING_GEAR_CONFIG_BACKGROUND;
+			guageRL = Reference.HUD_SCORE_TEAM_POINTS;
 		}
 		return guageRL;
 	}
@@ -93,7 +123,7 @@ public class RenderOverlayHandler extends Gui {
 	protected ResourceLocation getTextureLocationMarker() {
 		// Original design was to cause it to only load this markerRL 1 time
 		if (markerRL == null) {
-			markerRL = Reference.GUI_STARTING_GEAR_CONFIG_BACKGROUND;
+			markerRL = Reference.HUD_SCORE_TEAM_POINTS;
 		}
 		return markerRL;
 	}

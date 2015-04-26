@@ -29,17 +29,10 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	private boolean isBeingCaptured = false;
 	private boolean isCaptured = false;
 	private int numPlayersOnPoint = 0;
-	private long pointTimerStart, pointTimerCurrent;
-	private double remainingTime;
+	private long pointTimerStart = 0, pointTimerCurrent = 0;
+	private double remainingTime = 0;
 
 	public TileEntityCapturePoint() {
-		/**
-		 * TODO: On creation or onBlockPlace, register with game. Network packet?
-		 * 
-		 * Give/Get capture point ID.
-		 * 
-		 * Other values set by GUI.
-		 */
 		//Log.info("Capture Point Constructor");
 	}
 
@@ -150,9 +143,21 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	public int getCaptureTime() {
 		return captureTime;
 	}
+	
+	public double getRemainingCaptureTime() {
+		return remainingTime;
+	}
 
 	public void setIsActive(boolean setPoint) {
 		isActive = setPoint;
+	}
+	
+	public boolean getIsActive() {
+		return isActive;
+	}
+	
+	public boolean getIsBeingCaptured() {
+		return isBeingCaptured;
 	}
 	
 	public boolean getIsCaptured() {
@@ -203,7 +208,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					 */
 					pointTimerCurrent = System.currentTimeMillis();
 					remainingTime = (double) captureTime - ((double) (pointTimerCurrent - pointTimerStart) / 1000);
-					Log.info("Player in range of Capture Point.  Time until Capture: " + remainingTime);
+					//Log.info("Player in range of Capture Point.  Time until Capture: " + String.format("%.2f", remainingTime));
 
 					if (remainingTime <= 0) {
 						isBeingCaptured = false;

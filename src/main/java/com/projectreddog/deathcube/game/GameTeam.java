@@ -149,7 +149,10 @@ public class GameTeam {
 	}
 	
 	public BlockPos getCurrentPointPos() {
-		return capturePointsList.get(currentCaptureIndex);
+		if(capturePointsList != null && capturePointsList.size() != 0)
+			return capturePointsList.get(currentCaptureIndex);
+		else
+			return null;
 	}
 
 	public boolean hasCapturedAllPoints() {
