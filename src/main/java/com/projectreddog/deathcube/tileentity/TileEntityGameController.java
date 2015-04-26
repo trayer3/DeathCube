@@ -1084,7 +1084,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				}
 				
 				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
-					inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i].copy();
+					if(lookupTE.inventory[i] != null)
+						inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i].copy();
 				}
 			}
 		}
