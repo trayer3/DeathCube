@@ -1068,7 +1068,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						color = 11642407;
 					}
 					
-					ItemStack armorPiece = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i];
+					ItemStack armorPiece = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
 					
 					if(armorPiece != null && armorPiece.getItem().equals(Items.leather_helmet)) {
 						Items.leather_helmet.setColor(armorPiece, color);
@@ -1080,13 +1080,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						Items.leather_boots.setColor(armorPiece, color);
 					}
 					
-					inPlayer.inventory.setInventorySlotContents(i, armorPiece);
-					//inPlayer.inventory.armorInventory[i] = armorPiece;
+					inPlayer.inventory.armorInventory[i] = armorPiece;
 				}
 				
 				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
-					//inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i];
-					inPlayer.inventory.setInventorySlotContents(i, lookupTE.inventory[i]);
+					inPlayer.inventory.mainInventory[i] = lookupTE.inventory[i].copy();
 				}
 			}
 		}
