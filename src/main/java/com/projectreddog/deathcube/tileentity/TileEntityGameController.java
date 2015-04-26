@@ -1015,7 +1015,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * - Set to full health and saturation to help hunger.
 		 */
 		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
-		inPlayer.setVelocity(0, 0, 0);
+		inPlayer.motionX = 0;
+		inPlayer.motionY = 0;
+		inPlayer.motionZ = 0;
 		inPlayer.fallDistance = 0;
 		inPlayer.clearActivePotions();
 		inPlayer.extinguish();
