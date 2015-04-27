@@ -813,7 +813,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				activeTeamPointTimes[i] = captureTE.getRemainingCaptureTime();
 			}
 			
-			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+			//Log.info("Update Client Scoreboard: " + displayScoreboard);
+			
+			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 		}
 	}
 	

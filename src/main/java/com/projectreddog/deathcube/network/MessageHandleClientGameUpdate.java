@@ -31,6 +31,7 @@ import com.sun.corba.se.spi.ior.iiop.GIOPVersion;
 
 public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<MessageHandleClientGameUpdate, MessageHandleClientGameUpdate> {
 	private boolean displayScoreboard;
+	private int numberOfTeams = 0;
 	private String[] gameTeamsNames;
 	private int[] gameTeamsActivePoints;
 	private double[] gameTeamsPointTimes;
@@ -39,39 +40,55 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 	public MessageHandleClientGameUpdate() {
 	}
 
-	public MessageHandleClientGameUpdate(boolean displayScoreboard, String[] gameTeamsNames, int[] gameTeamsActivePoints, double[] gameTeamsPointTimes, long gameTimeStartClient) {
+	public MessageHandleClientGameUpdate(boolean displayScoreboard, int numberOfTeams, String[] gameTeamsNames, int[] gameTeamsActivePoints, double[] gameTeamsPointTimes, long gameTimeStartClient) {
+		//Log.info("Message Constructor - " + displayScoreboard);
+		//Log.info("Message Constructor - " + numberOfTeams + " teams. " + gameTimeStartClient + " time flag.");
 		this.displayScoreboard = displayScoreboard;
+		this.numberOfTeams = numberOfTeams;
 		this.gameTeamsNames = gameTeamsNames.clone();
 		this.gameTeamsActivePoints = gameTeamsActivePoints.clone();
 		this.gameTeamsPointTimes = gameTeamsPointTimes.clone();
 		this.gameTimeStartClient = gameTimeStartClient;
+		
+		/**
+		for(int i = 0; i < numberOfTeams; i++) {
+			Log.info("Message Constructor - Team: " + gameTeamsNames[i] + " Local: " + this.gameTeamsNames[i] + " Point: " + gameTeamsActivePoints[i] + " Local: " + this.gameTeamsActivePoints[i] + " Time: " + gameTeamsPointTimes[i] + " Local: " + this.gameTeamsPointTimes[i]);
+		} */
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+		//Log.info("Message fromBytes");
 		displayScoreboard = buf.readBoolean();
-		for(int i = 0; i < gameTeamsNames.length; i++) {
+		numberOfTeams = buf.readInt();
+		
+		gameTeamsNames = new String[numberOfTeams];
+		gameTeamsActivePoints = new int[numberOfTeams];
+		gameTeamsPointTimes = new double[numberOfTeams];
+		
+		for(int i = 0; i < numberOfTeams; i++) {
 			gameTeamsNames[i] = ByteBufUtils.readUTF8String(buf);
-		}
-		for(int i = 0; i < gameTeamsActivePoints.length; i++) {
 			gameTeamsActivePoints[i] = buf.readInt();
-		}
-		for(int i = 0; i < gameTeamsPointTimes.length; i++) {
 			gameTeamsPointTimes[i] = buf.readDouble();
 		}
 		gameTimeStartClient = buf.readLong();
+		
+		/**
+		Log.info("Message fromBytes - " + displayScoreboard);
+		Log.info("Message fromBytes - " + numberOfTeams + " teams. " + gameTimeStartClient + " time flag.");
+		for(int i = 0; i < numberOfTeams; i++) {
+			Log.info("Message fromBytes - Team: " + gameTeamsNames[i] + " Point: " + gameTeamsActivePoints[i] + " Time: " + gameTeamsPointTimes[i]);
+		} */
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+		//Log.info("Message toBytes");
 		buf.writeBoolean(displayScoreboard);
-		for(int i = 0; i < gameTeamsNames.length; i++) {
+		buf.writeInt(numberOfTeams);
+		for(int i = 0; i < numberOfTeams; i++) {
 			ByteBufUtils.writeUTF8String(buf, gameTeamsNames[i]);
-		}
-		for(int i = 0; i < gameTeamsActivePoints.length; i++) {
 			buf.writeInt(gameTeamsActivePoints[i]);
-		}
-		for(int i = 0; i < gameTeamsPointTimes.length; i++) {
 			buf.writeDouble(gameTeamsPointTimes[i]);
 		}
 		buf.writeLong(gameTimeStartClient);
@@ -80,10 +97,10 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 	@Override
 	public MessageHandleClientGameUpdate onMessage(MessageHandleClientGameUpdate message, MessageContext ctx) {
 		if (ctx.side == Side.SERVER) {
-			Log.info("Server received message: Display Scoreboard - " + message.displayScoreboard);
+			//Log.info("Server received message: Display Scoreboard - " + message.displayScoreboard);
 			handleServerSide(message, ctx.getServerHandler().playerEntity);
 		} else {
-			Log.info("Client received message: Display Scoreboard - " + message.displayScoreboard);
+			//Log.info("Client received message: Display Scoreboard - " + message.displayScoreboard);
 			handleClientSide(message, DeathCube.proxy.getClientPlayer());
 		}
 		return null;
@@ -93,16 +110,18 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 		/**
 		 * Set DeathCube.java values for Client Side.
 		 */
-		DeathCube.displayScoreboard_client = displayScoreboard;
-		DeathCube.gameTeams_names = gameTeamsNames;
-		DeathCube.gameTeams_activePoints = gameTeamsActivePoints;
-		DeathCube.gameTeams_pointTimes = gameTeamsPointTimes;
-		DeathCube.gameTimeStart_client = gameTimeStartClient;
+		//Log.info("Message Client Side value-setting - " + message.displayScoreboard);
+		DeathCube.displayScoreboard_client = message.displayScoreboard;
+		DeathCube.gameTeams_names = message.gameTeamsNames;
+		DeathCube.gameTeams_activePoints = message.gameTeamsActivePoints;
+		DeathCube.gameTeams_pointTimes = message.gameTeamsPointTimes;
+		DeathCube.gameTimeStart_client = message.gameTimeStartClient;
 	}
 
 	public void handleServerSide(MessageHandleClientGameUpdate message, EntityPlayer player) {
 		/**
 		 * Do nothing for server side.
 		 */
+		//Log.info("Message Server Side do nothing.");
 	}
 }
