@@ -70,7 +70,7 @@ public class DeathCube {
 	@SideOnly(Side.CLIENT)
 	public static double[] gameTeams_pointTimes;
 	@SideOnly(Side.CLIENT)
-	public static long gameTimeStart_client = 0;
+	public static long gameTimeStart_client;
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
