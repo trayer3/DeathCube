@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -27,6 +26,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
@@ -764,6 +764,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				DeathCube.fieldState = FieldStates.Inactive;
 				DeathCube.gameTimeStart = -1;
 
+				// TODO: Can't send message to server when currently acting as server?
 				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
@@ -788,9 +789,34 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			for (int j = 0; j < MinecraftServer.getServer().worldServers.length; ++j) {
 				MinecraftServer.getServer().worldServers[j].setWorldTime((long) 6000);
 			}
+			
+			updateClient();
 		}
 	}
 
+	public void updateClient() {
+		boolean displayScoreboard = false;
+		
+		if(DeathCube.gameState == GameStates.Running && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+			String[] teamNames = new String[DeathCube.gameTeams.length];
+			int[] activeTeamPoints = new int[DeathCube.gameTeams.length];
+			double[] activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+			
+			displayScoreboard = true;
+			
+			for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+				teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
+				
+				activeTeamPoints[i] = DeathCube.gameTeams[i].getCurrentCaptureIndex() + 1;
+				
+				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
+				activeTeamPointTimes[i] = captureTE.getRemainingCaptureTime();
+			}
+			
+			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+		}
+	}
+	
 	public void startGame() {
 
 		/**

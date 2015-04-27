@@ -63,8 +63,8 @@ public class RenderOverlayHandler extends Gui {
 		int x_margin = 4;
 		int x_spacing = 40;
 
-		if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
-			if (DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+		if (DeathCube.displayScoreboard_client) {
+			if (DeathCube.gameTeams_names != null && DeathCube.gameTeams_names.length != 0) {
 				/**
 				 * Background.  Supposed to be 50% transparent.
 				 */
@@ -79,26 +79,21 @@ public class RenderOverlayHandler extends Gui {
 				this.fontRenderer.drawString("Team:", x_margin, 2, fontColor);
 				this.fontRenderer.drawString("Point:", x_margin + x_spacing, 2, fontColor);
 				int y_spacing = 1;
-				for (GameTeam team : DeathCube.gameTeams) {
-					this.fontRenderer.drawString(team.getTeamColor(), x_margin, 2 + y_spacing*10, fontColor);
-					this.fontRenderer.drawString(String.valueOf(team.getCurrentCaptureIndex() + 1), x_margin + x_spacing, 2 + y_spacing*10, fontColor);
+				for (int i = 0; i < DeathCube.gameTeams_names.length; i++) {
+					this.fontRenderer.drawString(DeathCube.gameTeams_names[i], x_margin, 2 + y_spacing*10, fontColor);
+					this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints), x_margin + x_spacing, 2 + y_spacing*10, fontColor);
 					
 					/**
 					 * Display Time until Point Captured (Count-down)
 					 */
-					if(team.getCurrentPointPos() != null) {
-						TileEntityCapturePoint captureTE = (TileEntityCapturePoint) MinecraftServer.getServer().worldServers[0].getTileEntity(team.getCurrentPointPos());
-						if(captureTE != null && captureTE.getIsActive() && captureTE.getIsBeingCaptured()) {
-							String remainingTime = String.format("%.2f", captureTE.getRemainingCaptureTime());
-							this.fontRenderer.drawString(remainingTime, x_margin + x_spacing + 20, 2 + y_spacing*10, fontColor);
-						}
-					}
+					String remainingTime = String.format("%.2f", DeathCube.gameTeams_pointTimes);
+					this.fontRenderer.drawString(remainingTime, x_margin + x_spacing + 20, 2 + y_spacing*10, fontColor);
 					
 					y_spacing++;
 				}
 				
 				long currentTime = System.currentTimeMillis();
-				float timeRemaining = ((float) (Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart))) / 1000.0f;
+				float timeRemaining = ((float) (Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart_client))) / 1000.0f;
 				int remainingMinutes = (int) (timeRemaining / 60);
 				int remainingSeconds = (int) (timeRemaining % 60);
 				

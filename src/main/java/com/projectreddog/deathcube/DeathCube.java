@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.game.GameTeam;
@@ -57,6 +59,17 @@ public class DeathCube {
 	public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
 	public static List<BlockPos> capturePoints = new ArrayList<BlockPos>();
 	public static List<BlockPos> gearTEPos = new ArrayList<BlockPos>();
+	
+	@SideOnly(Side.CLIENT)
+	public static boolean displayScoreboard_client;
+	@SideOnly(Side.CLIENT)
+	public static String[] gameTeams_names;
+	@SideOnly(Side.CLIENT)
+	public static int[] gameTeams_activePoints;
+	@SideOnly(Side.CLIENT)
+	public static double[] gameTeams_pointTimes;
+	@SideOnly(Side.CLIENT)
+	public static long gameTimeStart_client = 0;
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
@@ -64,6 +77,8 @@ public class DeathCube {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 
+		displayScoreboard_client = false;
+		
 		// Initialize Classes
 		ModBlocks.init();
 		ModTileEntities.init();
