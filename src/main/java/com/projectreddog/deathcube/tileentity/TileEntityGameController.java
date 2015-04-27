@@ -55,6 +55,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private List<BlockPos> spawnPointsList = new ArrayList<BlockPos>();
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
 	private Block forceFieldBlock = ModBlocks.forcefield;
+	private int numTeamsInGame = 0;
 
 	/**
 	 * Scoring Variables
@@ -821,28 +822,50 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	
 	public void startGame() {
 
-		/**
+		/************************************************************************************************
 		 * Create Team Objects
 		 * - Array of Possible Teams by Color
 		 * - List of Colors used. (Not random - to make this random, will need to allow random color for
 		 * all points and teams. Map making would have to associate a point with a team by another
 		 * designator, e.g. A, B, C... - rather than color. Then, color would be assign during
 		 * the StartGame() method.)
-		 */
-		DeathCube.gameTeams = new GameTeam[numTeamsFromGUI];
+		 ************************************************************************************************/
+		
+		List<String> foundColors = new ArrayList<String>();
+		for(BlockPos spawnPos : this.spawnPointsList) {
+			TileEntitySpawnPoint spawnTE = (TileEntitySpawnPoint) this.worldObj.getTileEntity(spawnPos);
+			if(!foundColors.contains(spawnTE.spawnPointTeamColor)) {
+				foundColors.add(spawnTE.spawnPointTeamColor);
+			}
+		}
+		
+		if(foundColors.size() < 2) {
+			/**
+			 * Map not properly set up.  Must be more than 2  
+			 */
+			Log.info("Less than two Spawn Point Colors found.");
+			stopGame();
+		} else if(foundColors.size() >= 2 && foundColors.size() < numTeamsFromGUI) {
+			/**
+			 * Map is not set up for as many teams as specified in GUI.  Reset to number found.
+			 */
+			numTeamsInGame = foundColors.size();
+			// send message to client gameControllers?
+		} else {
+			/**
+			 * Found number equals GUI number or is greater.  OK to play with fewer teams.
+			 * - Do nothing.
+			 */
+			numTeamsInGame = numTeamsFromGUI;
+		}
+		
+		DeathCube.gameTeams = new GameTeam[numTeamsInGame];
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
 		DeathCube.playerAwaitingRespawn = new HashMap<String, Long>();
-		for (int i = 0; i < numTeamsFromGUI; i++) {
-			String color = Reference.TEAM_RED;
-			if (i == 0)
-				color = Reference.TEAM_RED;
-			else if (i == 1)
-				color = Reference.TEAM_BLUE;
-			else if (i == 2)
-				color = Reference.TEAM_GREEN;
-			else if (i == 3)
-				color = Reference.TEAM_YELLOW;
+		
+		for (int i = 0; i < numTeamsInGame; i++) {
+			String color = foundColors.get(i);
 
 			DeathCube.gameTeams[i] = new GameTeam(color, this.worldObj);
 			DeathCube.teamColorToIndex.put(color, i);
@@ -850,10 +873,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			Log.info("Team added, color: " + DeathCube.gameTeams[i].getTeamColor());
 		}
 
-		/**
+		/*************************************************************************************************
 		 * Add Spawn and Capture Points to GameTeam objects.
 		 * - TODO: Make sure there is at least 1 point of each kind for each team.
-		 */
+		 ************************************************************************************************/
 		Log.info("Spawn Point list size: " + spawnPointsList.size());
 		Log.info("Capture Point list size: " + capturePointsList.size());
 		Log.info("Gear TE list size: " + DeathCube.gearTEPos.size());
@@ -879,17 +902,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Find Capture Points for Team.
 			 */
-			List<BlockPos> tempList = new ArrayList<BlockPos>();
+			List<BlockPos> tempCapturePointList = new ArrayList<BlockPos>();
 			for (BlockPos pointPos : capturePointsList) {
 				TileEntityCapturePoint lookupTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(pointPos);
 				Log.info("Capture Point color: " + lookupTE.getCapturePointTeamColor());
 				if (lookupTE.getCapturePointTeamColor().equals(team.getTeamColor())) {
-					tempList.add(pointPos);
+					tempCapturePointList.add(pointPos);
 					Log.info("Point matches team!");
 				}
 			}
 
-			if (tempList.size() < 1) {
+			if (tempCapturePointList.size() < 1) {
 				Log.info("No Capture Points for Team: " + team.getTeamColor());
 				stopGame();
 				break;
@@ -900,15 +923,15 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Sort Capture Points by Point Order value.
 			 */
-			if (tempList.size() > 1) {
+			if (tempCapturePointList.size() > 1) {
 				Log.info("Ordering Points ...");
-				while (tempList.size() > 0) {
+				while (tempCapturePointList.size() > 0) {
 					int indexOfLowest = 0;
-					for (int i = 0; i < tempList.size(); i++) {
-						BlockPos iPos = tempList.get(i);
+					for (int i = 0; i < tempCapturePointList.size(); i++) {
+						BlockPos iPos = tempCapturePointList.get(i);
 						TileEntityCapturePoint iTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(iPos);
 
-						BlockPos lowPos = tempList.get(indexOfLowest);
+						BlockPos lowPos = tempCapturePointList.get(indexOfLowest);
 						TileEntityCapturePoint lowTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(lowPos);
 
 						if (iTE.captureOrderNumber < lowTE.captureOrderNumber) {
@@ -916,22 +939,25 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						}
 					}
 
-					Log.info("Capture Point: " + ((TileEntityCapturePoint) this.worldObj.getTileEntity(tempList.get(indexOfLowest))).captureOrderNumber);
-					team.addCapturePoint(tempList.get(indexOfLowest));
-					tempList.remove(indexOfLowest);
+					Log.info("Capture Point: " + ((TileEntityCapturePoint) this.worldObj.getTileEntity(tempCapturePointList.get(indexOfLowest))).captureOrderNumber);
+					team.addCapturePoint(tempCapturePointList.get(indexOfLowest));
+					tempCapturePointList.remove(indexOfLowest);
 				}
 			} else {
 				Log.info("Only 1 Point.");
-				team.addCapturePoint(tempList.get(0));
+				team.addCapturePoint(tempCapturePointList.get(0));
 			}
 
 			team.setNextCapturePointActive();
 			Log.info("Point set active.");
 		}
 
-		/**
-		 * For each player in the Game:
-		 */
+		/*************************************************************************************************
+		 * Set up each player in the Game:
+		 * - Assign to a Team
+		 * - Set up Kills Score tracking
+		 * - Spawn Player in Game
+		 ************************************************************************************************/
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		for (EntityPlayer player : playerList) {
 			/**

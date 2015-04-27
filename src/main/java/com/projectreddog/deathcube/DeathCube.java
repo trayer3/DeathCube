@@ -47,6 +47,7 @@ public class DeathCube {
 	public static boolean useForceField = true;
 	public static int forceFieldStrength = 5;
 	public static boolean isOrderedCapture = true;
+	public static boolean firstServerTick = true;
 
 	public static long gameTimeStart = 0;
 	public static GameTeam[] gameTeams;
@@ -133,6 +134,7 @@ public class DeathCube {
 		 * 
 		 * ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(gameController.getPos()));
 		 */
+		firstServerTick = true;
 	}
 
 	/**
