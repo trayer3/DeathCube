@@ -77,8 +77,6 @@ public class DeathCube {
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-
-		displayScoreboard_client = false;
 		
 		// Initialize Classes
 		ModBlocks.init();
