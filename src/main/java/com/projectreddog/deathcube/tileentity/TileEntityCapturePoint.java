@@ -156,8 +156,16 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		return isActive;
 	}
 	
+	public void setIsBeingCaptured(boolean setState) {
+		isBeingCaptured = setState;
+	}
+	
 	public boolean getIsBeingCaptured() {
 		return isBeingCaptured;
+	}
+	
+	public void setIsCaptured(boolean setState) {
+		isCaptured = setState;
 	}
 	
 	public boolean getIsCaptured() {

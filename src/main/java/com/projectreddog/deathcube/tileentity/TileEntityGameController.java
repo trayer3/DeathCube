@@ -56,6 +56,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	private List<BlockPos> capturePointsList = new ArrayList<BlockPos>();
 	private Block forceFieldBlock = ModBlocks.forcefield;
 	private int numTeamsInGame = 0;
+	private int mostPointsCaptured = 0;
 
 	/**
 	 * Scoring Variables
@@ -676,6 +677,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					} else {
 						/**
 						 * Process queue of Players waiting to respawn.
+						 * - TODO: Render on-screen a count-down until player respawns.
 						 */
 						if (DeathCube.playerAwaitingRespawn.size() > 0) {
 							Log.info("Player serving Death Penalty");
@@ -685,14 +687,22 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 							//Log.info("keyIterator done.");
 							while (keyIterator.hasNext()) {
 								String playerNameKey = keyIterator.next();
-								long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
-								currentTime = System.currentTimeMillis();
-								long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
-								Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
-								Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
-								if (timeDiff <= 0) {
-									Log.info("Found Player waiting to respawn - time to spawn!");
-									sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+								if(this.worldObj.getPlayerEntityByName(playerNameKey) != null) {
+									long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
+									currentTime = System.currentTimeMillis();
+									long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
+									Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+									Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
+									if (timeDiff <= 0) {
+										Log.info("Found Player waiting to respawn - time to spawn!");
+										sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+										DeathCube.playerAwaitingRespawn.remove(playerNameKey);
+									}
+								} else {
+									/**
+									 * If there is a player in the queue, but they can't be found in the world:
+									 * - Remove them from the queue
+									 */
 									DeathCube.playerAwaitingRespawn.remove(playerNameKey);
 								}
 							}
@@ -715,6 +725,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 										stopGame();
 									} else {
 										team.setNextCapturePointActive();
+										if(team.getCurrentCaptureIndex() > mostPointsCaptured) {
+											winningTeamColor = team.getTeamColor();
+										}
 									}
 								}
 							}
@@ -796,49 +809,65 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	}
 
 	public void updateClient() {
-		boolean displayScoreboard = false;
-		
-		if(DeathCube.gameState == GameStates.Running && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+		if((DeathCube.gameState == GameStates.Running || DeathCube.gameState == GameStates.PostGame) && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+			/**
+			 * Display Scoreboard.  Store values and send updates only when something has changed.
+			 */
+			boolean sendUpdate = false;
+			
+			boolean displayScoreboard = false;
 			String[] teamNames = new String[DeathCube.gameTeams.length];
 			int[] activeTeamPoints = new int[DeathCube.gameTeams.length];
 			double[] activeTeamPointTimes = new double[DeathCube.gameTeams.length];
 			
-			displayScoreboard = true;
-			
-			for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-				teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
-				
-				activeTeamPoints[i] = DeathCube.gameTeams[i].getCurrentCaptureIndex() + 1;
-				
-				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
-				activeTeamPointTimes[i] = captureTE.getRemainingCaptureTime();
-			}
-			
-			//Log.info("Update Client Scoreboard: " + displayScoreboard);
-			
-			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
-		} else if(DeathCube.gameState == GameStates.PostGame && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
-			String[] teamNames = new String[DeathCube.gameTeams.length];
-			int[] activeTeamPoints = new int[DeathCube.gameTeams.length];
-			double[] activeTeamPointTimes = new double[DeathCube.gameTeams.length];
-			
-			displayScoreboard = true;
-			
-			for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-				
-				if(DeathCube.gameTeams[i].getTeamColor().equals(winningTeamColor)) {
-					teamNames[i] = DeathCube.gameTeams[i].getTeamColor() + " Wins!";
-				} else {
+			if(DeathCube.gameState == GameStates.Running) {
+				for(int i = 0; i < DeathCube.gameTeams.length; i++) {
 					teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
+					
+					activeTeamPoints[i] = DeathCube.gameTeams[i].getCurrentCaptureIndex() + 1;
+					
+					TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
+					activeTeamPointTimes[i] = captureTE.getRemainingCaptureTime();
 				}
-				
-				activeTeamPoints[i] = 0;
-				
-				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
-				activeTeamPointTimes[i] = 0;
+				displayScoreboard = true;
+			} else if(DeathCube.gameState == GameStates.PostGame) {
+				/**
+				 * 
+				 * Game is over. Display the winner.
+				 * - TODO: Use a different graphic + renderer.  Don't display this in the scoreboard.
+				 * - TODO: Display post-game statistics - maybe for a few seconds, then only if player is pressing a hot-key.
+				 * 
+				 */
+				for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+					
+					if(DeathCube.gameTeams[i].getTeamColor().equals(winningTeamColor)) {
+						teamNames[i] = DeathCube.gameTeams[i].getTeamColor() + " Wins!";
+					} else {
+						teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
+					}
+					
+					activeTeamPoints[i] = 0;
+					
+					TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
+					activeTeamPointTimes[i] = 0;
+				}
+				displayScoreboard = true;
 			}
 			
-			//Log.info("Update Client Scoreboard: " + displayScoreboard);
+			/**
+			 * Check for Changes.
+			 * - For first time, need to check if null.
+			 * 
+			 * Declare at start of TE class
+			 */
+			boolean last_displayScoreboard = false;
+			String[] last_teamNames = new String[DeathCube.gameTeams.length];
+			int[] last_activeTeamPoints = new int[DeathCube.gameTeams.length];
+			double[] last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+			
+			if(last_displayScoreboard != displayScoreboard) {
+				
+			}
 			
 			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 		}
@@ -1180,6 +1209,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			team.setAllPointsActive(false);
 		}
 
+		mostPointsCaptured = 0;
 		DeathCube.gameTimeStart = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;
 		

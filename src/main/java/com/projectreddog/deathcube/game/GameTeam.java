@@ -171,7 +171,12 @@ public class GameTeam {
 	
 	public void setAllPointsActive(boolean active) {
 		for(BlockPos pos : capturePointsList) {
-			((TileEntityCapturePoint) this.worldObj.getTileEntity(pos)).setIsActive(active);
+			TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(pos);
+			captureTE.setIsActive(active);
+			if(!active) {
+				captureTE.setIsBeingCaptured(false);
+				captureTE.setIsCaptured(false);
+			}
 		}
 	}
 }
