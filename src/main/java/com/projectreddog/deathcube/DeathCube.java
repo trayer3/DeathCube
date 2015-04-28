@@ -20,9 +20,9 @@ import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModCommands;
+import com.projectreddog.deathcube.init.ModEntities;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
-import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
@@ -93,6 +93,8 @@ public class DeathCube {
 	 */
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+		//register entities before renders
+		ModEntities.init(this);
 
 		// Register Stuff
 		proxy.registerRenderers();
