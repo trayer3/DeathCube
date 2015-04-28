@@ -62,7 +62,14 @@ public class ModNetwork {
 	}
 	
 	public static void sendToAll(IMessage message){
-		ModNetwork.simpleNetworkWrapper.sendToAll(message);
+		/**
+		 * Bug that causes players to disconnect.  Get list of players and send message to each individually.
+		 */
+		for (EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
+			ModNetwork.simpleNetworkWrapper.sendTo(message, player);
+		}
+
+		//ModNetwork.simpleNetworkWrapper.sendToAll(message);
     }
 
     public static void sendToDimension(IMessage message, int dimensionId){
