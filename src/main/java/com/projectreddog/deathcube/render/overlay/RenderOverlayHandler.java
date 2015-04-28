@@ -80,7 +80,10 @@ public class RenderOverlayHandler extends Gui {
 				int y_spacing = 1;
 				for (int i = 0; i < DeathCube.gameTeams_names.length; i++) {
 					this.fontRenderer.drawString(DeathCube.gameTeams_names[i], x_margin, 2 + y_spacing * 10, fontColor);
-					this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints[i]), x_margin + x_spacing, 2 + y_spacing * 10, fontColor);
+					
+					if(DeathCube.gameTeams_activePoints[i] > 0) {
+						this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints[i]), x_margin + x_spacing, 2 + y_spacing * 10, fontColor);
+					}
 
 					/**
 					 * Display Time until Point Captured (Count-down)

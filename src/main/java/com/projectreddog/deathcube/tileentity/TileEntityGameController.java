@@ -817,6 +817,30 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			//Log.info("Update Client Scoreboard: " + displayScoreboard);
 			
 			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+		} else if(DeathCube.gameState == GameStates.PostGame && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+			String[] teamNames = new String[DeathCube.gameTeams.length];
+			int[] activeTeamPoints = new int[DeathCube.gameTeams.length];
+			double[] activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+			
+			displayScoreboard = true;
+			
+			for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+				
+				if(DeathCube.gameTeams[i].getTeamColor().equals(winningTeamColor)) {
+					teamNames[i] = DeathCube.gameTeams[i].getTeamColor() + " Wins!";
+				} else {
+					teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
+				}
+				
+				activeTeamPoints[i] = 0;
+				
+				TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
+				activeTeamPointTimes[i] = 0;
+			}
+			
+			//Log.info("Update Client Scoreboard: " + displayScoreboard);
+			
+			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 		}
 	}
 	

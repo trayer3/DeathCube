@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.command.CommandGame;
+import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.utility.Log;
@@ -116,6 +118,11 @@ public class DeathCubeEventHandler {
 					 * TODO: If not Running state, teleport to Lobby.
 					 */
 					TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
+					
+					String[] names = {"None"};
+					int[] points = {0};
+					double[] pointTimes = {0.0d};
+					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0), (EntityPlayerMP) event.entity);
 					
 					Log.info("Game not Running: Player joined Lobby.");
 				} else {
