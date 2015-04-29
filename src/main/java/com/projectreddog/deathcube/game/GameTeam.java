@@ -188,14 +188,18 @@ public class GameTeam {
 		boolean result = false;
 		
 		if(getCurrentPointPos() != null) {
-			int x = getCurrentPointPos().getX();
-			int y = getCurrentPointPos().getY();
-			int z = getCurrentPointPos().getZ();
+			double x = getCurrentPointPos().getX() + 0.5d;
+			double y = getCurrentPointPos().getY() + 1.5d;
+			double z = getCurrentPointPos().getZ() + 0.5d;
 			
 			waypoint.setPosition(x,y,z);
 			result  = this.worldObj.spawnEntityInWorld(waypoint);
 		}
 		
 		return result;
+	}
+	
+	public void removeWaypoint() {
+		waypoint.setDead();
 	}
 }

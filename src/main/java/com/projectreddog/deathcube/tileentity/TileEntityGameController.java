@@ -64,9 +64,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private String winningTeamColor = "trayer4";
 	boolean last_displayScoreboard = false;
-	String[] last_teamNames = new String[DeathCube.gameTeams.length];
-	int[] last_activeTeamPoints = new int[DeathCube.gameTeams.length];
-	double[] last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+	String[] last_teamNames;
+	int[] last_activeTeamPoints;
+	double[] last_activeTeamPointTimes;
 
 	public TileEntityGameController() {
 		Log.info("GameController Constructor Call.");
@@ -864,9 +864,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Check for Changes.
 			 * - For first time, need to check if null.
 			 */
-			last_teamNames = new String[DeathCube.gameTeams.length];
-			last_activeTeamPoints = new int[DeathCube.gameTeams.length];
-			last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+			//last_teamNames = new String[DeathCube.gameTeams.length];
+			//last_activeTeamPoints = new int[DeathCube.gameTeams.length];
+			//last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
 			
 			if(last_displayScoreboard != displayScoreboard) {
 				sendUpdate = true;
@@ -886,7 +886,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						Log.warn("Check - last_teamNames length is not equal to main GameTeams[] length.");
 					} else {
 						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-							if(!teamNames.equals(last_teamNames[i])) {
+							if(!teamNames[i].equals(last_teamNames[i])) {
 								sendUpdate = true;
 								Log.error("teamName " + i + " is different.  Update scoreboard.");
 							}
@@ -1321,6 +1321,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 */
 		for (GameTeam team : DeathCube.gameTeams) {
 			team.setAllPointsActive(false);
+			team.removeWaypoint();
 		}
 
 		mostPointsCaptured = 0;
