@@ -9,6 +9,8 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.game.GameTeam;
+import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.utility.Log;
 
@@ -39,14 +41,23 @@ public class CommandGame extends CommandBase {
 				if (DeathCube.gameState == GameStates.Lobby) {
 					DeathCube.gameState = GameStates.GameWarmup;
 					DeathCube.gameTimeStart = System.currentTimeMillis();
+					DeathCube.gameTimeCheck = System.currentTimeMillis();
 					Log.info("Game now Warming Up.");
 				} else {
 					throw new WrongUsageException("Game must be in Lobby to start.", new Object[0]);
 				}
 			} else if (args[0].equals("end")) {
 				if (DeathCube.gameState == GameStates.Running) {
+					for (GameTeam team : DeathCube.gameTeams) {
+						team.setAllPointsActive(false);
+					}
+
+					DeathCube.gameTimeStart = System.currentTimeMillis();
+					DeathCube.gameTimeCheck = System.currentTimeMillis();
 					DeathCube.gameState = GameStates.PostGame;
-					DeathCube.gameTimeStart = -1;
+					
+					if (DeathCube.fieldState != FieldStates.Inactive)
+						DeathCube.fieldState = FieldStates.Inactive;
 				} else {
 					throw new WrongUsageException("Game must be Running to end.", new Object[0]);
 				}

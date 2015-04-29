@@ -51,6 +51,7 @@ public class DeathCube {
 	public static boolean firstServerTick = true;
 
 	public static long gameTimeStart = 0;
+	public static long gameTimeCheck = 0;
 	public static GameTeam[] gameTeams;
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;

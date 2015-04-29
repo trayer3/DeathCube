@@ -62,6 +62,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 * Scoring Variables
 	 */
 	private String winningTeamColor = "trayer4";
+	boolean last_displayScoreboard = false;
+	String[] last_teamNames = new String[DeathCube.gameTeams.length];
+	int[] last_activeTeamPoints = new int[DeathCube.gameTeams.length];
+	double[] last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
 
 	public TileEntityGameController() {
 		Log.info("GameController Constructor Call.");
@@ -264,6 +268,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					if (DeathCube.gameState == GameStates.Lobby) {
 						DeathCube.gameState = GameStates.GameWarmup;
 						DeathCube.gameTimeStart = System.currentTimeMillis();
+						DeathCube.gameTimeCheck = System.currentTimeMillis();
 						Log.info("Game now Warming Up.");
 					} else if (DeathCube.gameState == GameStates.Running) {
 						stopGame();
@@ -857,19 +862,85 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Check for Changes.
 			 * - For first time, need to check if null.
-			 * 
-			 * Declare at start of TE class
 			 */
-			boolean last_displayScoreboard = false;
-			String[] last_teamNames = new String[DeathCube.gameTeams.length];
-			int[] last_activeTeamPoints = new int[DeathCube.gameTeams.length];
-			double[] last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+			last_teamNames = new String[DeathCube.gameTeams.length];
+			last_activeTeamPoints = new int[DeathCube.gameTeams.length];
+			last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
 			
 			if(last_displayScoreboard != displayScoreboard) {
-				
+				sendUpdate = true;
+				Log.info("boolean displayScoreboard has changed.  Update scoreboard.");
 			}
 			
-			ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+			if(last_teamNames == null) {
+				sendUpdate = true;
+				Log.error("last_teamNames is null.");
+			} else {
+				if(last_teamNames.length != DeathCube.gameTeams.length) {
+					sendUpdate = true;
+					Log.warn("Check - last_teamNames length is not equal to main GameTeams[] length.");
+				} else {
+					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+						if(!teamNames.equals(last_teamNames[i])) {
+							sendUpdate = true;
+							Log.error("teamName " + i + " is different.  Update scoreboard.");
+						}
+					}
+				}
+			}
+			
+			if(last_activeTeamPoints == null) {
+				sendUpdate = true;
+				Log.error("last_activeTeamPoints is null.");
+			} else {
+				if(last_activeTeamPoints.length != DeathCube.gameTeams.length) {
+					sendUpdate = true;
+					Log.warn("Check - last_activeTeamPoints length is not equal to main GameTeams[] length.");
+				} else {
+					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+						if(!teamNames.equals(last_activeTeamPoints[i])) {
+							sendUpdate = true;
+							Log.error("activeTeamPoint " + i + " is different.  Update scoreboard.");
+						}
+					}
+				}
+			}
+			
+			if(last_activeTeamPointTimes == null) {
+				sendUpdate = true;
+				Log.error("last_activeTeamPointTimes is null.");
+			} else {
+				if(last_activeTeamPointTimes.length != DeathCube.gameTeams.length) {
+					sendUpdate = true;
+					Log.warn("Check - last_activeTeamPointTimes length is not equal to main GameTeams[] length.");
+				} else {
+					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+						if(!teamNames.equals(last_activeTeamPointTimes[i])) {
+							sendUpdate = true;
+							Log.error("Point Time " + i + " is different.  Update scoreboard.");
+						}
+					}
+				}
+			}
+			
+			
+			/**
+			 * If time is more than 5 sec since last update, send update.
+			 */
+			Long currentTime = System.currentTimeMillis();
+			double timeCheck = ((double) (currentTime - DeathCube.gameTimeCheck)) / 1000.0f;
+			
+			if(timeCheck >= 5) {
+				sendUpdate = true;
+				Log.info("5 seconds since last scoreboard update.");
+			}
+			
+			if(sendUpdate) {
+				Log.info("Sending scoreboard update...");
+				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+				DeathCube.gameTimeCheck = System.currentTimeMillis();
+				Log.info("Scoreboard update sent.");
+			}
 		}
 	}
 	
@@ -1211,6 +1282,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 		mostPointsCaptured = 0;
 		DeathCube.gameTimeStart = System.currentTimeMillis();
+		DeathCube.gameTimeCheck = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;
 		
 		if (DeathCube.fieldState != FieldStates.Inactive)
