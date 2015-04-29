@@ -903,16 +903,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				if(last_activeTeamPoints == null) {
 					sendUpdate = true;
 					Log.error("last_activeTeamPoints is null.");
-					
-					for(GameTeam team : DeathCube.gameTeams) {
-						boolean updated = team.updateWaypoint();
-						
-						if(updated) {
-							Log.info("Waypoint updated - Team: " + team.getTeamColor());
-						} else {
-							Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
-						}
-					}
 				} else {
 					if(last_activeTeamPoints.length != DeathCube.gameTeams.length) {
 						sendUpdate = true;
@@ -922,16 +912,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 							if(activeTeamPoints[i] !=last_activeTeamPoints[i]) {
 								sendUpdate = true;
 								Log.error("activeTeamPoint " + i + " is different.  Update scoreboard.");
-								
-								for(GameTeam team : DeathCube.gameTeams) {
-									boolean updated = team.updateWaypoint();
-									
-									if(updated) {
-										Log.info("Waypoint updated - Team: " + team.getTeamColor());
-									} else {
-										Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
-									}
-								}
 							}
 						}
 					}
@@ -978,6 +958,16 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
 				Log.info("Scoreboard update sent.");
+				
+				for(GameTeam team : DeathCube.gameTeams) {
+					boolean updated = team.updateWaypoint();
+					
+					if(updated) {
+						Log.info("Waypoint updated - Team: " + team.getTeamColor());
+					} else {
+						Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
+					}
+				}
 				
 				last_displayScoreboard = displayScoreboard;
 				last_teamNames = teamNames.clone();
