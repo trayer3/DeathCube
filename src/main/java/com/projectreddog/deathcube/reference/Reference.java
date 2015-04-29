@@ -86,4 +86,10 @@ public class Reference {
 	public static final int VERIFY_CAPTURE_RADIUS_MAX = 10;
 	public static final int VERIFY_CAPTURE_TIME_MIN = 0;
 	public static final int VERIFY_CAPTURE_TIME_MAX = 60;
+	
+	public static final int ENTITY_WAYPOINT_ID = 1;
+	
+	public static final String ENTITY_WAYPOINT_NAME = "waypoint";
+	
+	public static final String ENTITY_WAYPOINT_TEXTURE_LOCATION = "models/Waypoint.png";
 }
