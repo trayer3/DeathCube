@@ -40,11 +40,11 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		if (this.worldObj != null) {
 			if (!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Team color: " + capturePointTeamColor);
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -69,7 +69,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 				/**
 				 * If a server message (not remote), update the Clients too.
 				 */
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, capturePointName));
 			}
 			markDirty();
 		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
@@ -79,7 +79,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 				/**
 				 * If a server message (not remote), update the Clients too.
 				 */
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, capturePointTeamColor));
 			}
 			markDirty();
 		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
@@ -89,7 +89,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(captureRadius)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -102,7 +102,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(captureOrderNumber)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -115,7 +115,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(captureTime)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);

@@ -1,4 +1,4 @@
-package com.projectreddog.deathcube.render.overlay;
+package com.projectreddog.deathcube.renderer.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

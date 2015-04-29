@@ -7,8 +7,8 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
-import com.projectreddog.deathcube.render.overlay.RenderOverlayHandler;
 import com.projectreddog.deathcube.renderer.entity.RenderWaypoint;
+import com.projectreddog.deathcube.renderer.overlay.RenderOverlayHandler;
 
 public class ClientProxy extends CommonProxy {
 

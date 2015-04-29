@@ -95,12 +95,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		if (this.worldObj != null) {
 			if (!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Num points: " + numTeamsFromGUI);
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
 				DeathCube.forceFieldStrength = this.forceFieldStrength;
 			} else {
 				Log.info("World is remote - text request.");
@@ -131,7 +131,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -144,7 +144,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -157,7 +157,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(forceFieldz)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -170,7 +170,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -183,7 +183,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -196,7 +196,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
 				}
 			} catch (NumberFormatException e) {
 				Log.warn("Tried to parse non-Integer: " + text);
@@ -937,7 +937,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			
 			if(sendUpdate) {
 				Log.info("Sending scoreboard update...");
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
 				Log.info("Scoreboard update sent.");
 			}
