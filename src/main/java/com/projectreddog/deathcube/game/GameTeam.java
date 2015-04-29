@@ -9,6 +9,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.utility.Log;
 
@@ -33,10 +34,13 @@ public class GameTeam {
 	private int teamHandicap = 0;
 	private int currentCaptureIndex = 0;
 	private int nextCaptureIndex = 0;
+	
+	private EntityWaypoint waypoint;
 
 	public GameTeam(String teamColor, World inWorldObj) {
 		this.teamColor = teamColor;
 		this.worldObj = inWorldObj;
+		this.waypoint = new EntityWaypoint(inWorldObj);
 	}
 
 	public String getTeamColor() {
@@ -178,5 +182,20 @@ public class GameTeam {
 				captureTE.setIsCaptured(false);
 			}
 		}
+	}
+	
+	public boolean updateWaypoint() {
+		boolean result = false;
+		
+		if(getCurrentPointPos() != null) {
+			int x = getCurrentPointPos().getX();
+			int y = getCurrentPointPos().getY();
+			int z = getCurrentPointPos().getZ();
+			
+			waypoint.setPosition(x,y,z);
+			result  = this.worldObj.spawnEntityInWorld(waypoint);
+		}
+		
+		return result;
 	}
 }

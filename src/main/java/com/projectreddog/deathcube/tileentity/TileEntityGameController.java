@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
@@ -872,52 +873,23 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.info("boolean displayScoreboard has changed.  Update scoreboard.");
 			}
 			
-			if(last_teamNames == null) {
-				sendUpdate = true;
-				Log.error("last_teamNames is null.");
-			} else {
-				if(last_teamNames.length != DeathCube.gameTeams.length) {
+			/**
+			 * Check Team Name Changes
+			 */
+			if(!sendUpdate) {
+				if(last_teamNames == null) {
 					sendUpdate = true;
-					Log.warn("Check - last_teamNames length is not equal to main GameTeams[] length.");
+					Log.error("last_teamNames is null.");
 				} else {
-					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-						if(!teamNames.equals(last_teamNames[i])) {
-							sendUpdate = true;
-							Log.error("teamName " + i + " is different.  Update scoreboard.");
-						}
-					}
-				}
-			}
-			
-			if(last_activeTeamPoints == null) {
-				sendUpdate = true;
-				Log.error("last_activeTeamPoints is null.");
-			} else {
-				if(last_activeTeamPoints.length != DeathCube.gameTeams.length) {
-					sendUpdate = true;
-					Log.warn("Check - last_activeTeamPoints length is not equal to main GameTeams[] length.");
-				} else {
-					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-						if(!teamNames.equals(last_activeTeamPoints[i])) {
-							sendUpdate = true;
-							Log.error("activeTeamPoint " + i + " is different.  Update scoreboard.");
-						}
-					}
-				}
-			}
-			
-			if(last_activeTeamPointTimes == null) {
-				sendUpdate = true;
-				Log.error("last_activeTeamPointTimes is null.");
-			} else {
-				if(last_activeTeamPointTimes.length != DeathCube.gameTeams.length) {
-					sendUpdate = true;
-					Log.warn("Check - last_activeTeamPointTimes length is not equal to main GameTeams[] length.");
-				} else {
-					for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-						if(!teamNames.equals(last_activeTeamPointTimes[i])) {
-							sendUpdate = true;
-							Log.error("Point Time " + i + " is different.  Update scoreboard.");
+					if(last_teamNames.length != DeathCube.gameTeams.length) {
+						sendUpdate = true;
+						Log.warn("Check - last_teamNames length is not equal to main GameTeams[] length.");
+					} else {
+						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if(!teamNames.equals(last_teamNames[i])) {
+								sendUpdate = true;
+								Log.error("teamName " + i + " is different.  Update scoreboard.");
+							}
 						}
 					}
 				}
@@ -925,14 +897,80 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			
 			
 			/**
+			 * Check active capture point index changes
+			 */
+			if(!sendUpdate) {
+				if(last_activeTeamPoints == null) {
+					sendUpdate = true;
+					Log.error("last_activeTeamPoints is null.");
+					
+					for(GameTeam team : DeathCube.gameTeams) {
+						boolean updated = team.updateWaypoint();
+						
+						if(updated) {
+							Log.info("Waypoint updated - Team: " + team.getTeamColor());
+						} else {
+							Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
+						}
+					}
+				} else {
+					if(last_activeTeamPoints.length != DeathCube.gameTeams.length) {
+						sendUpdate = true;
+						Log.warn("Check - last_activeTeamPoints length is not equal to main GameTeams[] length.");
+					} else {
+						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if(activeTeamPoints[i] !=last_activeTeamPoints[i]) {
+								sendUpdate = true;
+								Log.error("activeTeamPoint " + i + " is different.  Update scoreboard.");
+								
+								for(GameTeam team : DeathCube.gameTeams) {
+									boolean updated = team.updateWaypoint();
+									
+									if(updated) {
+										Log.info("Waypoint updated - Team: " + team.getTeamColor());
+									} else {
+										Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			/**
+			 * Check capture point countdown changes
+			 */
+			if(!sendUpdate) {
+				if(last_activeTeamPointTimes == null) {
+					sendUpdate = true;
+					Log.error("last_activeTeamPointTimes is null.");
+				} else {
+					if(last_activeTeamPointTimes.length != DeathCube.gameTeams.length) {
+						sendUpdate = true;
+						Log.warn("Check - last_activeTeamPointTimes length is not equal to main GameTeams[] length.");
+					} else {
+						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if(activeTeamPointTimes[i] != last_activeTeamPointTimes[i]) {
+								sendUpdate = true;
+								Log.error("Point Time " + i + " is different.  Update scoreboard.");
+							}
+						}
+					}
+				}
+			}
+			
+			/**
 			 * If time is more than 5 sec since last update, send update.
 			 */
-			Long currentTime = System.currentTimeMillis();
-			double timeCheck = ((double) (currentTime - DeathCube.gameTimeCheck)) / 1000.0f;
-			
-			if(timeCheck >= 5) {
-				sendUpdate = true;
-				Log.info("5 seconds since last scoreboard update.");
+			if(!sendUpdate) {
+				Long currentTime = System.currentTimeMillis();
+				double timeCheck = ((double) (currentTime - DeathCube.gameTimeCheck)) / 1000.0f;
+				
+				if(timeCheck >= 5) {
+					sendUpdate = true;
+					Log.info("5 seconds since last scoreboard update.");
+				}
 			}
 			
 			if(sendUpdate) {
@@ -940,6 +978,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
 				Log.info("Scoreboard update sent.");
+				
+				last_displayScoreboard = displayScoreboard;
+				last_teamNames = teamNames.clone();
+				last_activeTeamPoints = activeTeamPoints.clone();
+				last_activeTeamPointTimes = activeTeamPointTimes.clone();
 			}
 		}
 	}
