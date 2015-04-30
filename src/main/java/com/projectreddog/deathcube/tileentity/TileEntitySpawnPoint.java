@@ -21,7 +21,7 @@ public class TileEntitySpawnPoint extends TileEntityDeathCube implements IUpdate
 		if(this.worldObj != null) {
 			if(!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Spawn color: " + spawnPointTeamColor);
-					ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, spawnPointTeamColor));
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, spawnPointTeamColor));
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -42,7 +42,7 @@ public class TileEntitySpawnPoint extends TileEntityDeathCube implements IUpdate
 				/**
 				 * If a server message (not remote), update the Clients too.
 				 */
-				ModNetwork.simpleNetworkWrapper.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, spawnPointTeamColor));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, spawnPointTeamColor));
 			}
             markDirty();
         }

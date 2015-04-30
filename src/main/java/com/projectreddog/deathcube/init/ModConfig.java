@@ -24,6 +24,28 @@ public class ModConfig {
 	private static DataInputStream dis = null;
 
 	public static void init() {
+		/**
+		 * Get list of files from root. 
+		 * - Search for "world" and "saves"
+		 * - World means Server
+		 * - Saves means Local
+		 */
+		String dir;
+		File folder = new File("");
+		File[] listOfFiles = folder.listFiles();
+		Log.info("Root path:"+ folder.getPath());
+		Log.info("List of Directories:");
+
+		for (int i = 0; i < listOfFiles.length; i++) 
+		{
+			if (listOfFiles[i].isDirectory()) 
+			{
+				dir = listOfFiles[i].getName();
+
+				Log.info(dir);
+			}
+		}
+		
 		Log.info(Reference.CONFIG_FILE_PATH);
 		configFile = new File(Reference.CONFIG_FILE_PATH + "\\deathcube.config");
 		Log.info(configFile.toString());

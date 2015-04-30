@@ -120,26 +120,12 @@ public class DeathCube {
 
 		/***************************************************************************************************
 		 * 
-		 * TODO: Read from config file here.
+		 * Read from config file here.
 		 * - Lobby Spawn Position
-		 * - GameController Position
+		 * - GameController Position?
 		 * - Position of every Capture and Spawn Point?
 		 * 
-		 * TODO: Then set initial variables. And send a request for text update for all TE's.
-		 * 
-		 * TODO: Write to config file
-		 * - When and where?
-		 * - On block placed?
-		 * - Constructors (Block / TE)?
-		 * 
-		 ***************************************************************************************************
-		 * 
-		 * DeathCube.gameState = GameStates.Lobby;
-		 * DeathCube.fieldState = FieldStates.Inactive;
-		 * DeathCube.gameTimer = -1;
-		 * 
-		 * ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(gameController.getPos()));
-		 */
+		 ****************************************************************************************************/
 		firstServerTick = true;
 		
 		lobbySpawnPos = ModConfig.readConfig();

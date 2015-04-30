@@ -12,6 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -41,6 +43,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	/**
 	 * GUI Variables
 	 */
+	private String mapName = "Map Name";
 	private int numTeamsFromGUI = 4;
 	private int forceFieldx = Reference.FORCE_FIELD_MIN_DIMENSION;
 	private int forceFieldz = Reference.FORCE_FIELD_MIN_DIMENSION;
@@ -70,27 +73,14 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	double[] last_activeTeamPointTimes;
 
 	public TileEntityGameController() {
-		Log.info("GameController Constructor Call.");
-
 		if (DeathCube.gameState == null) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
-			DeathCube.gameTimeStart = -1;
-
-			if(this.worldObj != null && this.worldObj.isRemote) {
-				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
-			}
 			
-			Log.info("GameController States Initialized.  Text update request sent.");
-		} else {
-			Log.info("GameState: " + DeathCube.gameState);
-			
-			if(this.worldObj != null && this.worldObj.isRemote) {
-				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
-			}
-			
-			Log.info("GC Text update request sent.");
+			Log.info("GameController Constructor - GameState: NULL - Initialized to Lobby.");
 		}
+		
+		Log.info("GameController Constructor Call.  GameState: " + DeathCube.gameState);
 	}
 
 	public void onTextRequest() {
@@ -207,6 +197,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		}
 	}
 
+	public String getMapName() {
+		return mapName;
+	}
+	
 	public int getNumTeams() {
 		return numTeamsFromGUI;
 	}
@@ -577,9 +571,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		}
 	}
 
-	/**
-	 * Needs to be !isRemote?
-	 */
 	@Override
 	public void update() {
 		if (!this.worldObj.isRemote) {
@@ -1011,6 +1002,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			numTeamsInGame = numTeamsFromGUI;
 		}
 		
+		mostPointsCaptured = 0;
+		winningTeamColor = "trayer4";
 		DeathCube.gameTeams = new GameTeam[numTeamsInGame];
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
@@ -1253,25 +1246,19 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			if (lookupTE.getInventoryClass().equals(playerInventoryClass)) {
 				for(int i = 0; i < 4; i++) {
 					/**
-					 * Color Armor if Leather - TODO: Get better color values
-					 * Red: 9843760
-					 * Blue: 3029133
-					 * Green: 3491355
-					 * Yellow: 11642407
-					 * Black: 1644054
-					 * White: 14540253
+					 * Color Armor if Leather
 					 */
 					int color = 0;
 					String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
 					
 					if(teamColor.equals(Reference.TEAM_RED)) {
-						color = 9843760;
+						color = ItemDye.dyeColors[EnumDyeColor.RED.getMetadata()];
 					} else if(teamColor.equals(Reference.TEAM_BLUE)) {
-						color = 3029133;
+						color = ItemDye.dyeColors[EnumDyeColor.BLUE.getMetadata()];
 					} else if(teamColor.equals(Reference.TEAM_GREEN)) {
-						color = 3491355;
+						color = ItemDye.dyeColors[EnumDyeColor.GREEN.getMetadata()];
 					} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
-						color = 11642407;
+						color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getMetadata()];
 					}
 					
 					ItemStack armorPiece = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
@@ -1309,7 +1296,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			team.removeWaypoint();
 		}
 
-		mostPointsCaptured = 0;
 		DeathCube.gameTimeStart = System.currentTimeMillis();
 		DeathCube.gameTimeCheck = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;

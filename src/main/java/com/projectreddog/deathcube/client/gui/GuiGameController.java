@@ -18,6 +18,7 @@ import com.projectreddog.deathcube.utility.Log;
 public class GuiGameController extends GuiDeathCube {
 
 	private TileEntityGameController game_controller;
+	private GuiTextField text_MapName;
 	private GuiTextField text_NumTeams;
 	private GuiTextField text_ForceFieldx;
 	private GuiTextField text_ForceFieldz;
@@ -94,8 +95,12 @@ public class GuiGameController extends GuiDeathCube {
 		 * Prepare Text Field
 		 * - Page 1 Fields
 		 */
-		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing, fieldWidth, fieldHeight);
-		text_NumTeams.setMaxStringLength(40);
+		text_MapName = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing, fieldWidth*2, fieldHeight);
+		text_MapName.setMaxStringLength(50);
+		text_MapName.setText(game_controller.getMapName());
+		
+		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing*2, fieldWidth, fieldHeight);
+		text_NumTeams.setMaxStringLength(1);
 		text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
 		
 		/**
@@ -145,6 +150,7 @@ public class GuiGameController extends GuiDeathCube {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
 		super.mouseClicked(mouseX, mouseY, button);
+		text_MapName.mouseClicked(mouseX, mouseY, button);
 		text_NumTeams.mouseClicked(mouseX, mouseY, button);
 		text_ForceFieldx.mouseClicked(mouseX, mouseY, button);
 		text_ForceFieldz.mouseClicked(mouseX, mouseY, button);
@@ -175,7 +181,11 @@ public class GuiGameController extends GuiDeathCube {
 		 */
 		if(pageNumber == 1) {
 			mc.fontRendererObj.drawString("DeathCube Game Controller", x + 8, y + 8, 4210752);
-			mc.fontRendererObj.drawString("Teams", x + xSpacingLabel, y + ySpacing + 2, 4210752);
+			
+			mc.fontRendererObj.drawString("Map Name", x + xSpacingLabel, y + ySpacing + 2, 4210752);
+			text_MapName.drawTextBox();
+			
+			mc.fontRendererObj.drawString("Teams", x + xSpacingLabel, y + ySpacing*2 + 2, 4210752);
 			text_NumTeams.drawTextBox();
 		}
 		
@@ -184,6 +194,7 @@ public class GuiGameController extends GuiDeathCube {
 		 */
 		if(pageNumber == 2 && DeathCube.useForceField) {
 			mc.fontRendererObj.drawString("Use Force Field?", x + 8, y + 8, 4210752);
+			
 			mc.fontRendererObj.drawString("x:", ((this.width - 18) / 2) - 40, ((this.height - fieldHeight) / 2), 4210752);
 			text_ForceFieldx.drawTextBox();
 			

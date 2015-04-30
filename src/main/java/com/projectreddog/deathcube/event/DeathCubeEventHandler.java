@@ -128,6 +128,21 @@ public class DeathCubeEventHandler {
 					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0), (EntityPlayerMP) event.entity);
 					
 					Log.info("Game not Running: Player joined Lobby.");
+					
+					/**
+					 * Loop through Tile Entities & Send Text Update to all players
+					 * - Only if game is not Running
+					 */
+					List<TileEntity> loadedTEList = MinecraftServer.getServer().getEntityWorld().loadedTileEntityList;
+					for(TileEntity te : loadedTEList) {
+						if(te instanceof TileEntityGameController) {
+							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
+						} else if(te instanceof TileEntityCapturePoint) {
+							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
+						} else if(te instanceof TileEntitySpawnPoint) {
+							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
+						}
+					}
 				} else {
 					/**
 					 * If Running state, add to team and spawn in game.
@@ -161,17 +176,6 @@ public class DeathCubeEventHandler {
 						Log.info("Assigned new player to a team.");
 					}
 					Log.info("Player joined Running Game.");
-				}
-			}
-			
-			List<TileEntity> loadedTEList = MinecraftServer.getServer().getEntityWorld().loadedTileEntityList;
-			for(TileEntity te : loadedTEList) {
-				if(te instanceof TileEntityGameController) {
-					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
-				} else if(te instanceof TileEntityCapturePoint) {
-					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
-				} else if(te instanceof TileEntitySpawnPoint) {
-					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
 				}
 			}
 		} else if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
