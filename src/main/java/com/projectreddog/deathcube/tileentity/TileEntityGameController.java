@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
-import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
@@ -960,13 +959,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.info("Scoreboard update sent.");
 				
 				for(GameTeam team : DeathCube.gameTeams) {
-					boolean updated = team.updateWaypoint();
-					
-					if(updated) {
-						Log.info("Waypoint updated - Team: " + team.getTeamColor());
-					} else {
-						Log.warn("Waypoint not updated - Team: " + team.getTeamColor());
-					}
+					team.updateWaypoint();
 				}
 				
 				last_displayScoreboard = displayScoreboard;
@@ -987,6 +980,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * designator, e.g. A, B, C... - rather than color. Then, color would be assign during
 		 * the StartGame() method.)
 		 ************************************************************************************************/
+		
+		/**
+		 * TODO: Get list of Entities and kill all Waypoints.
+		 */
+		//this.worldObj.getEntities(EntityWaypoint, filter)
 		
 		List<String> foundColors = new ArrayList<String>();
 		for(BlockPos spawnPos : this.spawnPointsList) {
