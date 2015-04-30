@@ -1,5 +1,6 @@
 package com.projectreddog.deathcube;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.projectreddog.deathcube.event.DeathCubeEventHandler;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModCommands;
+import com.projectreddog.deathcube.init.ModConfig;
 import com.projectreddog.deathcube.init.ModEntities;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
@@ -66,13 +68,14 @@ public class DeathCube {
 	@SideOnly(Side.CLIENT)
 	public static boolean displayScoreboard_client;
 	@SideOnly(Side.CLIENT)
-	public static String[] gameTeams_names;
+	public static String[] gameTeams_names_client;
 	@SideOnly(Side.CLIENT)
-	public static int[] gameTeams_activePoints;
+	public static int[] gameTeams_activePoints_client;
 	@SideOnly(Side.CLIENT)
-	public static double[] gameTeams_pointTimes;
+	public static double[] gameTeams_pointTimes_client;
 	@SideOnly(Side.CLIENT)
 	public static long gameTimeStart_client;
+	
 
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
@@ -84,6 +87,7 @@ public class DeathCube {
 		ModBlocks.init();
 		ModTileEntities.init();
 		ModNetwork.init();
+		ModConfig.init();
 
 		// Log Completion
 		Log.info("Pre Initialization Complete!");
@@ -137,6 +141,8 @@ public class DeathCube {
 		 * ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(gameController.getPos()));
 		 */
 		firstServerTick = true;
+		
+		lobbySpawnPos = ModConfig.readConfig();
 	}
 
 	/**

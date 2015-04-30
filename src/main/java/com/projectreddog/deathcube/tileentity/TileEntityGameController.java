@@ -783,32 +783,20 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 				DeathCube.gameState = GameStates.Lobby;
 				DeathCube.fieldState = FieldStates.Inactive;
-				DeathCube.gameTimeStart = -1;
 
-				// TODO: Can't send message to server when currently acting as server?
-				ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(this.getPos()));
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
 
 			/******************************************************************************************
 			 * Other Actions:
-			 * - Make Sure Lobby Position is set
-			 * - Make it always Day - Could use a flag on processing day timer?
+			 * - Make it always Day - Change gamerule once, set time once?
 			 * - Make it never raining - Could use a flag on processing weather timer?
 			 *****************************************************************************************/
-			if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0) && this.pos != new BlockPos(0, 0, 0)) {
-				DeathCube.lobbySpawnPos = this.pos;
-				Log.info("Update() - Set Lobby Pos to: " + this.pos.toString());
-			}
 
 			if (MinecraftServer.getServer().worldServers[0].getWorldInfo().getCleanWeatherTime() <= 10) {
 				MinecraftServer.getServer().worldServers[0].getWorldInfo().setCleanWeatherTime(5000);
 				MinecraftServer.getServer().worldServers[0].getWorldInfo().setRaining(false);
 				MinecraftServer.getServer().worldServers[0].getWorldInfo().setThundering(false);
-			}
-
-			for (int j = 0; j < MinecraftServer.getServer().worldServers.length; ++j) {
-				MinecraftServer.getServer().worldServers[j].setWorldTime((long) 6000);
 			}
 			
 			updateClient();

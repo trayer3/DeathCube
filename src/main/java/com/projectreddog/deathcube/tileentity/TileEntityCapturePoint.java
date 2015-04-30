@@ -222,6 +222,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 						isBeingCaptured = false;
 						isActive = false;
 						isCaptured = true;
+						this.worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f, false);
 						Log.info("Point Captured!");
 					}
 				} else {
@@ -239,6 +240,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 				 * If no one is on the point, it is not being captured.
 				 */
 				isBeingCaptured = false;
+				remainingTime = 0;
 			}
 		}
 	}

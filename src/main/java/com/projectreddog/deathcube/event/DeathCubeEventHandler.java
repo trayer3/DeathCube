@@ -1,27 +1,30 @@
 package com.projectreddog.deathcube.event;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
-import com.projectreddog.deathcube.command.CommandGame;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
+import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
+import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 import com.projectreddog.deathcube.utility.Log;
 
 public class DeathCubeEventHandler {
@@ -158,6 +161,17 @@ public class DeathCubeEventHandler {
 						Log.info("Assigned new player to a team.");
 					}
 					Log.info("Player joined Running Game.");
+				}
+			}
+			
+			List<TileEntity> loadedTEList = MinecraftServer.getServer().getEntityWorld().loadedTileEntityList;
+			for(TileEntity te : loadedTEList) {
+				if(te instanceof TileEntityGameController) {
+					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
+				} else if(te instanceof TileEntityCapturePoint) {
+					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
+				} else if(te instanceof TileEntitySpawnPoint) {
+					ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
 				}
 			}
 		} else if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {

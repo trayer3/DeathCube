@@ -52,10 +52,6 @@ public class RenderOverlayHandler extends Gui {
 			// this.drawTexturedModalRect(xPos, yPos, 0, 0, 16, 64);
 
 			/**
-			 * Example drawing a texture :
-			 */
-
-			/**
 			 * Example drawing a a string:
 			 */
 			int depth = 1;
@@ -63,7 +59,7 @@ public class RenderOverlayHandler extends Gui {
 			int x_margin = 4;
 			int x_spacing = 40;
 
-			if (DeathCube.gameTeams_names != null && DeathCube.gameTeams_names.length != 0) {
+			if (DeathCube.gameTeams_names_client != null && DeathCube.gameTeams_names_client.length != 0) {
 				/**
 				 * Background. Supposed to be 50% transparent.
 				 */
@@ -78,18 +74,18 @@ public class RenderOverlayHandler extends Gui {
 				this.fontRenderer.drawString("Team:", x_margin, 2, fontColor);
 				this.fontRenderer.drawString("Point:", x_margin + x_spacing, 2, fontColor);
 				int y_spacing = 1;
-				for (int i = 0; i < DeathCube.gameTeams_names.length; i++) {
-					this.fontRenderer.drawString(DeathCube.gameTeams_names[i], x_margin, 2 + y_spacing * 10, fontColor);
+				for (int i = 0; i < DeathCube.gameTeams_names_client.length; i++) {
+					this.fontRenderer.drawString(DeathCube.gameTeams_names_client[i], x_margin, 2 + y_spacing * 10, fontColor);
 					
-					if(DeathCube.gameTeams_activePoints[i] > 0) {
-						this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints[i]), x_margin + x_spacing, 2 + y_spacing * 10, fontColor);
+					if(DeathCube.gameTeams_activePoints_client[i] > 0) {
+						this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints_client[i]), x_margin + x_spacing, 2 + y_spacing * 10, fontColor);
 					}
 
 					/**
 					 * Display Time until Point Captured (Count-down)
 					 */
-					if (DeathCube.gameTeams_pointTimes[i] > 0) {
-						String remainingTime = String.format("%.2f", DeathCube.gameTeams_pointTimes[i]);
+					if (DeathCube.gameTeams_pointTimes_client[i] > 0) {
+						String remainingTime = String.format("%.2f", DeathCube.gameTeams_pointTimes_client[i]);
 						this.fontRenderer.drawString(remainingTime, x_margin + x_spacing + 20, 2 + y_spacing * 10, fontColor);
 					}
 

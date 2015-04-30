@@ -112,9 +112,9 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 		 */
 		//Log.info("Message Client Side value-setting - " + message.displayScoreboard);
 		DeathCube.displayScoreboard_client = message.displayScoreboard;
-		DeathCube.gameTeams_names = message.gameTeamsNames;
-		DeathCube.gameTeams_activePoints = message.gameTeamsActivePoints;
-		DeathCube.gameTeams_pointTimes = message.gameTeamsPointTimes;
+		DeathCube.gameTeams_names_client = message.gameTeamsNames;
+		DeathCube.gameTeams_activePoints_client = message.gameTeamsActivePoints;
+		DeathCube.gameTeams_pointTimes_client = message.gameTeamsPointTimes;
 		DeathCube.gameTimeStart_client = message.gameTimeStartClient;
 	}
 
