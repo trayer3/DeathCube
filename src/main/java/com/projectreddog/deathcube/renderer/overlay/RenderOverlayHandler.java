@@ -99,7 +99,7 @@ public class RenderOverlayHandler extends Gui {
 				long currentTime = System.currentTimeMillis();
 				float timeRemaining = ((float) (Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart_client))) / 1000.0f;
 				int remainingMinutes = (int) (timeRemaining / 60);
-				int remainingSeconds = (int) (timeRemaining % 60);
+				String remainingSeconds = String.format("%02d", (timeRemaining % 60));
 
 				this.fontRenderer.drawString("GameTime:", x_margin, 2 + y_spacing * 10, fontColor);
 				this.fontRenderer.drawString(String.valueOf(remainingMinutes) + ":" + remainingSeconds, x_margin + x_spacing + 10, 2 + y_spacing * 10, fontColor);

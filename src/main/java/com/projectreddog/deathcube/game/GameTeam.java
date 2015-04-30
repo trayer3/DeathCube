@@ -41,6 +41,13 @@ public class GameTeam {
 		this.teamColor = teamColor;
 		this.worldObj = inWorldObj;
 		this.waypoint = new EntityWaypoint(inWorldObj);
+		
+		boolean result = this.worldObj.spawnEntityInWorld(this.waypoint);
+		if(result) {
+			Log.info("Team " + teamColor + " Waypoint Spawned Successfully!");
+		} else {
+			Log.warn("Team " + teamColor + " Waypoint Failed to Spawn ...");
+		}
 	}
 
 	public String getTeamColor() {
@@ -184,19 +191,14 @@ public class GameTeam {
 		}
 	}
 	
-	public boolean updateWaypoint() {
-		boolean result = false;
-		
+	public void updateWaypoint() {
 		if(getCurrentPointPos() != null) {
 			double x = getCurrentPointPos().getX() + 0.5d;
 			double y = getCurrentPointPos().getY() + 1.5d;
 			double z = getCurrentPointPos().getZ() + 0.5d;
 			
 			waypoint.setPosition(x,y,z);
-			result  = this.worldObj.spawnEntityInWorld(waypoint);
 		}
-		
-		return result;
 	}
 	
 	public void removeWaypoint() {

@@ -42,6 +42,7 @@ public class RenderWaypoint extends Render {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(false);
+		GL11.glScalef(2f, 2f, 2f);
 		/**
 		 * End setup drawing to always be in front of other blocks
 		 */
