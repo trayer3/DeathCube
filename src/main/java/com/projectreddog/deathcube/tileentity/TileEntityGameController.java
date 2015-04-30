@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
@@ -984,7 +986,14 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		/**
 		 * TODO: Get list of Entities and kill all Waypoints.
 		 */
-		//this.worldObj.getEntities(EntityWaypoint, filter)
+		List<Entity> loadedEntities = MinecraftServer.getServer().getEntityWorld().loadedEntityList;
+		for(Entity entity : loadedEntities) {
+			if(entity instanceof EntityWaypoint) {
+				entity.setDead();
+				Log.info("Killed a waypoint.");
+			}
+		}
+		
 		
 		List<String> foundColors = new ArrayList<String>();
 		for(BlockPos spawnPos : this.spawnPointsList) {
