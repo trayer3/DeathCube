@@ -87,7 +87,6 @@ public class DeathCube {
 		ModBlocks.init();
 		ModTileEntities.init();
 		ModNetwork.init();
-		ModConfig.init();
 
 		// Log Completion
 		Log.info("Pre Initialization Complete!");
@@ -116,6 +115,7 @@ public class DeathCube {
 	public void serverStart(FMLServerStartingEvent event) {
 		// Register Commands
 		ModCommands.init(event);
+		ModConfig.init();
 		Log.info("FMLServerStartingEvent Now.");
 
 		/***************************************************************************************************

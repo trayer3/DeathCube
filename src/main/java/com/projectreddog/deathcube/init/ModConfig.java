@@ -31,18 +31,23 @@ public class ModConfig {
 		 * - Saves means Local
 		 */
 		String dir;
-		File folder = new File("");
+		File folder = new File(".");
 		File[] listOfFiles = folder.listFiles();
 		Log.info("Root path:"+ folder.getPath());
-		Log.info("List of Directories:");
 
 		for (int i = 0; i < listOfFiles.length; i++) 
 		{
 			if (listOfFiles[i].isDirectory()) 
 			{
-				dir = listOfFiles[i].getName();
-
-				Log.info(dir);
+				if(listOfFiles[i].getName().equals("saves")) {
+					dir = listOfFiles[i].getName();
+					
+					Log.info("Found saves dir.");
+				} else if(listOfFiles[i].getName().equals("World")) {
+					dir = listOfFiles[i].getName();
+					
+					Log.info("Found World dir.");
+				}
 			}
 		}
 		
