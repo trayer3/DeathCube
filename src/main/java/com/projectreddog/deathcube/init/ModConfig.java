@@ -46,7 +46,7 @@ public class ModConfig {
 					
 					Log.info("Found saves dir.");
 				} else {
-					path = MinecraftServer.getServer().getWorldName();
+					path = "world";
 					
 					Log.info("Assuming a server, root contains world.");
 				}
