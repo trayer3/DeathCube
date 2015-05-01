@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldSettings;
@@ -18,6 +20,7 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
@@ -37,7 +40,7 @@ public class DeathCubeEventHandler {
 			 */
 			Block brokenBlock = event.state.getBlock();
 
-			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves) || brokenBlock.equals(Blocks.leaves2)) {
+			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves) || brokenBlock.equals(Blocks.leaves2)) {
 				/**
 				 * Do Nothing. It is OK to break these blocks.
 				 */
@@ -85,6 +88,12 @@ public class DeathCubeEventHandler {
 			 * If broken block is Cobblestone, drop block with 50% chance to receive drops.
 			 */
 			event.dropChance = 0.5f;
+		} else if (brokenBlock.equals(ModBlocks.loot_block)) {
+			/**
+			 * Clear drops.  Add whatever.
+			 */
+			event.drops.clear();
+			event.drops.add(0, new ItemStack(Items.arrow, 10));
 		} else {
 			/**
 			 * For all other blocks, do not drop anything

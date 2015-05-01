@@ -29,6 +29,7 @@ public class Reference {
 	 */
 	public static final String MODBLOCK_EXAMPLE = "example";
 	public static final String MODBLOCK_LOBBY = "lobby";
+	public static final String MODBLOCK_LOOT = "loot_block";
 	public static final String MODBLOCK_CAPTURE_POINT = "capturepoint";
 	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
 	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";

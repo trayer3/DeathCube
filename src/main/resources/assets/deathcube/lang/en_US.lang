@@ -1,15 +1,16 @@
 # Block Localizations
 tile.deathcube:example.name=Example Block
 tile.deathcube:lobby.name=Lobby Block
+tile.deathcube:loot_block.name=Loot Block
 tile.deathcube:capturepoint.name=Capture Point
 tile.deathcube:spawnpoint.name=Spawn Point
 tile.deathcube:gamecontroller.name=DeathCube Game Controller
 tile.deathcube:startinggearconfig.name=DeathCube Starting Gear Config
 tile.deathcube:forcefield.name=Force Field
 
+item.deathcube:example.name=Example Item
+
 commands.game.usage=/game <start | end | refresh>
-
-
 
 death.attack.deathcube:FORCE_FIELD_DEATH_1=%s tried to hug the Force Field.  It hugged back too hard!
 death.attack.deathcube:FORCE_FIELD_DEATH_2=Remember %s, Force Fields hurt! 

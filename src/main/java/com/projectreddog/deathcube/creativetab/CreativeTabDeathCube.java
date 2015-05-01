@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
+import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class CreativeTabDeathCube {
@@ -15,7 +16,7 @@ public class CreativeTabDeathCube {
 			@Override
 			public Item getTabIconItem() {
 
-				return Items.apple;
+				return ModItems.example_item;
 			}
 
 			@Override
