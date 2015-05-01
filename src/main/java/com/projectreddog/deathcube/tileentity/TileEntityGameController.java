@@ -734,6 +734,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 								if (lookupTE.getIsCaptured()) {
 									if (team.hasCapturedAllPoints()) {
 										winningTeamColor = team.getTeamColor();
+										List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+										for (EntityPlayer player : playerList) {
+											player.playSound("mob.enderdragon.end", 1.0f, 1.0f);
+										}
 										stopGame();
 									} else {
 										team.setNextCapturePointActive();
@@ -1034,7 +1038,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 		/*************************************************************************************************
 		 * Add Spawn and Capture Points to GameTeam objects.
-		 * - TODO: Make sure there is at least 1 point of each kind for each team.
+		 * - Make sure there is at least 1 point of each kind for each team.
 		 ************************************************************************************************/
 		Log.info("Spawn Point list size: " + spawnPointsList.size());
 		Log.info("Capture Point list size: " + capturePointsList.size());
@@ -1138,9 +1142,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			Log.info("Player sent to Team Spawn.");
 			/**
 			 * Play sound at Game Start
-			 * - TODO: Get Custom sound. This call doesn't work.
+			 * - TODO: Get Custom sound.
 			 */
-			player.playSound("mob.bat.death", 1.0f, 1.0f);
+			player.playSound("mob.cow.hurt", 1.0f, 1.0f);
 		}
 	}
 
