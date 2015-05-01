@@ -34,8 +34,8 @@ public class BlockLobby extends BlockDeathCube{
 		 * - Check if there is already a lobby position in the data file?
 		 * - Remove from data file onBlockDestroyedByPlayer/ByExplosion?
 		 */
-		ModConfig.updateConfig(pos);
-		DeathCube.lobbySpawnPos = ModConfig.readConfig();
+		ModConfig.updateConfig(pos);  // Should be server only?
+		DeathCube.lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 		
         return this.getStateFromMeta(meta);
     }

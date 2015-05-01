@@ -128,7 +128,7 @@ public class DeathCube {
 		 ****************************************************************************************************/
 		firstServerTick = true;
 		
-		lobbySpawnPos = ModConfig.readConfig();
+		lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
 
 	/**

@@ -29,6 +29,7 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModBlocks;
+import com.projectreddog.deathcube.init.ModConfig;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
@@ -93,6 +94,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD4_ID, String.valueOf(forceFieldyUp)));
 				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD5_ID, String.valueOf(forceFieldyDown)));
 				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD6_ID, String.valueOf(forceFieldStrength)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD7_ID, String.valueOf(mapName)));
 				DeathCube.forceFieldStrength = this.forceFieldStrength;
 			} else {
 				Log.info("World is remote - text request.");
@@ -194,6 +196,16 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.warn("Tried to parse non-Integer: " + text);
 			}
 			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD7_ID) {
+			mapName = text;
+			if (!this.worldObj.isRemote) {
+				/**
+				 * If a server message (not remote), update the Clients too.
+				 */
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD7_ID, mapName));
+				ModConfig.updateConfig(mapName);
+			}
+			markDirty();
 		}
 	}
 
@@ -228,6 +240,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+		mapName = tag.getString("map");
 		numTeamsFromGUI = tag.getInteger("team");
 		forceFieldx = tag.getInteger("x");
 		forceFieldz = tag.getInteger("z");
@@ -240,6 +253,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setString("map", mapName);
 		tag.setInteger("team", numTeamsFromGUI);
 		tag.setInteger("x", forceFieldx);
 		tag.setInteger("z", forceFieldz);

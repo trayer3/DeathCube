@@ -95,11 +95,11 @@ public class GuiGameController extends GuiDeathCube {
 		 * Prepare Text Field
 		 * - Page 1 Fields
 		 */
-		text_MapName = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing, fieldWidth*2, fieldHeight);
+		text_MapName = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing, fieldWidth*2, fieldHeight);
 		text_MapName.setMaxStringLength(50);
 		text_MapName.setText(game_controller.getMapName());
 		
-		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField, y + ySpacing*2, fieldWidth, fieldHeight);
+		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing*2, fieldWidth, fieldHeight);
 		text_NumTeams.setMaxStringLength(1);
 		text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
 		
@@ -141,6 +141,8 @@ public class GuiGameController extends GuiDeathCube {
 			text_ForceFieldyDown.setText(String.valueOf(game_controller.getForceFieldyDown()));
 		} else if (fieldID == Reference.MESSAGE_FIELD6_ID) {
 			text_ForceFieldStrength.setText(String.valueOf(game_controller.getForceFieldStrength()));
+		} else if (fieldID == Reference.MESSAGE_FIELD7_ID) {
+			text_MapName.setText(game_controller.getMapName());
 		}
 	}
 	
@@ -232,6 +234,8 @@ public class GuiGameController extends GuiDeathCube {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, text_ForceFieldyDown.getText()));
 		} else if (text_ForceFieldStrength.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, text_ForceFieldStrength.getText()));
+		} else if (text_MapName.textboxKeyTyped(chr, keyCode)) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD7_ID, text_MapName.getText()));
 		} else {
 			super.keyTyped(chr, keyCode);
 		}

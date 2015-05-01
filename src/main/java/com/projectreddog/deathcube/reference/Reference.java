@@ -72,6 +72,7 @@ public class Reference {
 	public static final int MESSAGE_FIELD4_ID = 4;
 	public static final int MESSAGE_FIELD5_ID = 5;
 	public static final int MESSAGE_FIELD6_ID = 6;
+	public static final int MESSAGE_FIELD7_ID = 7;
 	
 	public static final int TEAM_NUM_POSSIBLE = 4;
 	public static final String TEAM_RED = "Red";
