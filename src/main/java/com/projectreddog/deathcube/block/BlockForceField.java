@@ -2,7 +2,6 @@ package com.projectreddog.deathcube.block;
 
 import java.util.Random;
 
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,14 +20,13 @@ import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
-import com.projectreddog.deathcube.utility.Log;
 
 public class BlockForceField extends BlockDeathCube {
 	public float damageAmount = 5;
 
 	public BlockForceField() {
 		super();
-		
+
 		this.setUnlocalizedName(Reference.MODBLOCK_FORCE_FIELD);
 		this.setStepSound(soundTypeAnvil);
 		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
@@ -42,7 +40,7 @@ public class BlockForceField extends BlockDeathCube {
 
 	@SideOnly(Side.CLIENT)
 	public EnumWorldBlockLayer getBlockLayer() {
-		return EnumWorldBlockLayer.CUTOUT;
+		return EnumWorldBlockLayer.TRANSLUCENT;
 	}
 
 	public boolean isFullCube() {
@@ -119,7 +117,7 @@ public class BlockForceField extends BlockDeathCube {
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-		
+
 		if (!(worldIn.isRemote) && playerIn.capabilities.isCreativeMode) {
 			if (DeathCube.gameState == GameStates.Lobby) {
 				/**
@@ -128,24 +126,24 @@ public class BlockForceField extends BlockDeathCube {
 				 * -- Check that other side is valid spawning point.
 				 * -- Allow both horizontal and vertical pass-through
 				 */
-				
+
 				BlockPos destination = pos;
-				
-				if(side.getName().equals("down")) {
+
+				if (side.getName().equals("down")) {
 					destination = pos.up();
-				} else if(side.getName().equals("up")) {
+				} else if (side.getName().equals("up")) {
 					destination = pos.down(2);
-				} else if(side.getName().equals("north")) {
+				} else if (side.getName().equals("north")) {
 					destination = pos.south();
-				} else if(side.getName().equals("south")) {
+				} else if (side.getName().equals("south")) {
 					destination = pos.north();
-				} else if(side.getName().equals("east")) {
+				} else if (side.getName().equals("east")) {
 					destination = pos.west();
-				} else if(side.getName().equals("west")) {
+				} else if (side.getName().equals("west")) {
 					destination = pos.east();
 				}
-				
-				if(worldIn.getBlockState(destination).getBlock() == Blocks.air && worldIn.getBlockState(destination.up()).getBlock() == Blocks.air) {
+
+				if (worldIn.getBlockState(destination).getBlock() == Blocks.air && worldIn.getBlockState(destination.up()).getBlock() == Blocks.air) {
 					playerIn.setPositionAndUpdate(destination.getX() + 0.5d, destination.getY(), destination.getZ() + 0.5d);
 				}
 			}
