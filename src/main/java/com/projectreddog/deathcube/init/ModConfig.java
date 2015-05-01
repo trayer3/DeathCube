@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
 import com.projectreddog.deathcube.reference.Reference;
@@ -31,7 +32,7 @@ public class ModConfig {
 		 * - World means Server
 		 * - Saves means Local
 		 */
-		String dir;
+		String path = "";
 		File folder = new File(".");
 		File[] listOfFiles = folder.listFiles();
 		Log.info("Root path:"+ folder.getPath());
@@ -41,19 +42,19 @@ public class ModConfig {
 			if (listOfFiles[i].isDirectory()) 
 			{
 				if(listOfFiles[i].getName().equals("saves")) {
-					dir = listOfFiles[i].getName();
+					path = "saves\\" + MinecraftServer.getServer().getWorldName();
 					
 					Log.info("Found saves dir.");
-				} else if(listOfFiles[i].getName().equals("World")) {
-					dir = listOfFiles[i].getName();
+				} else {
+					path = MinecraftServer.getServer().getWorldName();
 					
-					Log.info("Found World dir.");
+					Log.info("Assuming a server, root contains world.");
 				}
 			}
 		}
 		
-		Log.info(Reference.CONFIG_FILE_PATH);
-		configFile = new File(Reference.CONFIG_FILE_PATH + "\\deathcube.config");
+		Log.info(path);
+		configFile = new File(path + "\\deathcube.config");
 		Log.info(configFile.toString());
 	}
 

@@ -15,8 +15,6 @@ public class Reference {
 
 	public static final String CLIENT_PROXY_CLASS = "com.projectreddog.deathcube.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.projectreddog.deathcube.proxy.ServerProxy";
-	
-	public static final String CONFIG_FILE_PATH = "saves\\" + MinecraftServer.getServer().getWorldName();
 
 	public static enum GameStates {
 		Lobby, GameWarmup, Running, PostGame, GameOver
