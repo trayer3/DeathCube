@@ -1,6 +1,5 @@
 package com.projectreddog.deathcube;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModCommands;
 import com.projectreddog.deathcube.init.ModConfig;
 import com.projectreddog.deathcube.init.ModEntities;
+import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.init.ModTileEntities;
 import com.projectreddog.deathcube.proxy.IProxy;
@@ -85,6 +85,7 @@ public class DeathCube {
 		
 		// Initialize Classes
 		ModBlocks.init();
+		ModItems.init();
 		ModTileEntities.init();
 		ModNetwork.init();
 
