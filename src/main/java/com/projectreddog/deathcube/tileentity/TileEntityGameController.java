@@ -260,7 +260,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		tag.setInteger("y_up", forceFieldyUp);
 		tag.setInteger("y_down", forceFieldyDown);
 		tag.setInteger("strength", forceFieldStrength);
-		Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
+		//Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
 	}
 
 	/**

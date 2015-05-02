@@ -40,11 +40,11 @@ public class ModConfig {
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isDirectory()) {
 					if (listOfFiles[i].getName().equals("saves")) {
-						path = "saves\\" + MinecraftServer.getServer().getWorldName();
+						path = "saves\\" + MinecraftServer.getServer().getWorldName() + "\\deathcube.config";
 
 						Log.info("Found saves dir.");
 					} else if (listOfFiles[i].getName().equals("world")) {
-						path = "world";
+						path = "world/deathcube.config";
 
 						Log.info("Assuming a server, root contains world.");
 					}
@@ -52,7 +52,7 @@ public class ModConfig {
 			}
 
 			Log.info(path);
-			configFile = new File(path + "\\deathcube.config");
+			configFile = new File(path);
 			Log.info(configFile.toString());
 		}
 	}
