@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -34,8 +35,10 @@ public class BlockLobby extends BlockDeathCube{
 		 * - Check if there is already a lobby position in the data file?
 		 * - Remove from data file onBlockDestroyedByPlayer/ByExplosion?
 		 */
-		ModConfig.updateConfig(pos);  // Should be server only?
-		DeathCube.lobbySpawnPos = ModConfig.readConfig().lobbyPos;
+		if(MinecraftServer.getServer().getEntityWorld().isRemote) {
+			ModConfig.updateConfig(pos);  // Should be server only?
+			DeathCube.lobbySpawnPos = ModConfig.readConfig().lobbyPos;
+		}
 		
         return this.getStateFromMeta(meta);
     }

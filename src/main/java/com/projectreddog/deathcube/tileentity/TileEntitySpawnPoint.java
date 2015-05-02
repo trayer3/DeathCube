@@ -56,14 +56,14 @@ public class TileEntitySpawnPoint extends TileEntityDeathCube implements IUpdate
     public void readFromNBT(NBTTagCompound tag){
         super.readFromNBT(tag);
         spawnPointTeamColor = tag.getString("team");        
-        Log.info("Spawn Point - NBT Read :: Team Color: " + spawnPointTeamColor);
+        //Log.info("Spawn Point - NBT Read :: Team Color: " + spawnPointTeamColor);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag){
         super.writeToNBT(tag);
         tag.setString("team", spawnPointTeamColor);
-        Log.info("Spawn Point - NBT Write :: Team Color: " + spawnPointTeamColor);
+        //Log.info("Spawn Point - NBT Write :: Team Color: " + spawnPointTeamColor);
     }
 	
 	@Override

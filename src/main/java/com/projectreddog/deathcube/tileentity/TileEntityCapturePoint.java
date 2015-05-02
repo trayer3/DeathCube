@@ -180,7 +180,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		captureRadius = tag.getInteger("radius");
 		captureOrderNumber = tag.getInteger("order");
 		captureTime = tag.getInteger("time");
-		Log.info("Capture Point - NBT Read :: Team Color: " + capturePointTeamColor);
+		//Log.info("Capture Point - NBT Read :: Team Color: " + capturePointTeamColor);
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 		tag.setInteger("radius", captureRadius);
 		tag.setInteger("order", captureOrderNumber);
 		tag.setInteger("time", captureTime);
-		Log.info("Capture Point - NBT Write :: Team Color: " + capturePointTeamColor);
+		//Log.info("Capture Point - NBT Write :: Team Color: " + capturePointTeamColor);
 	}
 
 	@Override
