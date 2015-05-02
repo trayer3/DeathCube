@@ -332,6 +332,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 */
 
 			int halfx, halfz;
+			int oddx, oddz;
 			int miny, maxy;
 			BlockPos currentPos1, currentPos2;
 			BlockPos startingPos, endingPos;
@@ -373,18 +374,22 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			if (forceFieldx % 2 == 0) {
 				// Even X
 				halfx = forceFieldx / 2;
+				oddx = 0;
 				Log.info("Force Field X is Even");
 			} else {
 				// Odd X
 				halfx = (forceFieldx - 1) / 2;
+				oddx = 1;
 				Log.info("Force Field X is Odd");
 			}
 
 			if (forceFieldz % 2 == 0) {
 				// Even Z
+				oddz = 0;
 				halfz = forceFieldz / 2;
 			} else {
 				// Odd Z
+				oddz = 1;
 				halfz = (forceFieldz - 1) / 2;
 			}
 
@@ -392,7 +397,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * North Wall
 			 */
 			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyDown));
-			endingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).east(halfx).up(forceFieldyUp));
+			endingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).east(halfx + oddx).up(forceFieldyUp));
 
 			Log.info("Half X: " + halfx);
 			Log.info("Y Up: " + forceFieldyUp + " - Y Down: " + forceFieldyDown);
@@ -405,7 +410,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * South Wall
 			 */
 			startingPos = new BlockPos(gameControllerPos.north().west(halfx).down(forceFieldyDown));
-			endingPos = new BlockPos(gameControllerPos.north().east(halfx).up(forceFieldyUp));
+			endingPos = new BlockPos(gameControllerPos.north().east(halfx + oddx).up(forceFieldyUp));
 
 			Log.info("Half X: " + halfx);
 			Log.info("Y Up: " + forceFieldyUp + " - Y Down: " + forceFieldyDown);
@@ -430,8 +435,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * East Wall
 			 */
-			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).east(halfx).down(forceFieldyDown));
-			endingPos = new BlockPos(gameControllerPos.north().east(halfx).up(forceFieldyUp));
+			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).east(halfx + oddx).down(forceFieldyDown));
+			endingPos = new BlockPos(gameControllerPos.north().east(halfx + oddx).up(forceFieldyUp));
 
 			Log.info("Half Z: " + halfz);
 			Log.info("Y Up: " + forceFieldyUp + " - Y Down: " + forceFieldyDown);
@@ -444,7 +449,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Top Cube Face
 			 */
 			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).up(forceFieldyUp));
-			endingPos = new BlockPos(gameControllerPos.north().east(halfx).up(forceFieldyUp));
+			endingPos = new BlockPos(gameControllerPos.north().east(halfx + oddx).up(forceFieldyUp));
 
 			Log.info("Half X: " + halfx);
 			Log.info("Half Z: " + halfz);
@@ -458,7 +463,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Bottom Cube Face
 			 */
 			startingPos = new BlockPos(gameControllerPos.north(forceFieldz + 1).west(halfx).down(forceFieldyDown));
-			endingPos = new BlockPos(gameControllerPos.north().east(halfx).down(forceFieldyDown));
+			endingPos = new BlockPos(gameControllerPos.north().east(halfx + oddx).down(forceFieldyDown));
 
 			Log.info("Half X: " + halfx);
 			Log.info("Half Z: " + halfz);
