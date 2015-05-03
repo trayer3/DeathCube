@@ -71,7 +71,7 @@ public class DeathCubeEventHandler {
 		if (!event.player.capabilities.isCreativeMode) {
 			Block placedBlock = event.placedBlock.getBlock();
 
-			if (placedBlock.equals(Blocks.cobblestone)) {
+			if (placedBlock.equals(Blocks.cobblestone) || placedBlock.equals(ModBlocks.loot_block)) {
 				/**
 				 * Do nothing. It is OK to place these blocks.
 				 */
@@ -92,18 +92,8 @@ public class DeathCubeEventHandler {
 			event.dropChance = 0.5f;
 		} else if (brokenBlock.equals(ModBlocks.loot_block)) {
 			/**
-			 * Clear drops.  Add whatever.
+			 * Also OK.
 			 */
-			event.drops.clear();
-			Random rand = new Random();
-			
-			if(rand.nextInt() < 0.5) {
-				event.drops.add(0, new ItemStack(ModItems.example_item, 1));
-			} else {
-				event.drops.add(0, new ItemStack(Items.arrow, 10));
-			}
-			
-			
 		} else {
 			/**
 			 * For all other blocks, do not drop anything
