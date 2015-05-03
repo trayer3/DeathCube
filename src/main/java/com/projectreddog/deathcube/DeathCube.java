@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -128,6 +131,17 @@ public class DeathCube {
 		 * 
 		 ****************************************************************************************************/
 		firstServerTick = true;
+		
+		if(MinecraftServer.getServer().worldServers[0] != null) {
+			WorldServer worldserver = MinecraftServer.getServer().worldServers[0];
+	        WorldInfo worldinfo = worldserver.getWorldInfo();
+	        
+	        worldinfo.setCleanWeatherTime(1728000);
+	        worldinfo.setRainTime(0);
+	        worldinfo.setThunderTime(0);
+	        worldinfo.setRaining(false);
+	        worldinfo.setThundering(false);
+		}
 		
 		lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
