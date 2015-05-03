@@ -7,6 +7,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
+import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.renderer.entity.RenderWaypoint;
 import com.projectreddog.deathcube.renderer.overlay.RenderOverlayHandler;
 
@@ -16,6 +17,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers(){
 		
 		ModBlocks.initBlockRenderer();
+		ModItems.initItemRender();
 		RenderingRegistry.registerEntityRenderingHandler(EntityWaypoint.class, new RenderWaypoint(Minecraft.getMinecraft().getRenderManager()));
 
 		// register event for overlay

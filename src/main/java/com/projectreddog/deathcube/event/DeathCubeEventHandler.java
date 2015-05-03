@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.event;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.init.ModBlocks;
+import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
@@ -93,7 +95,15 @@ public class DeathCubeEventHandler {
 			 * Clear drops.  Add whatever.
 			 */
 			event.drops.clear();
-			event.drops.add(0, new ItemStack(Items.arrow, 10));
+			Random rand = new Random();
+			
+			if(rand.nextInt() < 0.5) {
+				event.drops.add(0, new ItemStack(ModItems.example_item, 1));
+			} else {
+				event.drops.add(0, new ItemStack(Items.arrow, 10));
+			}
+			
+			
 		} else {
 			/**
 			 * For all other blocks, do not drop anything
