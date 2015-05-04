@@ -233,7 +233,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					pointTimerStart = System.currentTimeMillis();
 					pointTimerCurrent = pointTimerStart;
 					remainingTime = captureTime - ((pointTimerCurrent - pointTimerStart) / 1000);
-					Log.info("Player in range of Capture Point.  Time until Capture: " + remainingTime);
+					//Log.info("Player in range of Capture Point.  Time until Capture: " + remainingTime);
 				}
 			} else {
 				/**

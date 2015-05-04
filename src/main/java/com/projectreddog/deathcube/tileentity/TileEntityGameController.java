@@ -697,23 +697,22 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						 * - TODO: Render on-screen a count-down until player respawns.
 						 */
 						if (DeathCube.playerAwaitingRespawn.size() > 0) {
-							Log.info("Player serving Death Penalty");
+							//Log.info("Player serving Death Penalty");
 							Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
 							//Log.info("listKeys done.");
-							Iterator<String> keyIterator = keySet.iterator();
-							//Log.info("keyIterator done.");
-							while (keyIterator.hasNext()) {
+
+							for (Iterator<String> keyIterator = keySet.iterator(); keyIterator.hasNext();) {
 								String playerNameKey = keyIterator.next();
 								if(this.worldObj.getPlayerEntityByName(playerNameKey) != null) {
 									long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
 									currentTime = System.currentTimeMillis();
 									long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
-									Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
-									Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
+									//Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+									//Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
 									if (timeDiff <= 0) {
-										Log.info("Found Player waiting to respawn - time to spawn!");
+										//Log.info("Found Player waiting to respawn - time to spawn!");
 										sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
-										DeathCube.playerAwaitingRespawn.remove(playerNameKey);
+										keyIterator.remove();
 									}
 								} else {
 									/**
@@ -799,18 +798,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				DeathCube.fieldState = FieldStates.Inactive;
 
 				Log.info("GameController States Initialized.  Text update request sent.");
-			}
-
-			/******************************************************************************************
-			 * Other Actions:
-			 * - Make it always Day - Change gamerule once, set time once?
-			 * - Make it never raining - Could use a flag on processing weather timer?
-			 *****************************************************************************************/
-
-			if (MinecraftServer.getServer().worldServers[0].getWorldInfo().getCleanWeatherTime() <= 10) {
-				MinecraftServer.getServer().worldServers[0].getWorldInfo().setCleanWeatherTime(5000);
-				MinecraftServer.getServer().worldServers[0].getWorldInfo().setRaining(false);
-				MinecraftServer.getServer().worldServers[0].getWorldInfo().setThundering(false);
 			}
 			
 			updateClient();
@@ -936,7 +923,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
 							if(activeTeamPointTimes[i] != last_activeTeamPointTimes[i]) {
 								sendUpdate = true;
-								Log.error("Point Time " + i + " is different.  Update scoreboard.");
+								//Log.error("Point Time " + i + " is different.  Update scoreboard.");
 							}
 						}
 					}
@@ -952,15 +939,15 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				
 				if(timeCheck >= 5) {
 					sendUpdate = true;
-					Log.info("5 seconds since last scoreboard update.");
+					//Log.info("5 seconds since last scoreboard update.");
 				}
 			}
 			
 			if(sendUpdate) {
-				Log.info("Sending scoreboard update...");
+				//Log.info("Sending scoreboard update...");
 				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
-				Log.info("Scoreboard update sent.");
+				//Log.info("Scoreboard update sent.");
 				
 				for(GameTeam team : DeathCube.gameTeams) {
 					team.updateWaypoint();
@@ -1209,8 +1196,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
 		} else {
 			preparePlayerToSpawn(inPlayer);
-			inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
-			Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
+			//inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
+			//Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
 		}
 
 	}
