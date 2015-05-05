@@ -33,19 +33,21 @@ public class ItemDeathSkull extends ItemDeathCube {
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
     {
-		Random rand = new Random();
-		float randAmountx = rand.nextFloat()/5;
-		float randAmountz = rand.nextFloat()/5;
-		
-		if(entity instanceof EntityPlayer) {
-			stack.damageItem(1, player);
-			((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
-		} else {
-			stack.damageItem(1, player);
-			entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+		if(!player.worldObj.isRemote) {
+			Random rand = new Random();
+			float randAmountx = rand.nextFloat()/2;
+			float randAmountz = rand.nextFloat()/2;
+			
+			if(entity instanceof EntityPlayer) {
+				stack.damageItem(1, player);
+				((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+			} else {
+				stack.damageItem(1, player);
+				entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+			}
 		}
 		
-        return true;
+        return true;  // Or maybe it's just because I'm returning true.  Lifeskull is false.
     }
 	
 	/**
@@ -55,8 +57,8 @@ public class ItemDeathSkull extends ItemDeathCube {
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
     {
 		Random rand = new Random();
-		float randAmountx = rand.nextFloat()/10;
-		float randAmountz = rand.nextFloat()/10;
+		float randAmountx = rand.nextFloat()/5;
+		float randAmountz = rand.nextFloat()/5;
 		
 		if(playerIn.onGround) {
 			itemStackIn.damageItem(1, playerIn);

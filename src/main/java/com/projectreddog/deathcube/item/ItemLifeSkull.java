@@ -57,7 +57,7 @@ public class ItemLifeSkull extends ItemDeathCube {
 			}
 		}
 		
-        return false;
+        return true;
     }
 	
 	/**
