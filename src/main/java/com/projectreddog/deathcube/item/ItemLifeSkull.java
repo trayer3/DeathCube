@@ -2,19 +2,20 @@ package com.projectreddog.deathcube.item;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public class ItemExample extends ItemDeathCube {
+import com.projectreddog.deathcube.reference.Reference;
 
-	public ItemExample() {
+public class ItemLifeSkull extends ItemDeathCube {
+	
+	public ItemLifeSkull() {
 		super();
-		this.setUnlocalizedName("example_item");
+		this.setUnlocalizedName("lifeskull");
 		this.maxStackSize = 1;
-		this.setMaxDamage(4);
+		this.setMaxDamage(Reference.ITEM_LIFESKULL_DURABILITY);
 	}
 	
 	/**
@@ -30,12 +31,33 @@ public class ItemExample extends ItemDeathCube {
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
     {
-		//if(entity instanceof EntityPlayer) {
-		stack.damageItem(1, player);
-		entity.motionY = 2.0d;
-		//}
+		float entityHealth;
 		
-        return true;
+		if(entity instanceof EntityPlayer) {
+			entityHealth = ((EntityPlayer) entity).getHealth();
+			
+			if(entityHealth >= ((EntityPlayer) entity).getMaxHealth()) {
+				/**
+				 * Add some other effect?
+				 */
+			} else {
+				/**
+				 * Heal the player for 1 heart (or half a heart?).
+				 */
+				float newPlayerHealth;
+				
+				if(((EntityPlayer) entity).getMaxHealth() - entityHealth <= (Reference.ITEM_LIFESKULL_HEAL_AMOUNT * 2)) {
+					newPlayerHealth = ((EntityPlayer) entity).getMaxHealth();
+				} else {
+					newPlayerHealth = entityHealth + (Reference.ITEM_LIFESKULL_HEAL_AMOUNT * 2);
+				}
+				
+				stack.damageItem(1, player);
+				((EntityPlayer) entity).setHealth(newPlayerHealth);
+			}
+		}
+		
+        return false;
     }
 	
 	/**
@@ -44,11 +66,28 @@ public class ItemExample extends ItemDeathCube {
 	@Override
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
     {
-		if(playerIn.onGround) {
-			itemStackIn.damageItem(1, playerIn);
-			playerIn.motionY = 1.0d;
-		}
+		float playerHealth = playerIn.getHealth();
 		
+		if(playerHealth >= playerIn.getMaxHealth()) {
+			/**
+			 * Add some other effect?
+			 */
+		} else {
+			/**
+			 * Heal the player for 1 heart.
+			 */
+			float newPlayerHealth;
+			
+			if(playerIn.getMaxHealth() - playerHealth <= Reference.ITEM_LIFESKULL_HEAL_AMOUNT) {
+				newPlayerHealth = playerIn.getMaxHealth();
+			} else {
+				newPlayerHealth = playerHealth + Reference.ITEM_LIFESKULL_HEAL_AMOUNT;
+			}
+			
+			itemStackIn.damageItem(1, playerIn);
+			playerIn.setHealth(newPlayerHealth);
+		}
+
         return itemStackIn;
     }
     

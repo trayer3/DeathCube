@@ -57,10 +57,12 @@ public class BlockLoot extends BlockDeathCube{
         int count = quantityDropped(state, fortune, rand);
         for(int i = 0; i < count; i++)
         {
-        	if(randValue < 0.5) {
+        	if(randValue < 0.33) {
         		ret.add(new ItemStack(Items.arrow, 10));
+        	} else if(randValue > 0.66) {
+        		ret.add(new ItemStack(ModItems.lifeskull));
         	} else {
-        		ret.add(new ItemStack(ModItems.example_item));
+        		ret.add(new ItemStack(ModItems.deathskull));
         	}
         }
         return ret;

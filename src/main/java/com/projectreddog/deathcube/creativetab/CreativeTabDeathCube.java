@@ -16,7 +16,7 @@ public class CreativeTabDeathCube {
 			@Override
 			public Item getTabIconItem() {
 
-				return ModItems.example_item;
+				return ModItems.deathskull;
 			}
 
 			@Override

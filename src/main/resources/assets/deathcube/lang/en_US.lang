@@ -8,7 +8,8 @@ tile.deathcube:gamecontroller.name=DeathCube Game Controller
 tile.deathcube:startinggearconfig.name=DeathCube Starting Gear Config
 tile.deathcube:forcefield.name=Force Field
 
-item.deathcube:example_item.name=DeathCube Skull
+item.deathcube:deathskull.name=Death Skull
+item.deathcube:lifeskull.name=Life Skull
 
 commands.game.usage=/game <start | end | refresh>
 

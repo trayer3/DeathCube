@@ -63,6 +63,11 @@ public class Reference {
 	public static final ResourceLocation GUI_STARTING_GEAR_CONFIG_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/startinggeargui.png");
 	public static final ResourceLocation HUD_SCORE_TEAM_POINTS = new ResourceLocation(Reference.MOD_ID, "textures/hud/hudscorebackground.png");
 	
+	public static final float ITEM_LIFESKULL_HEAL_AMOUNT = 2.0f;
+	public static final int ITEM_LIFESKULL_DURABILITY = 4;
+	public static final double ITEM_DEATHSKULL_VELOCITY_AMOUNT = 1.0d;
+	public static final int ITEM_DEATHSKULL_DURABILITY = 4;
+	
 	public static final int MESSAGE_SOURCE_GUI = 0;
 
 	public static final int MESSAGE_FIELD1_ID = 1;
