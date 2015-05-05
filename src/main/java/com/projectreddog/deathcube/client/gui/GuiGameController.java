@@ -20,16 +20,7 @@ public class GuiGameController extends GuiDeathCube {
 	private TileEntityGameController game_controller;
 	private GuiTextField text_MapName;
 	private GuiTextField text_NumTeams;
-	private GuiTextField text_ForceFieldx;
-	private GuiTextField text_ForceFieldz;
-	private GuiTextField text_ForceFieldyUp;
-	private GuiTextField text_ForceFieldyDown;
-	private GuiTextField text_ForceFieldStrength;
 	private GuiButton button_Start;
-	private GuiButton button_ForceField_Page;
-	private GuiButton button_ForceField_Used;
-	private GuiButton button_ForceField_Toggle;
-	private GuiButton button_Back;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
 	private int x = 0;
@@ -66,30 +57,6 @@ public class GuiGameController extends GuiDeathCube {
 		buttonWidth = 80;
 		button_Start = new GuiButton(Reference.BUTTON_1, ((this.width - buttonWidth) / 2), ((this.height - 20) / 2) + 50, buttonWidth, 20, "Start Game!");
 		buttonList.add(button_Start);
-		
-		buttonWidth = 120;
-		button_ForceField_Page = new GuiButton(Reference.BUTTON_2, ((this.width - buttonWidth) / 2), ((this.height - 20) / 2) + 25, buttonWidth, 20, "Configure Force Field");
-		buttonList.add(button_ForceField_Page);
-		
-		/**
-		 * - Page 2 Buttons
-		 */
-		buttonWidth = 30;
-		button_ForceField_Used = new GuiButton(Reference.BUTTON_3, ((this.width - buttonWidth) / 2) + 50, ((this.height - 20) / 2) - 50, buttonWidth, 20, "");
-		if (DeathCube.useForceField) {
-    		button_ForceField_Used.displayString = "Yes";
-		} else {
-			button_ForceField_Used.displayString = "No";
-		}
-		
-		buttonWidth = 20;
-		button_ForceField_Toggle = new GuiButton(Reference.BUTTON_4, (this.width - buttonWidth) / 2, ((this.height - 20) / 2), buttonWidth, 20, "#");
-		
-		
-		// This button position:  Centered plus moved to the right of the GUI, then moved back by the width of the button, then back 10 more.  
-		// --> Down to same height as Start Button. = Bottom Left Corner.
-		buttonWidth = 40;
-		button_Back = new GuiButton(Reference.BUTTON_5, ((this.width - buttonWidth) / 2) + ((this.gui_Width) / 2) - buttonWidth, ((this.height - 20) / 2) + 50, buttonWidth, 20, "Back");
 
 		/**
 		 * Prepare Text Field
@@ -102,45 +69,12 @@ public class GuiGameController extends GuiDeathCube {
 		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing*2, fieldWidth, fieldHeight);
 		text_NumTeams.setMaxStringLength(1);
 		text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
-		
-		/**
-		 * - Page 2 Fields
-		 */
-		text_ForceFieldx = new GuiTextField(20, fontRendererObj, ((this.width - 30) / 2) - fieldWidth, ((this.height - fieldHeight) / 2), fieldWidth, fieldHeight);
-		text_ForceFieldx.setMaxStringLength(3);
-		text_ForceFieldx.setText(String.valueOf(game_controller.getForceFieldx()));
-		
-		text_ForceFieldz = new GuiTextField(20, fontRendererObj, ((this.width - 30) / 2) + fieldWidth + 5, ((this.height - fieldHeight) / 2), fieldWidth, fieldHeight);
-		text_ForceFieldz.setMaxStringLength(3);
-		text_ForceFieldz.setText(String.valueOf(game_controller.getForceFieldz()));
-		
-		text_ForceFieldyUp = new GuiTextField(20, fontRendererObj, ((this.width - 30) / 2) + 5, ((this.height - fieldHeight) / 2) - 20, fieldWidth, fieldHeight);
-		text_ForceFieldyUp.setMaxStringLength(3);
-		text_ForceFieldyUp.setText(String.valueOf(game_controller.getForceFieldyUp()));
-		
-		text_ForceFieldyDown = new GuiTextField(20, fontRendererObj, ((this.width - 30) / 2) + 5, ((this.height - fieldHeight) / 2) + 20, fieldWidth, fieldHeight);
-		text_ForceFieldyDown.setMaxStringLength(3);
-		text_ForceFieldyDown.setText(String.valueOf(game_controller.getForceFieldyDown()));
-		
-		text_ForceFieldStrength = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, ((this.height - 16) / 2) + 50, fieldWidth, fieldHeight);
-		text_ForceFieldStrength.setMaxStringLength(3);
-		text_ForceFieldStrength.setText(String.valueOf(game_controller.getForceFieldStrength()));
 	}
 	
 	@Override
 	public void onTextfieldUpdate(int fieldID) {
 		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
 			text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
-		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
-			text_ForceFieldx.setText(String.valueOf(game_controller.getForceFieldx()));
-		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
-			text_ForceFieldz.setText(String.valueOf(game_controller.getForceFieldz()));
-		} else if (fieldID == Reference.MESSAGE_FIELD4_ID) {
-			text_ForceFieldyUp.setText(String.valueOf(game_controller.getForceFieldyUp()));
-		} else if (fieldID == Reference.MESSAGE_FIELD5_ID) {
-			text_ForceFieldyDown.setText(String.valueOf(game_controller.getForceFieldyDown()));
-		} else if (fieldID == Reference.MESSAGE_FIELD6_ID) {
-			text_ForceFieldStrength.setText(String.valueOf(game_controller.getForceFieldStrength()));
 		} else if (fieldID == Reference.MESSAGE_FIELD7_ID) {
 			text_MapName.setText(game_controller.getMapName());
 		}
@@ -154,11 +88,6 @@ public class GuiGameController extends GuiDeathCube {
 		super.mouseClicked(mouseX, mouseY, button);
 		text_MapName.mouseClicked(mouseX, mouseY, button);
 		text_NumTeams.mouseClicked(mouseX, mouseY, button);
-		text_ForceFieldx.mouseClicked(mouseX, mouseY, button);
-		text_ForceFieldz.mouseClicked(mouseX, mouseY, button);
-		text_ForceFieldyUp.mouseClicked(mouseX, mouseY, button);
-		text_ForceFieldyDown.mouseClicked(mouseX, mouseY, button);
-		text_ForceFieldStrength.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -190,28 +119,6 @@ public class GuiGameController extends GuiDeathCube {
 			mc.fontRendererObj.drawString("Teams", x + xSpacingLabel, y + ySpacing*2 + 2, 4210752);
 			text_NumTeams.drawTextBox();
 		}
-		
-		/**
-		 * - Page 2 Fields
-		 */
-		if(pageNumber == 2 && DeathCube.useForceField) {
-			mc.fontRendererObj.drawString("Use Force Field?", x + 8, y + 8, 4210752);
-			
-			mc.fontRendererObj.drawString("x:", ((this.width - 18) / 2) - 40, ((this.height - fieldHeight) / 2), 4210752);
-			text_ForceFieldx.drawTextBox();
-			
-			mc.fontRendererObj.drawString("z:", ((this.width - 18) / 2) + 53, ((this.height - fieldHeight) / 2), 4210752);
-			text_ForceFieldz.drawTextBox();
-			
-			mc.fontRendererObj.drawString("y-up:", ((this.width - 20) / 2), ((this.height - fieldHeight) / 2) - 30, 4210752);
-			text_ForceFieldyUp.drawTextBox();
-			
-			mc.fontRendererObj.drawString("y-down:", ((this.width - 20) / 2) - 5, ((this.height - fieldHeight) / 2) + 35, 4210752);
-			text_ForceFieldyDown.drawTextBox();
-			
-			mc.fontRendererObj.drawString("Strength:", x + xSpacingLabel, ((this.height - fieldHeight) / 2) + 50, 4210752);
-			text_ForceFieldStrength.drawTextBox();
-		}
 
 		super.drawScreen(mouseX, mouseY, partTicks);
 	}
@@ -224,16 +131,6 @@ public class GuiGameController extends GuiDeathCube {
 		Log.info("Key typed: " + chr);
 		if (text_NumTeams.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD1_ID, text_NumTeams.getText()));
-		} else if (text_ForceFieldx.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, text_ForceFieldx.getText()));
-		} else if (text_ForceFieldz.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, text_ForceFieldz.getText()));
-		} else if (text_ForceFieldyUp.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, text_ForceFieldyUp.getText()));
-		} else if (text_ForceFieldyDown.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, text_ForceFieldyDown.getText()));
-		} else if (text_ForceFieldStrength.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, text_ForceFieldStrength.getText()));
 		} else if (text_MapName.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD7_ID, text_MapName.getText()));
 		} else {
@@ -246,39 +143,7 @@ public class GuiGameController extends GuiDeathCube {
         if(button.id == Reference.BUTTON_1) {
         	Log.info("Start Button Pressed - Start Game");
         	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_1));
-        } else if(button.id == Reference.BUTTON_2) {
-        	Log.info("Force Field Page - Button Pressed");
-        	//ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_2));
-        	pageNumber = 2;
-        	buttonList.remove(button_Start);
-        	buttonList.remove(button_ForceField_Page);
-        	buttonList.add(button_ForceField_Used);
-    		buttonList.add(button_ForceField_Toggle);
-    		buttonList.add(button_Back);
-        } else if(button.id == Reference.BUTTON_3) {
-        	Log.info("Force Field Used - Button Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_3));
-        	
-        	if (DeathCube.useForceField) {
-        		button_ForceField_Used.displayString = "Yes";
-        		buttonList.add(button_ForceField_Toggle);
-			} else {
-				button_ForceField_Used.displayString = "No";
-				buttonList.remove(button_ForceField_Toggle);
-			}
-        } else if(button.id == Reference.BUTTON_4) {
-        	Log.info("Force Field Toggle - Pressed");
-        	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_4));
-        } else if(button.id == Reference.BUTTON_5) {
-        	Log.info("Back Button Pressed");
-        	//ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(game_controller.getPos(), Reference.BUTTON_5));
-        	pageNumber = 1;
-        	buttonList.add(button_Start);
-        	buttonList.add(button_ForceField_Page);
-        	buttonList.remove(button_ForceField_Used);
-    		buttonList.remove(button_ForceField_Toggle);
-    		buttonList.remove(button_Back);
-        }
+        } 
     }
 
 	@Override
@@ -303,44 +168,5 @@ public class GuiGameController extends GuiDeathCube {
 		if(fieldNumTeams < 2 || fieldNumTeams > Reference.TEAM_NUM_POSSIBLE) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD1_ID, String.valueOf(Reference.TEAM_NUM_POSSIBLE)));
 		} 
-		
-		/**
-		 * Verify that the Force Field dimensions are valid.
-		 */
-		int fieldx = Integer.parseInt(text_ForceFieldx.getText());
-		if(fieldx < Reference.FORCE_FIELD_MIN_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldx > Reference.FORCE_FIELD_MAX_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION)));
-		}
-		
-		int fieldz = Integer.parseInt(text_ForceFieldz.getText());
-		if(fieldz < Reference.FORCE_FIELD_MIN_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldz > Reference.FORCE_FIELD_MAX_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION)));
-		}
-		
-		int fieldyUp = Integer.parseInt(text_ForceFieldyUp.getText());
-		if(fieldyUp < Reference.FORCE_FIELD_MIN_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldyUp > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD4_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION_Y)));
-		}
-		
-		int fieldyDown = Integer.parseInt(text_ForceFieldyDown.getText());
-		if(fieldyDown < Reference.FORCE_FIELD_MIN_DIMENSION) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
-		} else if (fieldyDown > Reference.FORCE_FIELD_MAX_DIMENSION_Y) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD5_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION_Y)));
-		}
-		
-		int field_strength = Integer.parseInt(text_ForceFieldStrength.getText());
-		if(field_strength < Reference.FORCE_FIELD_MIN_STRENGTH) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(Reference.FORCE_FIELD_MIN_STRENGTH)));
-		} else if (field_strength > Reference.FORCE_FIELD_MAX_STRENGTH) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD6_ID, String.valueOf(Reference.FORCE_FIELD_MAX_STRENGTH)));
-		}
-		
 	}
 }
