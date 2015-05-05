@@ -1262,13 +1262,13 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
 					
 					if(teamColor.equals(Reference.TEAM_RED)) {
-						color = ItemDye.dyeColors[EnumDyeColor.RED.getMetadata()];
+						color = ItemDye.dyeColors[EnumDyeColor.RED.getDyeDamage()];
 					} else if(teamColor.equals(Reference.TEAM_BLUE)) {
-						color = ItemDye.dyeColors[EnumDyeColor.BLUE.getMetadata()];
+						color = ItemDye.dyeColors[EnumDyeColor.BLUE.getDyeDamage()];
 					} else if(teamColor.equals(Reference.TEAM_GREEN)) {
-						color = ItemDye.dyeColors[EnumDyeColor.GREEN.getMetadata()];
+						color = ItemDye.dyeColors[EnumDyeColor.GREEN.getDyeDamage()];
 					} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
-						color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getMetadata()];
+						color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getDyeDamage()];
 					}
 					
 					ItemStack armorPiece = lookupTE.inventory[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
