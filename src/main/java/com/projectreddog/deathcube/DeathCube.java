@@ -143,6 +143,9 @@ public class DeathCube {
 	        worldinfo.setThundering(false);
 		}
 		
+		gameState = GameStates.Lobby;
+		fieldState = FieldStates.Inactive;
+		
 		lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
 

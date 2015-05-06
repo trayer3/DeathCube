@@ -73,9 +73,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			DeathCube.fieldState = FieldStates.Inactive;
 			
 			Log.info("GameController Constructor - GameState: NULL - Initialized to Lobby.");
+		} else {
+			Log.info("GameController Constructor Call.  GameState: " + DeathCube.gameState);
 		}
-		
-		Log.info("GameController Constructor Call.  GameState: " + DeathCube.gameState);
 	}
 
 	public void onTextRequest() {

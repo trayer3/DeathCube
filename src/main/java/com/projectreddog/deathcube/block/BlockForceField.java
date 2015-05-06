@@ -119,33 +119,31 @@ public class BlockForceField extends BlockDeathCube {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
 
 		if (!(worldIn.isRemote) && playerIn.capabilities.isCreativeMode) {
-			if (DeathCube.gameState == GameStates.Lobby) {
-				/**
-				 * Player Right-Clicked the block:
-				 * - If Lobby, pass through Force Field
-				 * -- Check that other side is valid spawning point.
-				 * -- Allow both horizontal and vertical pass-through
-				 */
+			/**
+			 * Player Right-Clicked the block:
+			 * - If Lobby, pass through Force Field
+			 * -- Check that other side is valid spawning point.
+			 * -- Allow both horizontal and vertical pass-through
+			 */
 
-				BlockPos destination = pos;
+			BlockPos destination = pos;
 
-				if (side.getName().equals("down")) {
-					destination = pos.up();
-				} else if (side.getName().equals("up")) {
-					destination = pos.down(2);
-				} else if (side.getName().equals("north")) {
-					destination = pos.south();
-				} else if (side.getName().equals("south")) {
-					destination = pos.north();
-				} else if (side.getName().equals("east")) {
-					destination = pos.west();
-				} else if (side.getName().equals("west")) {
-					destination = pos.east();
-				}
+			if (side.getName().equals("down")) {
+				destination = pos.up();
+			} else if (side.getName().equals("up")) {
+				destination = pos.down(2);
+			} else if (side.getName().equals("north")) {
+				destination = pos.south();
+			} else if (side.getName().equals("south")) {
+				destination = pos.north();
+			} else if (side.getName().equals("east")) {
+				destination = pos.west();
+			} else if (side.getName().equals("west")) {
+				destination = pos.east();
+			}
 
-				if (worldIn.getBlockState(destination).getBlock() == Blocks.air && worldIn.getBlockState(destination.up()).getBlock() == Blocks.air) {
-					playerIn.setPositionAndUpdate(destination.getX() + 0.5d, destination.getY(), destination.getZ() + 0.5d);
-				}
+			if (worldIn.getBlockState(destination).getBlock() == Blocks.air && worldIn.getBlockState(destination.up()).getBlock() == Blocks.air) {
+				playerIn.setPositionAndUpdate(destination.getX() + 0.5d, destination.getY(), destination.getZ() + 0.5d);
 			}
 		}
 		return true;

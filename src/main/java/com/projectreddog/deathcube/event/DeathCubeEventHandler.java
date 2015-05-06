@@ -11,7 +11,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -104,17 +106,17 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerDeathDrops(PlayerDropsEvent event) {
-		Log.info("Number of Drops: " + event.drops.size());
+		//Log.info("Number of Drops: " + event.drops.size());
 
 		for (Iterator<EntityItem> keyIterator = event.drops.iterator(); keyIterator.hasNext();) {
 			EntityItem eItem = keyIterator.next();
 			Item dropItem = eItem.getEntityItem().getItem();
 			if (dropItem == Item.getItemFromBlock(Blocks.cobblestone)) {
-				Log.info("Techstack found cobble!");
+				//Log.info("Techstack found cobble!");
 			} else if (dropItem == ModItems.deathskull) {
-				Log.info("Techstack found a Death Skull!");
+				//Log.info("Techstack found a Death Skull!");
 			} else if (dropItem == ModItems.lifeskull) {
-				Log.info("Techstack found a Life Skull!");
+				//Log.info("Techstack found a Life Skull!");
 			} else {
 				/**
 				 * Not an allowed drop.  Remove from drops.
@@ -195,6 +197,20 @@ public class DeathCubeEventHandler {
 					}
 					Log.info("Player joined Running Game.");
 				}
+			}
+			
+			/**
+			 * Set weather to clear every time a player joins / respawns.
+			 */
+			if(MinecraftServer.getServer().worldServers[0] != null) {
+				WorldServer worldserver = MinecraftServer.getServer().worldServers[0];
+		        WorldInfo worldinfo = worldserver.getWorldInfo();
+		        
+		        worldinfo.setCleanWeatherTime(1728000);
+		        worldinfo.setRainTime(0);
+		        worldinfo.setThunderTime(0);
+		        worldinfo.setRaining(false);
+		        worldinfo.setThundering(false);
 			}
 		} else if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
 			Log.info("Entity is EntityPlayerMP.");
