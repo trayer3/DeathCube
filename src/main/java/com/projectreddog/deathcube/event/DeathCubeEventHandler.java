@@ -1,6 +1,6 @@
 package com.projectreddog.deathcube.event;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldSettings;
@@ -106,27 +105,22 @@ public class DeathCubeEventHandler {
 	@SubscribeEvent
 	public void onPlayerDeathDrops(PlayerDropsEvent event) {
 		Log.info("Number of Drops: " + event.drops.size());
-		
-		if (event.drops.contains(Item.getItemFromBlock(Blocks.cobblestone))) {
-			/**
-			 * If there is cobblestone, drop only the cobblestone.
-			 */
-			//event.drops.retainAll((Collection<?>) Blocks.cobblestone);
-			Log.info("Trayer found cobble!");
-		} else {
-			//event.drops.clear();
-			Log.info("Trayer did not find cobble ...");
-		}
-		
-		ItemStack is =	new ItemStack(Blocks.cobblestone);
 
-		for (EntityItem eItem : event.drops) {
+		for (Iterator<EntityItem> keyIterator = event.drops.iterator(); keyIterator.hasNext();) {
+			EntityItem eItem = keyIterator.next();
 			Item dropItem = eItem.getEntityItem().getItem();
-			if (dropItem == is.getItem()) {
+			if (dropItem == Item.getItemFromBlock(Blocks.cobblestone)) {
 				Log.info("Techstack found cobble!");
+			} else if (dropItem == ModItems.deathskull) {
+				Log.info("Techstack found a Death Skull!");
+			} else if (dropItem == ModItems.lifeskull) {
+				Log.info("Techstack found a Life Skull!");
 			} else {
-				event.drops.remove(eItem);
-				//Log.info("Techstack did not find cobble ...");
+				/**
+				 * Not an allowed drop.  Remove from drops.
+				 */
+				keyIterator.remove();
+				// Log.info("Techstack did not find cobble ...");
 			}
 		}
 	}
