@@ -16,6 +16,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -102,6 +104,50 @@ public class DeathCubeEventHandler {
 			 * For all other blocks, do not drop anything
 			 */
 			event.drops.clear();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerAttack(AttackEntityEvent event) {
+		if(DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
+			if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+				if(DeathCube.playerToTeamColor != null) {
+					String attackerTeamColor = DeathCube.playerToTeamColor.get(event.entityPlayer.getName());
+					String targetTeamColor = DeathCube.playerToTeamColor.get(event.target.getName());
+					
+					if(attackerTeamColor != null && targetTeamColor != null && attackerTeamColor.equals(targetTeamColor)) {
+						event.setCanceled(true);
+					} else {
+						Log.info("Player's team colors do not match.  Attack OK.");
+					}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerDeath(LivingDeathEvent event) {
+		if(event.entityLiving instanceof EntityPlayer) {
+			Log.info("Event Test - EntityPlayer was killed!");
+			if(DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
+				if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+					if(event.source.getSourceOfDamage() instanceof EntityPlayer){
+						Log.info("Event Test - EntityPlayer killed EntityPlayer");
+						Log.info("");
+					}
+				}
+			}
+		} else if(event.entityLiving instanceof EntityPlayerMP) {
+			Log.info("Event Test - EntityPlayerMP was killed!");
+			if(DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
+				if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+					if(event.source.getSourceOfDamage() instanceof EntityPlayerMP){
+						Log.info("Event Test - EntityPlayerMP killed EntityPlayerMP");
+					}
+				}
+			}
+		} else {
+			Log.info("Event Test: " + event.entityLiving.getName() + " died from " + event.source.getSourceOfDamage().toString());
 		}
 	}
 
