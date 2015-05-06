@@ -105,6 +105,8 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerDeathDrops(PlayerDropsEvent event) {
+		Log.info("Number of Drops: " + event.drops.size());
+		
 		if (event.drops.contains(Item.getItemFromBlock(Blocks.cobblestone))) {
 			/**
 			 * If there is cobblestone, drop only the cobblestone.
@@ -112,16 +114,16 @@ public class DeathCubeEventHandler {
 			//event.drops.retainAll((Collection<?>) Blocks.cobblestone);
 			Log.info("Trayer found cobble!");
 		} else {
-			event.drops.clear();
+			//event.drops.clear();
 			Log.info("Trayer did not find cobble ...");
 		}
+		
+		ItemStack is =	new ItemStack(Blocks.cobblestone);
 
 		for (EntityItem eItem : event.drops) {
 			Item dropItem = eItem.getEntityItem().getItem();
-			if (dropItem == Item.getItemFromBlock(Blocks.cobblestone)) {
+			if (dropItem == is.getItem()) {
 				Log.info("Techstack found cobble!");
-			} else if (dropItem == ModItems.deathskull) {
-			} else if (dropItem == ModItems.lifeskull) {
 			} else {
 				event.drops.remove(eItem);
 				//Log.info("Techstack did not find cobble ...");
