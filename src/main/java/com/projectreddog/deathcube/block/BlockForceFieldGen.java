@@ -25,7 +25,7 @@ public class BlockForceFieldGen extends BlockContainer {
 		super(material);
 
 		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
-		this.setUnlocalizedName(Reference.MODBLOCK_FORCE_FIELD);
+		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_FORCE_FIELD_GEN);
 		this.setStepSound(soundTypeMetal);
 		this.setBlockUnbreakable();
 		this.setResistance(18000004.0f);
@@ -69,7 +69,7 @@ public class BlockForceFieldGen extends BlockContainer {
 			 */
 			TileEntity te = worldIn.getTileEntity(pos);
 			if (te != null && !playerIn.isSneaking()) {
-				Log.info("Capture Point Block Clicked!");
+				Log.info("Force Field Generator - Clicked!");
 				playerIn.openGui(DeathCube.instance, Reference.GUI_CAPTURE_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
 				return true;
 			} else {
