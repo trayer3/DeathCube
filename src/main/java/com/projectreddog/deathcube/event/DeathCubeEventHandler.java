@@ -2,13 +2,13 @@ package com.projectreddog.deathcube.event;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -42,7 +42,8 @@ public class DeathCubeEventHandler {
 			 */
 			Block brokenBlock = event.state.getBlock();
 
-			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves) || brokenBlock.equals(Blocks.leaves2)) {
+			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves)
+					|| brokenBlock.equals(Blocks.leaves2)) {
 				/**
 				 * Do Nothing. It is OK to break these blocks.
 				 */
@@ -104,82 +105,94 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerDeathDrops(PlayerDropsEvent event) {
-		if (event.drops.contains(Blocks.cobblestone)) {
+		if (event.drops.contains(Item.getItemFromBlock(Blocks.cobblestone))) {
 			/**
 			 * If there is cobblestone, drop only the cobblestone.
-			 * 
-			 * TODO: Player drops on death. Test: Does this work?
 			 */
-			event.drops.retainAll((Collection<?>) Blocks.cobblestone);
+			//event.drops.retainAll((Collection<?>) Blocks.cobblestone);
+			Log.info("Trayer found cobble!");
 		} else {
 			event.drops.clear();
+			Log.info("Trayer did not find cobble ...");
+		}
+
+		for (EntityItem eItem : event.drops) {
+			Item dropItem = eItem.getEntityItem().getItem();
+			if (dropItem == Item.getItemFromBlock(Blocks.cobblestone)) {
+				Log.info("Techstack found cobble!");
+			} else if (dropItem == ModItems.deathskull) {
+			} else if (dropItem == ModItems.lifeskull) {
+			} else {
+				event.drops.remove(eItem);
+				//Log.info("Techstack did not find cobble ...");
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerJoin(EntityJoinWorldEvent event) {
-		//Log.info("Entity joined game.");
-		if (!event.world.isRemote && event.entity instanceof EntityPlayer) {  //instanceof EntityPlayerMP
+		// Log.info("Entity joined game.");
+		if (!event.world.isRemote && event.entity instanceof EntityPlayer) { // instanceof EntityPlayerMP
 			/**
 			 * If Entity is a Player, perform an action based on Gamestate.
 			 */
-			
-			if(DeathCube.gameState != null) {
-				if(DeathCube.gameState != GameStates.Running) {
+
+			if (DeathCube.gameState != null) {
+				if (DeathCube.gameState != GameStates.Running) {
 					/**
 					 * TODO: If not Running state, teleport to Lobby.
 					 */
 					TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
-					
-					String[] names = {"None"};
-					int[] points = {0};
-					double[] pointTimes = {0.0d};
+
+					String[] names = { "None" };
+					int[] points = { 0 };
+					double[] pointTimes = { 0.0d };
 					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0), (EntityPlayerMP) event.entity);
-					
+
 					Log.info("Game not Running: Player joined Lobby.");
-					
+
 					/**
 					 * Loop through Tile Entities & Send Text Update to all players
 					 * - Only if game is not Running
 					 */
 					List<TileEntity> loadedTEList = MinecraftServer.getServer().getEntityWorld().loadedTileEntityList;
-					for(TileEntity te : loadedTEList) {
-						if(te instanceof TileEntityGameController) {
+					for (TileEntity te : loadedTEList) {
+						if (te instanceof TileEntityGameController) {
 							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
-						} else if(te instanceof TileEntityCapturePoint) {
+						} else if (te instanceof TileEntityCapturePoint) {
 							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
-						} else if(te instanceof TileEntitySpawnPoint) {
+						} else if (te instanceof TileEntitySpawnPoint) {
 							ModNetwork.sendToServer(new MessageRequestTextUpdate_Client(te.getPos()));
 						}
 					}
 				} else {
 					/**
 					 * If Running state, add to team and spawn in game.
-					 * - Check if already on team.  This will be called every respawn too.
+					 * - Check if already on team. This will be called every respawn too.
 					 */
-					if(DeathCube.playerToTeamColor.containsKey(((EntityPlayer) event.entity).getName())){
+					if (DeathCube.playerToTeamColor.containsKey(((EntityPlayer) event.entity).getName())) {
 						/**
-						 * Player already on a Team.  
+						 * Player already on a Team.
 						 * 
-						 * TODO: Perform Death Penalty.  Spectate teammate, or Penalty Box.
+						 * TODO: Perform Death Penalty. Spectate teammate, or Penalty Box.
 						 * - Not just in spectate mode.
 						 * 
-						 * Debug - Send to Lobby for now.  
-						 * - Then make Spectator.  
+						 * Debug - Send to Lobby for now.
+						 * - Then make Spectator.
 						 * - Then add to queue to rejoin game.
 						 */
 						Log.info("Player is on a team.  Debug: Spawning in Lobby for now.");
 						TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
-						//((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
-						
+						// ((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
+
 						/**
 						 * Add to Queue to respawn in game.
 						 */
 						DeathCube.playerAwaitingRespawn.put(((EntityPlayer) event.entity).getName(), System.currentTimeMillis());
 					} else {
 						/**
-						 * Player not on a Team yet.  Assign Team.
+						 * Player not on a Team yet. Assign Team.
 						 */
 						TileEntityGameController.assignPlayerToTeam((EntityPlayer) event.entity);
 						Log.info("Assigned new player to a team.");
