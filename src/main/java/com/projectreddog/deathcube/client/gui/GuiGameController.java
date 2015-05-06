@@ -45,6 +45,11 @@ public class GuiGameController extends GuiDeathCube {
 		pageNumber = 1;
 		
 		/**
+		 * Need a better spot for this.  Or wait a short time?
+		 */
+		ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(game_controller.getPos()));
+		
+		/**
 		 * Find GUI upper-left corner.
 		 */
 		x = (this.width - this.gui_Width) / 2;

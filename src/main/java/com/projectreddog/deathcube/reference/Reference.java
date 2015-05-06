@@ -47,7 +47,8 @@ public class Reference {
 	public static final int FORCE_FIELD_MAX_DIMENSION = 500;
 	public static final int FORCE_FIELD_MAX_DIMENSION_Y = 256;
 	public static final int FORCE_FIELD_MIN_STRENGTH = 0;
-	public static final int FORCE_FIELD_MAX_STRENGTH = 999;
+	public static final int FORCE_FIELD_MAX_STRENGTH = 50;
+	public static final int FORCE_FIELD_DEFAULT_STRENGTH = 8;
 
 	public static final int GEAR_INVENTORY_SIZE = 40;
 	public static final String GEAR_CLASS_WARRIOR = "Warrior";
@@ -89,7 +90,7 @@ public class Reference {
 	public static final int TIME_WARMUP = 1000;
 	public static final int TIME_MAINGAME = 600000;
 	public static final int TIME_POSTGAME = 5000;
-	public static final int TIME_DEATH_PENALTY = 5000;
+	public static final int TIME_DEATH_PENALTY = 10000;
 	
 	public static final List<String> VERIFY_COLORS_LIST = Arrays.asList(TEAM_RED, TEAM_BLUE, TEAM_GREEN, TEAM_YELLOW);
 	public static final int VERIFY_CAPTURE_RADIUS_MIN = 1;

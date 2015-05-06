@@ -51,7 +51,7 @@ public class DeathCube {
 	public static GameStates gameState;
 	public static FieldStates fieldState;
 	public static boolean useForceField = true;
-	public static int forceFieldStrength = 5;
+	public static int forceFieldStrength = Reference.FORCE_FIELD_DEFAULT_STRENGTH;
 	public static boolean isOrderedCapture = true;
 	public static boolean firstServerTick = true;
 

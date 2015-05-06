@@ -11,6 +11,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.WorldInfo;
@@ -138,7 +139,9 @@ public class DeathCubeEventHandler {
 			if (DeathCube.gameState != null) {
 				if (DeathCube.gameState != GameStates.Running) {
 					/**
-					 * TODO: If not Running state, teleport to Lobby.
+					 * If not Running state:
+					 * - Update player scoreboard
+					 * - Try to update all TE Gui's (Not Working - TODO: Why not?)
 					 */
 					//TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 
@@ -172,11 +175,9 @@ public class DeathCubeEventHandler {
 						/**
 						 * Player already on a Team.
 						 * 
-						 * TODO: Perform Death Penalty. Spectate teammate, or Penalty Box.
-						 * - Not just in spectate mode.
-						 * 
-						 * Debug - Send to Lobby for now.
-						 * - Then make Spectator.
+						 * Perform Death Penalty. 
+						 * - Make Game Mode = Spectator.
+						 * - TODO: Spectate teammate?
 						 * - Then add to queue to rejoin game.
 						 */
 						Log.info("Player is on a team.  Debug: Spawning in Lobby for now.");
@@ -192,8 +193,16 @@ public class DeathCubeEventHandler {
 						/**
 						 * Player not on a Team yet. Assign Team.
 						 */
-						TileEntityGameController.assignPlayerToTeam((EntityPlayer) event.entity);
-						Log.info("Assigned new player to a team.");
+						if(DeathCube.gameControllerPos != null && DeathCube.gameControllerPos != new BlockPos(0, 0, 0)) {
+							TileEntityGameController lookupTE = (TileEntityGameController) event.world.getTileEntity(DeathCube.gameControllerPos);
+							
+							if(lookupTE != null) {
+								lookupTE.assignPlayerToTeam((EntityPlayer) event.entity);
+								Log.info("Assigned new player to a team.");
+							} else {
+								Log.info("Assign to Team Failed - no GameController found at Master Position.");
+							}
+						}
 					}
 					Log.info("Player joined Running Game.");
 				}

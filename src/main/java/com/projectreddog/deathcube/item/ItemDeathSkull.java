@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -47,6 +48,9 @@ public class ItemDeathSkull extends ItemDeathCube {
 			if(entity instanceof EntityPlayer) {
 				stack.damageItem(1, player);
 				((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+			} else if(entity instanceof EntityPlayerMP) {
+				stack.damageItem(1, player);
+				((EntityPlayerMP) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
 			} else {
 				stack.damageItem(1, player);
 				entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);

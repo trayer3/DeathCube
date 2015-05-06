@@ -76,6 +76,12 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		} else {
 			Log.info("GameController Constructor Call.  GameState: " + DeathCube.gameState);
 		}
+		
+		if(this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+			DeathCube.gameControllerPos = this.pos;
+			Log.info("Found GameController Position: " + this.pos.toString());
+			Log.info("Set Master GameController Position: " + DeathCube.gameControllerPos.toString());
+		}
 	}
 
 	public void onTextRequest() {
@@ -387,6 +393,13 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
 			
+			if(DeathCube.firstServerTick && this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+				DeathCube.gameControllerPos = this.pos;
+				DeathCube.firstServerTick = false;
+				Log.info("Found GameController Position: " + this.pos.toString());
+				Log.info("Set Master GameController Position: " + DeathCube.gameControllerPos.toString());
+			}
+			
 			updateClient();
 		}
 	}
@@ -558,6 +571,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * designator, e.g. A, B, C... - rather than color. Then, color would be assign during
 		 * the StartGame() method.)
 		 ************************************************************************************************/
+		
+		if(this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+			DeathCube.gameControllerPos = this.pos;
+		}
 		
 		/**
 		 * TODO: Get list of Entities and kill all Waypoints.

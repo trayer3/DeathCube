@@ -36,7 +36,6 @@ public class GuiForceFieldGen extends GuiDeathCube {
 	private int fieldWidth = 27;
 	private int fieldHeight = 12;
 	private int buttonWidth;
-	private int pageNumber = 1;
 
 	public GuiForceFieldGen(TileEntityForceFieldGen forceFieldGen) {
 		super();
@@ -47,7 +46,10 @@ public class GuiForceFieldGen extends GuiDeathCube {
 	public void initGui() {
 		super.initGui();
 
-		pageNumber = 1;
+		/**
+		 * Need a better spot for this.  Or wait a short time?
+		 */
+		ModNetwork.simpleNetworkWrapper.sendToServer(new MessageRequestTextUpdate_Client(forceFieldGen.getPos()));
 		
 		/**
 		 * Find GUI upper-left corner.
@@ -56,7 +58,7 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		y = (this.height - this.gui_Height) / 2;
 		
 		/**
-		 * - Page 2 Buttons
+		 * Set up Buttons
 		 */
 		buttonWidth = 30;
 		button_ForceField_Used = new GuiButton(Reference.BUTTON_3, ((this.width - buttonWidth) / 2) + 50, ((this.height - 20) / 2) - 50, buttonWidth, 20, "");
@@ -71,7 +73,7 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		
 		
 		/**
-		 * - Page 2 Fields
+		 * Set up Text Fields
 		 */
 		text_ForceFieldx = new GuiTextField(20, fontRendererObj, ((this.width - 30) / 2) - fieldWidth, ((this.height - fieldHeight) / 2), fieldWidth, fieldHeight);
 		text_ForceFieldx.setMaxStringLength(3);
@@ -141,7 +143,7 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		/**
 		 * - Page 2 Fields
 		 */
-		if(pageNumber == 2 && DeathCube.useForceField) {
+		if(DeathCube.useForceField) {
 			mc.fontRendererObj.drawString("Use Force Field?", x + 8, y + 8, 4210752);
 			
 			mc.fontRendererObj.drawString("x:", ((this.width - 18) / 2) - 40, ((this.height - fieldHeight) / 2), 4210752);
