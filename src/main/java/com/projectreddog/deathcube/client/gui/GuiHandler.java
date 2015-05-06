@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import com.projectreddog.deathcube.container.ContainerStartingGearConfig;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
+import com.projectreddog.deathcube.tileentity.TileEntityForceFieldGen;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 import com.projectreddog.deathcube.tileentity.TileEntityStartingGearConfig;
@@ -65,6 +66,14 @@ public class GuiHandler implements IGuiHandler {
 			if (entity != null) {
 				if (entity instanceof TileEntityStartingGearConfig) {
 					return new GuiStartingGearConfig(player.inventory, (TileEntityStartingGearConfig) entity);
+				}
+			}
+		} else if (ID == Reference.GUI_FORCE_FIELD_GEN) {
+
+			TileEntity entity = world.getTileEntity(new BlockPos(x, y, z));
+			if (entity != null) {
+				if (entity instanceof TileEntityForceFieldGen) {
+					return new GuiForceFieldGen((TileEntityForceFieldGen) entity);
 				}
 			}
 		}

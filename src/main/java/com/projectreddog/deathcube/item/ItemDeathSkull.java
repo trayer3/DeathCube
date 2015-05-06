@@ -37,6 +37,12 @@ public class ItemDeathSkull extends ItemDeathCube {
 			Random rand = new Random();
 			float randAmountx = rand.nextFloat()/2;
 			float randAmountz = rand.nextFloat()/2;
+			if(rand.nextBoolean()) {
+				randAmountx = -randAmountx;
+			}
+			if(rand.nextBoolean()) {
+				randAmountz = -randAmountz;
+			}
 			
 			if(entity instanceof EntityPlayer) {
 				stack.damageItem(1, player);
@@ -47,7 +53,7 @@ public class ItemDeathSkull extends ItemDeathCube {
 			}
 		}
 		
-        return true;  // Or maybe it's just because I'm returning true.  Lifeskull is false.
+        return true;
     }
 	
 	/**
@@ -59,6 +65,12 @@ public class ItemDeathSkull extends ItemDeathCube {
 		Random rand = new Random();
 		float randAmountx = rand.nextFloat()/5;
 		float randAmountz = rand.nextFloat()/5;
+		if(rand.nextBoolean()) {
+			randAmountx = -randAmountx;
+		}
+		if(rand.nextBoolean()) {
+			randAmountz = -randAmountz;
+		}
 		
 		if(playerIn.onGround) {
 			itemStackIn.damageItem(1, playerIn);

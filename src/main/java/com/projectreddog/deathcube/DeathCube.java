@@ -63,7 +63,7 @@ public class DeathCube {
 	public static Map<String, Long> playerAwaitingRespawn;
 
 	public static BlockPos gameControllerPos;
-	public static BlockPos lobbySpawnPos;
+	//public static BlockPos lobbySpawnPos;
 	//public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
 	//public static List<BlockPos> capturePoints = new ArrayList<BlockPos>();
 	public static List<BlockPos> gearTEPos = new ArrayList<BlockPos>();
@@ -146,7 +146,7 @@ public class DeathCube {
 		gameState = GameStates.Lobby;
 		fieldState = FieldStates.Inactive;
 		
-		lobbySpawnPos = ModConfig.readConfig().lobbyPos;
+		//lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
 
 	/**

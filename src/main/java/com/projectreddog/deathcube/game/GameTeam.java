@@ -5,12 +5,22 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
+import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
+import com.projectreddog.deathcube.tileentity.TileEntityStartingGearConfig;
 import com.projectreddog.deathcube.utility.Log;
 
 /**
@@ -207,5 +217,103 @@ public class GameTeam {
 	
 	public void removeWaypoint() {
 		waypoint.setDead();
+	}
+	
+	public static void sendPlayerToTeamSpawn(EntityPlayer inPlayer) {
+		/**
+		 * Teleport Players to Team Spawn Location(s).
+		 */
+		preparePlayerToSpawn(inPlayer);
+		givePlayerGear(inPlayer);
+		Log.info("Player attributes set.  Gear given.");
+
+		String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
+		int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
+		BlockPos spawnLocation = DeathCube.gameTeams[teamIndex].getSpawnLocation();
+		inPlayer.setPositionAndUpdate(spawnLocation.getX() + 0.5d, spawnLocation.getY() + 1, spawnLocation.getZ() + 0.5d);
+	}
+
+	public static void preparePlayerToSpawn(EntityPlayer inPlayer) {
+		/**
+		 * Prepare Player to Spawn in Game or Lobby:
+		 * - Set velocity to zero to avoid death falling.
+		 * - Clear any potion effects from Lobby time.
+		 * - Set to full health and saturation to help hunger.
+		 */
+		inPlayer.setGameType(WorldSettings.GameType.SURVIVAL);
+		inPlayer.motionX = 0;
+		inPlayer.motionY = 0;
+		inPlayer.motionZ = 0;
+		inPlayer.fallDistance = 0;
+		inPlayer.clearActivePotions();
+		inPlayer.extinguish();
+		inPlayer.setHealth(inPlayer.getMaxHealth());
+		inPlayer.addPotionEffect(new PotionEffect(Potion.saturation.getId(), 10));
+	}
+
+	public static void givePlayerGear(EntityPlayer inPlayer) {
+		/**
+		 * Give Player Gear
+		 * - Clear inventory. Happens automatically with assignment of new inventory?
+		 * - Stone Sword
+		 * - Leather Armor (in team color)
+		 * - Bow
+		 * - Arrows
+		 * - Splash Potion of Poison
+		 * 
+		 **** --This should be customizable. Use TE with inventory. Copy inventory to player on respawn.
+		 */
+		Log.info("Give Gear - Start");
+		World world = MinecraftServer.getServer().worldServers[0];
+		String playerInventoryClass = Reference.GEAR_CLASS_WARRIOR;  // Get from player somehow.
+		
+		for (BlockPos pointPos : DeathCube.gearTEPos) {
+			TileEntityStartingGearConfig lookupTE = (TileEntityStartingGearConfig) world.getTileEntity(pointPos);
+			Log.info("Gear TE Location - " + pointPos.toString());
+			if (lookupTE.getInventoryClass().equals(playerInventoryClass)) {
+				ItemStack[] configInvClone = lookupTE.getInventory();
+				
+				for(int i = 0; i < 4; i++) {
+					/**
+					 * Color Armor if Leather
+					 */
+					int color = 0;
+					String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
+					
+					if(teamColor.equals(Reference.TEAM_RED)) {
+						color = ItemDye.dyeColors[EnumDyeColor.RED.getDyeDamage()];
+					} else if(teamColor.equals(Reference.TEAM_BLUE)) {
+						color = ItemDye.dyeColors[EnumDyeColor.BLUE.getDyeDamage()];
+					} else if(teamColor.equals(Reference.TEAM_GREEN)) {
+						color = ItemDye.dyeColors[EnumDyeColor.GREEN.getDyeDamage()];
+					} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
+						color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getDyeDamage()];
+					}
+					
+					ItemStack armorPiece = configInvClone[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
+					
+					if(armorPiece != null && armorPiece.getItem().equals(Items.leather_helmet)) {
+						Items.leather_helmet.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_chestplate)) {
+						Items.leather_chestplate.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_leggings)) {
+						Items.leather_leggings.setColor(armorPiece, color);
+					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_boots)) {
+						Items.leather_boots.setColor(armorPiece, color);
+					}
+					
+					inPlayer.inventory.armorInventory[i] = armorPiece;
+				}
+				
+				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
+					if(configInvClone[i] != null) {
+						inPlayer.inventory.mainInventory[i] = configInvClone[i].copy();
+					} else {
+						inPlayer.inventory.mainInventory[i] = null;
+					}
+				}
+			}
+		}
+		Log.info("Give Gear - Success");
 	}
 }

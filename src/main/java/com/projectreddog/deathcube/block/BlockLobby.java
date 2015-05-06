@@ -36,8 +36,8 @@ public class BlockLobby extends BlockDeathCube{
 		 * - Remove from data file onBlockDestroyedByPlayer/ByExplosion?
 		 */
 		//if(MinecraftServer.getServer().getEntityWorld().isRemote) {
-			ModConfig.updateConfig(pos);  // Should be server only?
-			DeathCube.lobbySpawnPos = ModConfig.readConfig().lobbyPos;
+			//ModConfig.updateConfig(pos);  // Should be server only?
+			//DeathCube.lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 		//}
 		
         return this.getStateFromMeta(meta);

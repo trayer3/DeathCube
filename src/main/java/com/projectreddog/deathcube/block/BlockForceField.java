@@ -29,7 +29,7 @@ public class BlockForceField extends BlockDeathCube {
 
 		this.setUnlocalizedName(Reference.MODBLOCK_FORCE_FIELD);
 		this.setStepSound(soundTypeAnvil);
-		this.setBlockBounds(.1f, .1f, .1f, .8f, .8f, .8f);
+		this.setBlockBounds(.1f, .1f, .1f, .9f, .9f, .9f);
 		this.setBlockUnbreakable();
 		this.setResistance(18000004.0f);
 	}

@@ -58,6 +58,7 @@ public class Reference {
 	public static final int GUI_SPAWN_POINT = 1;
 	public static final int GUI_CAPTURE_POINT = 2;
 	public static final int GUI_STARTING_GEAR_CONFIG = 3;
+	public static final int GUI_FORCE_FIELD_GEN = 4;
 	
 	public static final ResourceLocation GUI_SPAWN_POINT_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/spawnpointgui.png");
 	public static final ResourceLocation GUI_GAME_CONTROLLER_BACKGROUND = new ResourceLocation(Reference.MOD_ID, "textures/gui/gamecontrollergui.png");

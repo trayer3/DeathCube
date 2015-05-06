@@ -37,6 +37,16 @@ public class TileEntityStartingGearConfig extends TileEntity implements IUpdateP
 
 		}
 	}
+	
+	public void setInventory(ItemStack[] inInventory) {
+		/**
+		 * Shouldn't need to use this.
+		 */
+	}
+	
+	public ItemStack[] getInventory() {
+		return inventory.clone();
+	}
 
 	protected ItemStack addToinventory(ItemStack is) {
 		int i = getSizeInventory();

@@ -70,7 +70,7 @@ public class BlockForceFieldGen extends BlockContainer {
 			TileEntity te = worldIn.getTileEntity(pos);
 			if (te != null && !playerIn.isSneaking()) {
 				Log.info("Force Field Generator - Clicked!");
-				playerIn.openGui(DeathCube.instance, Reference.GUI_CAPTURE_POINT, worldIn, pos.getX(), pos.getY(), pos.getZ());
+				playerIn.openGui(DeathCube.instance, Reference.GUI_FORCE_FIELD_GEN, worldIn, pos.getX(), pos.getY(), pos.getZ());
 				return true;
 			} else {
 				return false;

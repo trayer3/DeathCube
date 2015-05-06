@@ -140,7 +140,7 @@ public class DeathCubeEventHandler {
 					/**
 					 * TODO: If not Running state, teleport to Lobby.
 					 */
-					TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
+					//TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 
 					String[] names = { "None" };
 					int[] points = { 0 };
@@ -180,7 +180,7 @@ public class DeathCubeEventHandler {
 						 * - Then add to queue to rejoin game.
 						 */
 						Log.info("Player is on a team.  Debug: Spawning in Lobby for now.");
-						TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
+						//TileEntityGameController.sendPlayerToLobby((EntityPlayer) event.entity);
 						((EntityPlayer) event.entity).setGameType(WorldSettings.GameType.SPECTATOR);
 						// ((EntityPlayerMP) event.entity).setSpectatingEntity(teammate);
 
@@ -213,7 +213,7 @@ public class DeathCubeEventHandler {
 		        worldinfo.setThundering(false);
 			}
 		} else if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
-			Log.info("Entity is EntityPlayerMP.");
+			Log.info("*****************  Entity is EntityPlayerMP.  ************************");
 		}
 	}
 }
