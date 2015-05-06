@@ -722,7 +722,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Assign Team.
 			 */
-			assignPlayerToTeam(player);
+			if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+				assignPlayerToTeam(player);
+			} else {
+				Log.info("Game Teams object is null or empty.");
+			}
 
 			/**
 			 * TODO: Initialize Kill Streak Timers
@@ -749,27 +753,28 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public static void assignPlayerToTeam(EntityPlayer inPlayer) {
 		/**
 		 * Check if teams are balanced.
+		 * - Loop through all teams and mark the smallest if not balanced.
 		 */
 		boolean teamsBalanced = true;
-		String smallestTeam = DeathCube.gameTeams[0].getTeamColor();
+		String smallestTeamColor = DeathCube.gameTeams[0].getTeamColor();
 		int smallestTeamSize = DeathCube.gameTeams[0].getTeamSize();
 		for (int i = 1; i < DeathCube.gameTeams.length; i++) {
-			/**
-			 * Loop through all teams.
-			 * - If one has a smaller size, mark it as the smallest.
-			 */
 			Log.info("Team " + DeathCube.gameTeams[i].getTeamColor() + " size: " + DeathCube.gameTeams[i].getTeamSize());
 			if (DeathCube.gameTeams[i].getTeamSize() < smallestTeamSize) {
 				teamsBalanced = false;
-				smallestTeam = DeathCube.gameTeams[i].getTeamColor();
+				smallestTeamColor = DeathCube.gameTeams[i].getTeamColor();
 				Log.info("Smallest Team: " + DeathCube.gameTeams[i].getTeamColor());
 			}
 		}
 
+		/**
+		 * If teams are equal, assign player to a Random Team
+		 * 
+		 * Otherwise, assign player to the smallest team.
+		 * - What if there is a tie for the smallest team?
+		 * - Currently, the last team (Yellow) will be populated last.
+		 */
 		if (teamsBalanced) {
-			/**
-			 * If teams are equal, assign player to a Random Team
-			 */
 			Random rand = new Random();
 			int teamIndex = rand.nextInt(DeathCube.gameTeams.length);
 			DeathCube.gameTeams[teamIndex].addPlayer(inPlayer);
@@ -777,12 +782,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 			Log.info("Added player: " + inPlayer.getName() + " to random team: " + DeathCube.gameTeams[teamIndex].getTeamColor());
 		} else {
-			/**
-			 * Otherwise, assign player to the smallest team.
-			 * - What if there is a tie for the smallest team?
-			 * - Currently, the last team (Yellow) will be populated last.
-			 */
-			int smallestTeamIndex = DeathCube.teamColorToIndex.get(smallestTeam);
+			int smallestTeamIndex = DeathCube.teamColorToIndex.get(smallestTeamColor);
 			DeathCube.gameTeams[smallestTeamIndex].addPlayer(inPlayer);
 			DeathCube.playerToTeamColor.put(inPlayer.getName(), DeathCube.gameTeams[smallestTeamIndex].getTeamColor());
 

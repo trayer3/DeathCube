@@ -197,8 +197,12 @@ public class DeathCubeEventHandler {
 							TileEntityGameController lookupTE = (TileEntityGameController) event.world.getTileEntity(DeathCube.gameControllerPos);
 							
 							if(lookupTE != null) {
-								lookupTE.assignPlayerToTeam((EntityPlayer) event.entity);
-								Log.info("Assigned new player to a team.");
+								if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+									lookupTE.assignPlayerToTeam((EntityPlayer) event.entity);
+									Log.info("Assigned new player to a team.");
+								} else {
+									Log.info("Game Teams object is null or empty.");
+								}
 							} else {
 								Log.info("Assign to Team Failed - no GameController found at Master Position.");
 							}
