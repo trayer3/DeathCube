@@ -133,7 +133,7 @@ public class DeathCubeEventHandler {
 				if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
 					if(event.source.getSourceOfDamage() instanceof EntityPlayer){
 						Log.info("Event Test - EntityPlayer killed EntityPlayer");
-						Log.info("");
+						Log.info(((EntityPlayer) event.entityLiving).toString() + " killed by " + ((EntityPlayer) event.source.getSourceOfDamage()).toString());
 					}
 				}
 			}
