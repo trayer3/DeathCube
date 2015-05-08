@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "deathcube:boost_block" }
+    }
+}

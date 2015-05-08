@@ -1,13 +1,14 @@
 # Block Localizations
-tile.deathcube:example.name=Example Block
-tile.deathcube:lobby.name=Lobby Block
-tile.deathcube:loot_block.name=Loot Block
+tile.deathcube:boost_block.name=Booster Field
 tile.deathcube:capturepoint.name=Capture Point
-tile.deathcube:spawnpoint.name=Spawn Point
-tile.deathcube:gamecontroller.name=DeathCube Game Controller
-tile.deathcube:startinggearconfig.name=DeathCube Starting Gear Config
+tile.deathcube:example.name=Example Block
 tile.deathcube:forcefield.name=Force Field
 tile.deathcube:forcefieldgen.name=Force Field Generator
+tile.deathcube:gamecontroller.name=DeathCube Game Controller
+tile.deathcube:lobby.name=Lobby Block
+tile.deathcube:loot_block.name=Loot Block
+tile.deathcube:spawnpoint.name=Spawn Point
+tile.deathcube:startinggearconfig.name=DeathCube Starting Gear Config
 
 item.deathcube:deathskull.name=Death Skull
 item.deathcube:lifeskull.name=Life Skull

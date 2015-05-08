@@ -27,15 +27,17 @@ public class Reference {
 	/**
 	 * ID's and other Values
 	 */
-	public static final String MODBLOCK_EXAMPLE = "example";
-	public static final String MODBLOCK_LOBBY = "lobby";
-	public static final String MODBLOCK_LOOT = "loot_block";
+	public static final String MODBLOCK_BOOST = "boost_block";
 	public static final String MODBLOCK_CAPTURE_POINT = "capturepoint";
-	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
-	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";
-	public static final String MODBLOCK_STARTING_GEAR_CONFIG = "startinggearconfig";
+	public static final String MODBLOCK_EXAMPLE = "example";
 	public static final String MODBLOCK_FORCE_FIELD = "forcefield";
 	public static final String MODBLOCK_FORCE_FIELD_GEN = "forcefieldgen";
+	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";
+	public static final String MODBLOCK_LOBBY = "lobby";
+	public static final String MODBLOCK_LOOT = "loot_block";
+	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
+	public static final String MODBLOCK_STARTING_GEAR_CONFIG = "startinggearconfig";
+	
 
 	public static final int BUTTON_1 = 1;
 	public static final int BUTTON_2 = 2;
