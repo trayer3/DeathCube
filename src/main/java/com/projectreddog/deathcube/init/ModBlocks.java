@@ -51,6 +51,7 @@ public class ModBlocks {
 	}
 
 	public static void initBlockRenderer() {
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(boost_block), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_BOOST, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(example), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_EXAMPLE, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(lobby), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_LOBBY, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(loot_block), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_LOOT, "inventory"));

@@ -3,6 +3,7 @@ package com.projectreddog.deathcube.block;
 import java.util.Random;
 
 import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
+import com.projectreddog.deathcube.reference.Reference;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -65,7 +66,7 @@ public abstract class BlockBasePassThrough extends BlockDeathCube
     {
         return false;
     }
-
+    
     public boolean isFullCube()
     {
         return false;

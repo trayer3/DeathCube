@@ -147,7 +147,9 @@ public class DeathCubeEventHandler {
 				}
 			}
 		} else {
-			Log.info("Event Test: " + event.entityLiving.getName() + " died from " + event.source.getSourceOfDamage().toString());
+			/*if(event.entityLiving.getName() != null && event.source.getSourceOfDamage().toString() != null) {
+				Log.info("Event Test: " + event.entityLiving.getName() + " died from " + event.source.getSourceOfDamage().toString());
+			}*/
 		}
 	}
 

@@ -1,6 +1,8 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/orientable",
     "textures": {
-        "all": "deathcube:blocks/boost_block"
+        "top": "deathcube:blocks/boost_block_top",
+        "front": "deathcube:blocks/boost_block",
+        "side": "deathcube:blocks/boost_block"
     }
 }
