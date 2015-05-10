@@ -24,7 +24,7 @@ public class GuiForceFieldGen extends GuiDeathCube {
 	private GuiTextField text_ForceFieldyUp;
 	private GuiTextField text_ForceFieldyDown;
 	private GuiTextField text_ForceFieldStrength;
-	private GuiButton button_ForceField_Used;
+	//private GuiButton button_ForceField_Used;
 	private GuiButton button_ForceField_Toggle;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
@@ -59,7 +59,7 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		
 		/**
 		 * Set up Buttons
-		 */
+		 *
 		buttonWidth = 30;
 		button_ForceField_Used = new GuiButton(Reference.BUTTON_3, ((this.width - buttonWidth) / 2) + 50, ((this.height - 20) / 2) - 50, buttonWidth, 20, "");
 		if (DeathCube.useForceField) {
@@ -67,9 +67,11 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		} else {
 			button_ForceField_Used.displayString = "No";
 		}
+		buttonList.add(button_ForceField_Used); */
 		
 		buttonWidth = 20;
 		button_ForceField_Toggle = new GuiButton(Reference.BUTTON_4, (this.width - buttonWidth) / 2, ((this.height - 20) / 2), buttonWidth, 20, "#");
+		buttonList.add(button_ForceField_Toggle);
 		
 		
 		/**
@@ -193,10 +195,10 @@ public class GuiForceFieldGen extends GuiDeathCube {
         	ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleGuiButtonPress(forceFieldGen.getPos(), Reference.BUTTON_3));
         	
         	if (DeathCube.useForceField) {
-        		button_ForceField_Used.displayString = "Yes";
+        		//button_ForceField_Used.displayString = "Yes";
         		buttonList.add(button_ForceField_Toggle);
 			} else {
-				button_ForceField_Used.displayString = "No";
+				//button_ForceField_Used.displayString = "No";
 				buttonList.remove(button_ForceField_Toggle);
 			}
         } else if(button.id == Reference.BUTTON_4) {
