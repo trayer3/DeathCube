@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "deathcube:loot_block" }
+        "active_state=0": { "model": "deathcube:loot_block" },
+        "active_state=1": { "model": "deathcube:inactive_block" }
     }
 }
