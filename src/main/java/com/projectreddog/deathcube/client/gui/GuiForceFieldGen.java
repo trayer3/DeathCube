@@ -96,12 +96,15 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		text_ForceFieldStrength = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, ((this.height - 16) / 2) + 50, fieldWidth, fieldHeight);
 		text_ForceFieldStrength.setMaxStringLength(3);
 		text_ForceFieldStrength.setText(String.valueOf(forceFieldGen.getForceFieldStrength()));
+		
+		Log.info("Force Field Gen - Gui Initialized");
 	}
 	
 	@Override
 	public void onTextfieldUpdate(int fieldID) {
 		if (fieldID == Reference.MESSAGE_FIELD2_ID) {
 			text_ForceFieldx.setText(String.valueOf(forceFieldGen.getForceFieldx()));
+			Log.info("X Value - Field Updated (Key Typed)");
 		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
 			text_ForceFieldz.setText(String.valueOf(forceFieldGen.getForceFieldz()));
 		} else if (fieldID == Reference.MESSAGE_FIELD4_ID) {
@@ -228,8 +231,10 @@ public class GuiForceFieldGen extends GuiDeathCube {
 		int fieldx = Integer.parseInt(text_ForceFieldx.getText());
 		if(fieldx < Reference.FORCE_FIELD_MIN_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(forceFieldGen.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(Reference.FORCE_FIELD_MIN_DIMENSION)));
+			Log.info("X Value too Small");
 		} else if (fieldx > Reference.FORCE_FIELD_MAX_DIMENSION) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(forceFieldGen.getPos(), Reference.MESSAGE_FIELD2_ID, String.valueOf(Reference.FORCE_FIELD_MAX_DIMENSION)));
+			Log.info("X Value too Large");
 		}
 		
 		int fieldz = Integer.parseInt(text_ForceFieldz.getText());

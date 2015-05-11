@@ -71,10 +71,12 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 		if (fieldID == Reference.MESSAGE_FIELD2_ID) {
 			try {
 				forceFieldx = Integer.parseInt(text);
+				Log.info("GUI Updated");
 				if (!this.worldObj.isRemote) {
 					/**
 					 * If a server message (not remote), update the Clients too.
 					 */
+					Log.info("Sending Force Field X value to Server");
 					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, String.valueOf(forceFieldx)));
 				}
 			} catch (NumberFormatException e) {
@@ -137,6 +139,7 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 	}
 
 	public int getForceFieldx() {
+		Log.info("Getting Force Field X Value: " + forceFieldx);
 		return forceFieldx;
 	}
 
@@ -165,6 +168,7 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 		forceFieldyDown = tag.getInteger("y_down");
 		forceFieldStrength = tag.getInteger("strength");
 		Log.info("Force Field Gen - NBT Read");
+		Log.info("Force Field X: " + forceFieldx);
 	}
 
 	@Override
@@ -175,7 +179,8 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 		tag.setInteger("y_up", forceFieldyUp);
 		tag.setInteger("y_down", forceFieldyDown);
 		tag.setInteger("strength", forceFieldStrength);
-		//Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
+		Log.info("Force Field Gen - NBT Write");
+		Log.info("Force Field X: " + forceFieldx);
 	}
 
 	@Override
@@ -247,8 +252,10 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 			 * Double-check Force Field Dimensions:
 			 */
 			if(forceFieldx < Reference.FORCE_FIELD_MIN_DIMENSION) {
+				Log.info("Force Field Toggle - X too small: " + forceFieldx);
 				forceFieldx = Reference.FORCE_FIELD_MIN_DIMENSION;
 			} else if (forceFieldx > Reference.FORCE_FIELD_MAX_DIMENSION) {
+				Log.info("Force Field Toggle - X too big: " + forceFieldx);
 				forceFieldx = Reference.FORCE_FIELD_MAX_DIMENSION;
 			}
 			if(forceFieldz < Reference.FORCE_FIELD_MIN_DIMENSION) {
@@ -408,11 +415,10 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 				// Debug
 				if (currentPosY.getY() % 5 == 0 && currentPosX.getX() % 5 == 0) {
 					if (generate) {
-						Log.info("YX Block-Gen Position: " + currentPosX.toString());
+						//Log.info("YX Block-Gen Position: " + currentPosX.toString());
 					} else {
-						Log.info("YX Block-Remove Position: " + currentPosX.toString());
+						//Log.info("YX Block-Remove Position: " + currentPosX.toString());
 					}
-
 				}
 			}
 		}
@@ -448,9 +454,9 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 				// Debug
 				if (currentPosY.getY() % 5 == 0 && currentPosZ.getZ() % 5 == 0) {
 					if (generate) {
-						Log.info("YZ Block-Gen Position: " + currentPosZ.toString());
+						//Log.info("YZ Block-Gen Position: " + currentPosZ.toString());
 					} else {
-						Log.info("YZ Block-Remove Position: " + currentPosZ.toString());
+						//Log.info("YZ Block-Remove Position: " + currentPosZ.toString());
 					}
 				}
 			}
@@ -485,11 +491,10 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 				// Debug
 				if (currentPosX.getX() % 5 == 0 && currentPosZ.getZ() % 5 == 0) {
 					if (generate) {
-						Log.info("XZ Block-Gen Position: " + currentPosZ.toString());
+						//Log.info("XZ Block-Gen Position: " + currentPosZ.toString());
 					} else {
-						Log.info("XZ Block-Remove Position: " + currentPosZ.toString());
+						//Log.info("XZ Block-Remove Position: " + currentPosZ.toString());
 					}
-
 				}
 			}
 		}
