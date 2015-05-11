@@ -12,19 +12,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.utility.Log;
 
 public class BlockLoot extends BlockDeathCube {
 	public static final PropertyInteger ACTIVE_STATE = PropertyInteger.create("active_state", 0, 1);
-	
+
 	public BlockLoot() {
 		super();
 
 		this.setUnlocalizedName(Reference.MODBLOCK_LOOT);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(ACTIVE_STATE, Integer.valueOf(0)));
+		this.setBlockBounds(0.0F, 0.05F, 0.0F, 1.0F, 1.0F, 1.0F);
 		this.setHardness(5f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
 	}
@@ -41,46 +45,78 @@ public class BlockLoot extends BlockDeathCube {
 
 		super.breakBlock(worldIn, pos, state);
 	}
-	
+
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+
+		Log.info("Loot Block - Player Activate state value: " + i);
+		Log.info("Loot Block - Player Activate world-state value: " + j);
+
+		if (i == 0) {
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+		}
+        
+        return false;
+    }
+
 	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-	
+
+		int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+
+		Log.info("Loot Block - Player Destroy state value: " + i);
+		Log.info("Loot Block - Player Destroy world-state value: " + j);
+
+		if (i == 0) {
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+		}
+		
+		// Stop block from being broken
 	}
-	
+
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-	
-	}
-	
-	/**
-     * Triggered whenever an entity collides with this block (enters into the block)
-     */
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
-    
-    }
-    
-    /**
-     * Called When an Entity Collided with the Block
-     */
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-    
-    }
-	
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-	
+
+		int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+
+		Log.info("Loot Block - Harvest state value: " + i);
+		Log.info("Loot Block - Harvest world-state value: " + j);
+
+		if (i == 0) {
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+		}
+		
+		// Stop block from being broken / harvested
 	}
 
 	/**
-	 * This returns a complete list of items dropped from this block.
-	 *
-	 * @param world
-	 *            The current world
-	 * @param pos
-	 *            Block position in world
-	 * @param state
-	 *            Current state
-	 * @param fortune
-	 *            Breakers fortune level
-	 * @return A ArrayList containing all items this block drops
+	 * Triggered whenever an entity collides with this block (enters into the block)
 	 */
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
+		Log.info("Loot Block - Player entered block.");
+		//if (entityIn instanceof EntityPlayer) {
+		//	worldIn.setBlockState(pos, this.blockState.getBaseState().withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
+		//}
+	}
+
+	/**
+	 * Called When an Entity Collided with the Block
+	 */
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+		if (entityIn instanceof EntityPlayer) {
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+		}
+	}
+
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+		/**
+		 * Check time since block went inactive.
+		 * - Set back to active if time > limit.
+		 */
+	}
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
