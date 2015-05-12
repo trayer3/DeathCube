@@ -7,10 +7,13 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
@@ -55,57 +58,60 @@ public class BlockLoot extends BlockDeathCube {
 		Log.info("Loot Block - Player Activate world-state value: " + j);
 
 		if (i == 1) {
+			/**
+			 * Change from Inactive Block to Loot Block
+			 */
 			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2); // What is the Comparable value = 2 for?
 		} else if (i == 0) {
+			/**
+			 * Change from Loot Block to Inactive Block
+			 */
 			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+			
+			/**
+			 * Drop item(s)
+			 */
+			this.harvestBlock(worldIn, playerIn, pos, state, null);
 		}
         
         return false;
     }
-
-	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-
-		if(state.getValue(ACTIVE_STATE) != null) {
-			int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-			int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
-
-			Log.info("Loot Block - Player Destroy state value: " + i);
-			Log.info("Loot Block - Player Destroy world-state value: " + j);
-
-			if (i == 0) {
-				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
-			}
-			
-			// Stop block from being broken
-		}
-	}
-
-	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-
-		if(state.getValue(ACTIVE_STATE) != null) {
-			int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-			int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
-
-			Log.info("Loot Block - Player Destroy state value: " + i);
-			Log.info("Loot Block - Player Destroy world-state value: " + j);
-
-			if (i == 0) {
-				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
-			}
-			
-			// Stop block from being broken
-		}
-	}
-
+	
 	/**
-	 * Triggered whenever an entity collides with this block (enters into the block)
-	 */
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn) {
-		Log.info("Loot Block - Player entered block.");
-		//if (entityIn instanceof EntityPlayer) {
-		//	worldIn.setBlockState(pos, this.blockState.getBaseState().withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
-		//}
-	}
+     * Called when a player removes a block.  This is responsible for
+     * actually destroying the block, and the block is intact at time of call.
+     * This is called regardless of whether the player can harvest the block or
+     * not.
+     *
+     * Return true if the block is actually destroyed.
+     *
+     * Note: When used in multiplayer, this is called on both client and
+     * server sides!
+     *
+     * @param world The current world
+     * @param player The player damaging the block, may be null
+     * @param pos Block position in world
+     * @param willHarvest True if Block.harvestBlock will be called after this, if the return in true.
+     *        Can be useful to delay the destruction of tile entities till after harvestBlock
+     * @return True if the block is actually destroyed.
+     */
+	@Override
+    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+    {
+    	/**
+    	 * Set to Inactive Block
+    	 * - How to get a proper state object?
+    	 * - Still crashes - can't get state of Loot Block since already changed to Air block.
+    	 */
+    	//world.setBlockState(pos, this.getStateById(0).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+        
+    	/**
+    	 * Do not destroy the block
+    	 */
+    	return false;
+    }
+	
+	// Try this maybe?  harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)
 
 	/**
 	 * Called When an Entity Collided with the Block
@@ -113,6 +119,13 @@ public class BlockLoot extends BlockDeathCube {
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
 		if (entityIn instanceof EntityPlayer) {
 			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+			
+			/**
+			 * Drop item:
+			 * - Drops all possible items currently.  Why?  Same call as in onBlockActivated.
+			 * - Maybe it's the cast of Entity to EntityPlayer?  Would only affect harvesters and fortune level.
+			 */
+			this.harvestBlock(worldIn, ((EntityPlayer) entityIn), pos, state, null);
 		}
 	}
 
