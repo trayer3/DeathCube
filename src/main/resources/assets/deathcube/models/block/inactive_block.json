@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "deathcube:blocks/loot_block"
+        "all": "deathcube:blocks/inactive_block"
     }
 }

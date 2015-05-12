@@ -54,7 +54,9 @@ public class BlockLoot extends BlockDeathCube {
 		Log.info("Loot Block - Player Activate state value: " + i);
 		Log.info("Loot Block - Player Activate world-state value: " + j);
 
-		if (i == 0) {
+		if (i == 1) {
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2); // What is the Comparable value = 2 for?
+		} else if (i == 0) {
 			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
 		}
         
@@ -63,32 +65,36 @@ public class BlockLoot extends BlockDeathCube {
 
 	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
 
-		int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+		if(state.getValue(ACTIVE_STATE) != null) {
+			int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+			int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
 
-		Log.info("Loot Block - Player Destroy state value: " + i);
-		Log.info("Loot Block - Player Destroy world-state value: " + j);
+			Log.info("Loot Block - Player Destroy state value: " + i);
+			Log.info("Loot Block - Player Destroy world-state value: " + j);
 
-		if (i == 0) {
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+			if (i == 0) {
+				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+			}
+			
+			// Stop block from being broken
 		}
-		
-		// Stop block from being broken
 	}
 
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
 
-		int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+		if(state.getValue(ACTIVE_STATE) != null) {
+			int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+			int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
 
-		Log.info("Loot Block - Harvest state value: " + i);
-		Log.info("Loot Block - Harvest world-state value: " + j);
+			Log.info("Loot Block - Player Destroy state value: " + i);
+			Log.info("Loot Block - Player Destroy world-state value: " + j);
 
-		if (i == 0) {
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+			if (i == 0) {
+				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+			}
+			
+			// Stop block from being broken
 		}
-		
-		// Stop block from being broken / harvested
 	}
 
 	/**
