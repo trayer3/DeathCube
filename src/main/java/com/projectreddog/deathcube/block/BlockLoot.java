@@ -1,5 +1,6 @@
 package com.projectreddog.deathcube.block;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -102,17 +103,15 @@ public class BlockLoot extends BlockDeathCube {
 	@Override
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
-    	/**
-    	 * Set to Inactive Block
-    	 * - How to get a proper state object?
-    	 * - Still crashes - can't get state of Loot Block since already changed to Air block.
-    	 */
-    	//world.setBlockState(pos, this.getStateById(0).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
-        
-    	/**
-    	 * Do not destroy the block
-    	 */
-    	return false;
+		if(!player.capabilities.isCreativeMode) {
+			/**
+	    	 * Set to Inactive Block
+	    	 * - Do not destroy the block
+	    	 */
+	    	return world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+		} else {
+			return world.setBlockToAir(pos);
+		}
     }
 	
 	// Try this maybe?  harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)
@@ -122,14 +121,16 @@ public class BlockLoot extends BlockDeathCube {
 	 */
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
 		if (entityIn instanceof EntityPlayer) {
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+			this.removedByPlayer(worldIn, pos, ((EntityPlayer) entityIn), true);
 			
 			/**
+			 * Change State to Inactive and ...
 			 * Drop item:
 			 * - Drops all possible items currently.  Why?  Same call as in onBlockActivated.
 			 * - Maybe it's the cast of Entity to EntityPlayer?  Would only affect harvesters and fortune level.
 			 */
-			this.harvestBlock(worldIn, ((EntityPlayer) entityIn), pos, state, null);
+			//worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+			//this.harvestBlock(worldIn, ((EntityPlayer) entityIn), pos, state, null);
 		}
 	}
 
