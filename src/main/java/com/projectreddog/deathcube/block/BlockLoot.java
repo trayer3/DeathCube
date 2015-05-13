@@ -51,30 +51,34 @@ public class BlockLoot extends BlockDeathCube {
 
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
+        if(playerIn.capabilities.isCreativeMode) {
+        	int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+    		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
 
-		Log.info("Loot Block - Player Activate state value: " + i);
-		Log.info("Loot Block - Player Activate world-state value: " + j);
+    		Log.info("Loot Block - Player Activate state value: " + i);
+    		Log.info("Loot Block - Player Activate world-state value: " + j);
 
-		if (i == 1) {
-			/**
-			 * Change from Inactive Block to Loot Block
-			 */
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2); // What is the Comparable value = 2 for?
-		} else if (i == 0) {
-			/**
-			 * Change from Loot Block to Inactive Block
-			 */
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
-			
-			/**
-			 * Drop item(s)
-			 */
-			this.harvestBlock(worldIn, playerIn, pos, state, null);
-		}
-        
-        return false;
+    		if (i == 1) {
+    			/**
+    			 * Change from Inactive Block to Loot Block
+    			 */
+    			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2); // What is the Comparable value = 2 for?
+    		} else if (i == 0) {
+    			/**
+    			 * Change from Loot Block to Inactive Block
+    			 */
+    			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
+    			
+    			/**
+    			 * Drop item(s)
+    			 */
+    			this.harvestBlock(worldIn, playerIn, pos, state, null);
+    		}
+            
+            return false;
+        } else {
+            return false;
+        }
     }
 	
 	/**
