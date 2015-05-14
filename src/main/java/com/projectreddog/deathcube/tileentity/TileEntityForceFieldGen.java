@@ -66,7 +66,7 @@ public class TileEntityForceFieldGen extends TileEntityDeathCube implements IUpd
 		 * - private GuiTextField text_ForceFieldyDown;
 		 * - private GuiTextField text_ForceFieldStrength;
 		 */
-		Log.info("Capture Point sees Text Update: " + text);
+		Log.info("Force Field Generator sees Text Update: " + text);
 		toggleForceField(false);
 		if (fieldID == Reference.MESSAGE_FIELD2_ID) {
 			try {

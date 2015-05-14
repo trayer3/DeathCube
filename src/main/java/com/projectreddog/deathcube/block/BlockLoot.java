@@ -26,6 +26,7 @@ import com.projectreddog.deathcube.utility.Log;
 
 public class BlockLoot extends BlockDeathCube {
 	public static final PropertyInteger ACTIVE_STATE = PropertyInteger.create("active_state", 0, 1);
+	private static boolean isRefreshing = false;
 
 	public BlockLoot() {
 		super();
@@ -108,6 +109,9 @@ public class BlockLoot extends BlockDeathCube {
 	    	 * Set to Inactive Block
 	    	 * - Do not destroy the block
 	    	 */
+			isRefreshing = true;
+			Log.info("Block Removed by Player - Setting Refresh Now");
+			world.scheduleUpdate(pos, this, 100);  //  5 seconds * 20 ticks/second = 100?  //this.tickRate(world));
 	    	return world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
 		} else {
 			return world.setBlockToAir(pos);
@@ -139,6 +143,14 @@ public class BlockLoot extends BlockDeathCube {
 		 * Check time since block went inactive.
 		 * - Set back to active if time > limit.
 		 */
+		if(isRefreshing) {
+			Log.info("Loot Block updateTick() - Refreshing");
+			isRefreshing = false;
+			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
+			Log.info("Loot Block updateTick() - Refreshing set to False");
+		} else {
+			Log.info("Loot Block updateTick() - Non-Refreshing");
+		}
 	}
 
 	@Override
