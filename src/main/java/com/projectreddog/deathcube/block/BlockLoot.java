@@ -38,49 +38,39 @@ public class BlockLoot extends BlockDeathCube {
 		this.setStepSound(soundTypeMetal);
 	}
 
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+	public void toggleBlockState(World worldIn, BlockPos pos, IBlockState state) {
+		int currentState = -1;
+		
+		if(state != null) {
+			currentState = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
+		}
 
-		/**
-		 * Capture drops and change to something from preset:
-		 * - Config file?
-		 * - Config TE?
-		 */
-		// MinecraftServer.getServer().worldServers[0].spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX(), pos.getY(), pos.getZ(), 3, 0, 0, 0, 1, 1);
-
-		super.breakBlock(worldIn, pos, state);
+		if(currentState != -1) {
+			Log.info("Loot Block - Player Activate state value: " + currentState);
+			
+			if (currentState == 0) {
+				/**
+				 * State 0 = Active Loot Block
+				 * - Change to Inactive Block, State 1
+				 */
+				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+			} else if (currentState == 1) {
+				/**
+				 * State 1 = Inactive Block
+				 * - Change to Active Loot Block, State 0
+				 */
+				worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
+			}
+		}
 	}
-
+	
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if(playerIn.capabilities.isCreativeMode) {
-        	int i = ((Integer) state.getValue(ACTIVE_STATE)).intValue();
-    		int j = ((Integer) worldIn.getBlockState(pos).getValue(ACTIVE_STATE)).intValue();
-
-    		Log.info("Loot Block - Player Activate state value: " + i);
-    		Log.info("Loot Block - Player Activate world-state value: " + j);
-
-    		if (i == 1) {
-    			/**
-    			 * Change from Inactive Block to Loot Block
-    			 */
-    			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2); // What is the Comparable value = 2 for?
-    		} else if (i == 0) {
-    			/**
-    			 * Change from Loot Block to Inactive Block
-    			 */
-    			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2); // What is the Comparable value = 2 for?
-    			
-    			/**
-    			 * Drop item(s)
-    			 */
-    			this.harvestBlock(worldIn, playerIn, pos, state, null);
-    		}
-            
-            return false;
-        } else {
-            return false;
+        	this.toggleBlockState(worldIn, pos, state); 
         }
+        
+        return false;
     }
 	
 	/**
@@ -108,32 +98,42 @@ public class BlockLoot extends BlockDeathCube {
 			/**
 	    	 * Set to Inactive Block
 	    	 * - Do not destroy the block
+	    	 * - 5 seconds * 20 ticks/second = 100 delay
 	    	 */
-			isRefreshing = true;
 			Log.info("Block Removed by Player - Setting Refresh Now");
-			world.scheduleUpdate(pos, this, 100);  //  5 seconds * 20 ticks/second = 100?  //this.tickRate(world));
-	    	return world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
+			isRefreshing = true;
+			world.scheduleUpdate(pos, this, 100);
+        	
+			this.toggleBlockState(world, pos, world.getBlockState(pos));
+			
+			/**
+			 * Drop item(s)
+			 */
+    		this.harvestBlock(world, player, pos, world.getBlockState(pos), null);
+			
+	    	return false;  //world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
 		} else {
+			/**
+			 * If player is in Creative Mode:
+			 * - Allow block to be broken
+			 */
 			return world.setBlockToAir(pos);
 		}
     }
-	
-	// Try this maybe?  harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)
 
 	/**
 	 * Called When an Entity Collided with the Block
 	 */
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
 		if (entityIn instanceof EntityPlayer) {
+			/**
+			 * Toggle State and Schedule Update
+			 */
 			this.removedByPlayer(worldIn, pos, ((EntityPlayer) entityIn), true);
 			
 			/**
-			 * Change State to Inactive and ...
-			 * Drop item:
-			 * - Drops all possible items currently.  Why?  Same call as in onBlockActivated.
-			 * - Maybe it's the cast of Entity to EntityPlayer?  Would only affect harvesters and fortune level.
+			 * Drop item(s)
 			 */
-			//worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(1)), 2);
 			//this.harvestBlock(worldIn, ((EntityPlayer) entityIn), pos, state, null);
 		}
 	}
@@ -146,7 +146,8 @@ public class BlockLoot extends BlockDeathCube {
 		if(isRefreshing) {
 			Log.info("Loot Block updateTick() - Refreshing");
 			isRefreshing = false;
-			worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
+			this.toggleBlockState(worldIn, pos, state);
+			//worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
 			Log.info("Loot Block updateTick() - Refreshing set to False");
 		} else {
 			Log.info("Loot Block updateTick() - Non-Refreshing");
@@ -160,14 +161,16 @@ public class BlockLoot extends BlockDeathCube {
 		Random rand = world instanceof World ? ((World) world).rand : RANDOM;
 		float randValue = rand.nextFloat();
 
-		int count = quantityDropped(state, fortune, rand);
+		Log.info("Get Drops for Loot Block");
+		
+		int count = 1; //quantityDropped(state, fortune, rand);
 		for (int i = 0; i < count; i++) {
 			if (randValue < 0.33) {
-				ret.add(new ItemStack(Items.arrow, 10));
+				ret.add(new ItemStack(ModItems.deathskull));
 			} else if (randValue > 0.66) {
 				ret.add(new ItemStack(ModItems.lifeskull));
 			} else {
-				ret.add(new ItemStack(ModItems.deathskull));
+				ret.add(new ItemStack(Items.arrow, 10));
 			}
 		}
 		return ret;
