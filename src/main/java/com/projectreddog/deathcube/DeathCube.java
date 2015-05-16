@@ -78,8 +78,12 @@ public class DeathCube {
 	public static double[] gameTeams_pointTimes_client;
 	@SideOnly(Side.CLIENT)
 	public static long gameTimeStart_client;
-	
-
+	@SideOnly(Side.CLIENT)
+	public static double renderHelperYOffset  =0;
+	@SideOnly(Side.CLIENT)
+	public static double renderHelperYDirection =-1;
+	@SideOnly(Side.CLIENT)
+	public static double renderHelperRotation = 0d;
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
 	 */

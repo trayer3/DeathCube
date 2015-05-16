@@ -15,6 +15,7 @@ import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
+import com.projectreddog.deathcube.network.MessageHandleWaypointUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 
@@ -33,7 +34,8 @@ public class ModNetwork {
 		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 2, Side.CLIENT);
 		simpleNetworkWrapper.registerMessage(MessageRequestTextUpdate_Client.class, MessageRequestTextUpdate_Client.class, 3, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleClientGameUpdate.class, MessageHandleClientGameUpdate.class, 4, Side.CLIENT);
-
+		simpleNetworkWrapper.registerMessage(MessageHandleWaypointUpdate.class, MessageHandleWaypointUpdate.class, 5, Side.SERVER);
+		simpleNetworkWrapper.registerMessage(MessageHandleWaypointUpdate.class, MessageHandleWaypointUpdate.class, 6, Side.CLIENT);
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}
 	
