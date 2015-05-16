@@ -94,6 +94,7 @@ public class BlockLoot extends BlockDeathCube {
 	@Override
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
+		if(!player.capabilities.isCreativeMode && ((Integer) world.getBlockState(pos).getValue(ACTIVE_STATE)).intValue() == 0) {
 			/**
 	    	 * Set to Inactive Block
 	    	 * - Do not destroy the block
