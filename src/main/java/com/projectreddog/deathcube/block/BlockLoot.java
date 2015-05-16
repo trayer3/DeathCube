@@ -94,7 +94,6 @@ public class BlockLoot extends BlockDeathCube {
 	@Override
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
-		if(!player.capabilities.isCreativeMode) {
 			/**
 	    	 * Set to Inactive Block
 	    	 * - Do not destroy the block
@@ -129,7 +128,9 @@ public class BlockLoot extends BlockDeathCube {
 			/**
 			 * Toggle State and Schedule Update
 			 */
-			this.removedByPlayer(worldIn, pos, ((EntityPlayer) entityIn), true);
+			if(((Integer) state.getValue(ACTIVE_STATE)).intValue() == 0){
+				this.removedByPlayer(worldIn, pos, ((EntityPlayer) entityIn), true);
+			}
 			
 			/**
 			 * Drop item(s)
