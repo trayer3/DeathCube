@@ -36,6 +36,7 @@ public class BlockBoost extends BlockBasePassThrough {
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
 		if(entityIn.motionY < 1.0d) {
 			entityIn.addVelocity(0.0d, 0.5d, 0.0d);
+			entityIn.fallDistance = 0;
 		}
 	}
 	

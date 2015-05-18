@@ -1,44 +1,55 @@
 package com.projectreddog.deathcube.block;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.creativetab.CreativeTabDeathCube;
 import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
+import com.projectreddog.deathcube.tileentity.TileEntityLootBlock;
 import com.projectreddog.deathcube.utility.Log;
 
-public class BlockLoot extends BlockDeathCube {
+public class BlockLoot extends BlockContainer {
 	public static final PropertyInteger ACTIVE_STATE = PropertyInteger.create("active_state", 0, 1);
-	private static boolean isRefreshing = false;
+	private static boolean headBreak = false;
 
-	public BlockLoot() {
-		super();
+	public BlockLoot(Material material) {
+		super(material);
 
-		this.setUnlocalizedName(Reference.MODBLOCK_LOOT);
+		this.setCreativeTab(CreativeTabDeathCube.DEATHCUBE_TAB);
+		this.setUnlocalizedName(Reference.MOD_ID.toLowerCase() + ":" + Reference.MODBLOCK_LOOT);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(ACTIVE_STATE, Integer.valueOf(0)));
 		this.setBlockBounds(0.0F, 0.05F, 0.0F, 1.0F, 1.0F, 1.0F);
+		this.setResistance(18000004.0f);
 		this.setHardness(5f);// not sure on the hardness
 		this.setStepSound(soundTypeMetal);
 	}
+	
+	public BlockLoot() {
+		this(Material.rock);
+	}
 
-	public void toggleBlockState(World worldIn, BlockPos pos, IBlockState state) {
+	public static void toggleBlockState(World worldIn, BlockPos pos, IBlockState state) {
 		int currentState = -1;
 		
 		if(state != null) {
@@ -65,12 +76,21 @@ public class BlockLoot extends BlockDeathCube {
 	}
 	
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        if(playerIn.capabilities.isCreativeMode) {
-        	this.toggleBlockState(worldIn, pos, state); 
-        }
-        
-        return false;
+    {   
+        if (playerIn.capabilities.isCreativeMode) { // && DeathCube.gameState == GameStates.Lobby) {
+			/**
+			 * Can only open GUI if in Creative Mode and GameState is Lobby.
+			 */
+			TileEntity te = worldIn.getTileEntity(pos);
+			if (te != null && !playerIn.isSneaking()) {
+				playerIn.openGui(DeathCube.instance, Reference.GUI_LOOT_BLOCK, worldIn, pos.getX(), pos.getY(), pos.getZ());
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
     }
 	
 	/**
@@ -101,8 +121,9 @@ public class BlockLoot extends BlockDeathCube {
 	    	 * - 5 seconds * 20 ticks/second = 100 delay
 	    	 */
 			Log.info("Block Removed by Player - Setting Refresh Now");
-			isRefreshing = true;
-			world.scheduleUpdate(pos, this, 100);
+			
+			TileEntityLootBlock lookupTE = (TileEntityLootBlock) world.getTileEntity(pos);
+			lookupTE.setRefreshTime(System.currentTimeMillis());
         	
 			this.toggleBlockState(world, pos, world.getBlockState(pos));
 			
@@ -115,9 +136,18 @@ public class BlockLoot extends BlockDeathCube {
 		} else {
 			/**
 			 * If player is in Creative Mode:
-			 * - Allow block to be broken
+			 * - Allow block to be broken when not a head break
+			 * - Head break toggles block state
 			 */
-			return world.setBlockToAir(pos);
+			if(headBreak) {
+				this.toggleBlockState(world, pos, world.getBlockState(pos));
+				this.harvestBlock(world, player, pos, world.getBlockState(pos), null);
+				headBreak = false;
+				
+				return false;
+			} else {
+				return world.setBlockToAir(pos);
+			}
 		}
     }
 
@@ -130,6 +160,7 @@ public class BlockLoot extends BlockDeathCube {
 			 * Toggle State and Schedule Update
 			 */
 			if(((Integer) state.getValue(ACTIVE_STATE)).intValue() == 0){
+				headBreak = true;
 				this.removedByPlayer(worldIn, pos, ((EntityPlayer) entityIn), true);
 			}
 			
@@ -137,22 +168,6 @@ public class BlockLoot extends BlockDeathCube {
 			 * Drop item(s)
 			 */
 			//this.harvestBlock(worldIn, ((EntityPlayer) entityIn), pos, state, null);
-		}
-	}
-
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-		/**
-		 * Check time since block went inactive.
-		 * - Set back to active if time > limit.
-		 */
-		if(isRefreshing) {
-			Log.info("Loot Block updateTick() - Refreshing");
-			isRefreshing = false;
-			this.toggleBlockState(worldIn, pos, state);
-			//worldIn.setBlockState(pos, state.withProperty(ACTIVE_STATE, Integer.valueOf(0)), 2);
-			Log.info("Loot Block updateTick() - Refreshing set to False");
-		} else {
-			Log.info("Loot Block updateTick() - Non-Refreshing");
 		}
 	}
 
@@ -194,5 +209,26 @@ public class BlockLoot extends BlockDeathCube {
 
 	protected BlockState createBlockState() {
 		return new BlockState(this, new IProperty[] { ACTIVE_STATE });
+	}
+	
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileEntityLootBlock();
+	}
+
+	@Override
+	public int getRenderType() {
+		/**
+		 * 1 = Liquid
+		 * 2 = TESR
+		 * 3 = Normal
+		 * -1 = Nothing (air)
+		 */
+		return 3;
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
 	}
 }

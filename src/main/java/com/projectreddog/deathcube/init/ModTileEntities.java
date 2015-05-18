@@ -6,6 +6,7 @@ import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityForceFieldGen;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
+import com.projectreddog.deathcube.tileentity.TileEntityLootBlock;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
 import com.projectreddog.deathcube.tileentity.TileEntityStartingGearConfig;
 
@@ -17,5 +18,6 @@ public class ModTileEntities {
 		GameRegistry.registerTileEntity(TileEntityGameController.class, Reference.MODBLOCK_GAME_CONTROLLER);
 		GameRegistry.registerTileEntity(TileEntityStartingGearConfig.class, Reference.MODBLOCK_STARTING_GEAR_CONFIG);
 		GameRegistry.registerTileEntity(TileEntityForceFieldGen.class, Reference.MODBLOCK_FORCE_FIELD_GEN);
+		GameRegistry.registerTileEntity(TileEntityLootBlock.class, Reference.MODBLOCK_LOOT);
 	}
 }
