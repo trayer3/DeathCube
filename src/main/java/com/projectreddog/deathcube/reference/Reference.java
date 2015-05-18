@@ -105,4 +105,9 @@ public class Reference {
 	public static final String ENTITY_WAYPOINT_NAME = "waypoint";
 	
 	public static final String ENTITY_WAYPOINT_TEXTURE_LOCATION = "models/Waypoint.png";
+	
+	public static final double RENDER_HELPER_MAX_Y_OFFSET = 1d;
+	public static final double RENDER_HELPER_Y_OFFSET_SPEED = .05d;
+	public static final double RENDER_HELPER_ROTATION_SPEED  = 1d;
+	
 }

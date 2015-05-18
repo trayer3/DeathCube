@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.model.ModelWaypoint;
 import com.projectreddog.deathcube.reference.Reference;
 
@@ -31,7 +33,8 @@ public class RenderWaypoint extends Render {
 	public void doRender(Entity entity, double x, double y, double z, float yaw, float pitch) {
 
 		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GL11.glTranslated(x, y + DeathCube.renderHelperYOffset, z);
+		GL11.glRotated(DeathCube.renderHelperRotation, 0, 1, 0);
 		/**
 		 * Setup drawing to always be in front of other blocks
 		 */
@@ -47,7 +50,27 @@ public class RenderWaypoint extends Render {
 		 * End setup drawing to always be in front of other blocks
 		 */
 		this.bindEntityTexture(entity);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		if (entity instanceof EntityWaypoint) {
+			// should always be true but to be typesafe ;)
+			EntityWaypoint entityWaypoint = (EntityWaypoint) entity;
+			if (entityWaypoint.team == 1) {
+				// red
+				GlStateManager.color(1.0F, 0F, 0F, 1.0F);
+			} else if (entityWaypoint.team == 2) {
+				// green
+				GlStateManager.color(0F, 1.0F, 0F, 1.0F);
+			} else if (entityWaypoint.team == 3) {
+				// blue
+				GlStateManager.color(0F, 0F, 1.0F, 1.0F);
+			} else if (entityWaypoint.team == 4) {
+				// yellow
+				GlStateManager.color(1.0F, 1.0F, 0.0F, 1.0F);
+			} else {
+				// normal coloring
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			}
+		}
+		// GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.Model.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 
 		/**
@@ -65,5 +88,4 @@ public class RenderWaypoint extends Render {
 		GL11.glPopMatrix();
 
 	}
-
 }

@@ -350,6 +350,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 							 */
 						}
 					}
+					/**
+					 * Tech added this section to update the game render helper variables to make the waypoints bounce & rotate.
+					 */
+					updateRenderHelpers();
 				} else if (DeathCube.gameState == GameStates.PostGame) {
 					/*****************************************************************************************
 					 * 
@@ -402,6 +406,33 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			
 			updateClient();
 		}
+	}
+
+	private void updateRenderHelpers() {
+		/*
+		 * update Rotation
+		 */
+		DeathCube.renderHelperRotation += Reference.RENDER_HELPER_ROTATION_SPEED;
+		if (DeathCube.renderHelperRotation > 360d){
+			DeathCube.renderHelperRotation =0d;
+		}
+		/*
+		 * Update Y offset
+		 */
+		
+		if (DeathCube.renderHelperYDirection == -1){
+			DeathCube.renderHelperYOffset -= Reference.RENDER_HELPER_Y_OFFSET_SPEED;
+			if (DeathCube.renderHelperYOffset < (Reference.RENDER_HELPER_MAX_Y_OFFSET *-1)) {
+				DeathCube.renderHelperYDirection *= -1;
+				
+			}
+		}else {
+			DeathCube.renderHelperYOffset += Reference.RENDER_HELPER_Y_OFFSET_SPEED;
+			if (DeathCube.renderHelperYOffset > Reference.RENDER_HELPER_MAX_Y_OFFSET){
+				DeathCube.renderHelperYDirection *= -1;
+			}
+		}
+		
 	}
 
 	public void updateClient() {

@@ -51,7 +51,7 @@ public class GameTeam {
 	public GameTeam(String teamColor, World inWorldObj) {
 		this.teamColor = teamColor;
 		this.worldObj = inWorldObj;
-		this.waypoint = new EntityWaypoint(inWorldObj);
+		this.waypoint = new EntityWaypoint(inWorldObj,teamColor);
 	}
 
 	public String getTeamColor() {
