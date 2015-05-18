@@ -1,11 +1,10 @@
 package com.projectreddog.deathcube.entity;
 
+import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import com.projectreddog.deathcube.init.ModNetwork;
-import com.projectreddog.deathcube.network.MessageHandleWaypointUpdate;
 import com.projectreddog.deathcube.utility.Log;
 
 public class EntityWaypoint extends Entity {
@@ -30,6 +29,7 @@ public class EntityWaypoint extends Entity {
 		} else if (TeamColor.equalsIgnoreCase("Yellow")) {
 			this.team = 4;
 		}
+		this.getDataWatcher().updateObject(20, this.team);
 		this.onUpdate();
 
 		Log.info("WAYPOINT TEAM: " + this.team);
@@ -45,19 +45,14 @@ public class EntityWaypoint extends Entity {
 
 	@Override
 	public void onUpdate() {
-		if (worldObj.isRemote && firstTick) {
-			clientInit();
-			firstTick = false;
-		}
+
+		DataWatcher dw = this.getDataWatcher();
+		this.team = dw.getWatchableObjectInt(20);
 	}
 
 	public void clientInit() {
-		if (worldObj.isRemote) {
-			// client us this method so we can delay it until the entity ID is assigned?
-
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleWaypointUpdate(this.getEntityId(), this.team));
-
-		}
+		DataWatcher dw = this.getDataWatcher();
+		this.team = dw.getWatchableObjectInt(20);
 	}
 
 	/**

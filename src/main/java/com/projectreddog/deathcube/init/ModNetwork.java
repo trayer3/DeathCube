@@ -15,7 +15,6 @@ import com.projectreddog.deathcube.client.gui.GuiHandler;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleGuiButtonPress;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
-import com.projectreddog.deathcube.network.MessageHandleWaypointUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 
@@ -34,18 +33,16 @@ public class ModNetwork {
 		simpleNetworkWrapper.registerMessage(MessageHandleTextUpdate.class, MessageHandleTextUpdate.class, 2, Side.CLIENT);
 		simpleNetworkWrapper.registerMessage(MessageRequestTextUpdate_Client.class, MessageRequestTextUpdate_Client.class, 3, Side.SERVER);
 		simpleNetworkWrapper.registerMessage(MessageHandleClientGameUpdate.class, MessageHandleClientGameUpdate.class, 4, Side.CLIENT);
-		simpleNetworkWrapper.registerMessage(MessageHandleWaypointUpdate.class, MessageHandleWaypointUpdate.class, 5, Side.SERVER);
-		simpleNetworkWrapper.registerMessage(MessageHandleWaypointUpdate.class, MessageHandleWaypointUpdate.class, 6, Side.CLIENT);
 		NetworkRegistry.INSTANCE.registerGuiHandler(DeathCube.instance, new GuiHandler());
 	}
-	
-	public static void sendToServer(IMessage message){
-		ModNetwork.simpleNetworkWrapper.sendToServer(message);
-    }
 
-    public static void sendTo(IMessage message, EntityPlayerMP player){
-    	ModNetwork.simpleNetworkWrapper.sendTo(message, player);
-    }
+	public static void sendToServer(IMessage message) {
+		ModNetwork.simpleNetworkWrapper.sendToServer(message);
+	}
+
+	public static void sendTo(IMessage message, EntityPlayerMP player) {
+		ModNetwork.simpleNetworkWrapper.sendTo(message, player);
+	}
 
 	public static void sendPacketToAllAround(IMessage packet, TargetPoint tp) {
 		for (EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
@@ -62,19 +59,19 @@ public class ModNetwork {
 			}
 		}
 	}
-	
-	public static void sendToAll(IMessage message){
+
+	public static void sendToAll(IMessage message) {
 		/**
-		 * Bug that causes players to disconnect.  Get list of players and send message to each individually.
+		 * Bug that causes players to disconnect. Get list of players and send message to each individually.
 		 */
 		for (EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList) {
 			ModNetwork.simpleNetworkWrapper.sendTo(message, player);
 		}
 
-		//ModNetwork.simpleNetworkWrapper.sendToAll(message);
-    }
+		// ModNetwork.simpleNetworkWrapper.sendToAll(message);
+	}
 
-    public static void sendToDimension(IMessage message, int dimensionId){
-    	ModNetwork.simpleNetworkWrapper.sendToDimension(message, dimensionId);
-    }
+	public static void sendToDimension(IMessage message, int dimensionId) {
+		ModNetwork.simpleNetworkWrapper.sendToDimension(message, dimensionId);
+	}
 }
