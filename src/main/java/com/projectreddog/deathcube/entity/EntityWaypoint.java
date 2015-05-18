@@ -29,9 +29,11 @@ public class EntityWaypoint extends Entity {
 		} else if (TeamColor.equalsIgnoreCase("Yellow")) {
 			this.team = 4;
 		}
-		this.getDataWatcher().updateObject(20, this.team);
-		this.onUpdate();
+		if (!world.isRemote) {
+			this.getDataWatcher().updateObject(20, this.team);
 
+		}
+		this.onUpdate();
 		Log.info("WAYPOINT TEAM: " + this.team);
 	}
 
@@ -45,9 +47,10 @@ public class EntityWaypoint extends Entity {
 
 	@Override
 	public void onUpdate() {
-
-		DataWatcher dw = this.getDataWatcher();
-		this.team = dw.getWatchableObjectInt(20);
+		if (worldObj.isRemote) {
+			DataWatcher dw = this.getDataWatcher();
+			this.team = dw.getWatchableObjectInt(20);
+		}
 	}
 
 	public void clientInit() {

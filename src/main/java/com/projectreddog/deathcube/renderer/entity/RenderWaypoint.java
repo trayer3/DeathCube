@@ -33,7 +33,7 @@ public class RenderWaypoint extends Render {
 	public void doRender(Entity entity, double x, double y, double z, float yaw, float pitch) {
 
 		GL11.glPushMatrix();
-		GL11.glTranslated(x, y+ DeathCube.renderHelperYOffset, z);
+		GL11.glTranslated(x, y + DeathCube.renderHelperYOffset, z);
 		GL11.glRotated(DeathCube.renderHelperRotation, 0, 1, 0);
 		/**
 		 * Setup drawing to always be in front of other blocks
@@ -50,27 +50,27 @@ public class RenderWaypoint extends Render {
 		 * End setup drawing to always be in front of other blocks
 		 */
 		this.bindEntityTexture(entity);
-		if (entity instanceof EntityWaypoint){
+		if (entity instanceof EntityWaypoint) {
 			// should always be true but to be typesafe ;)
 			EntityWaypoint entityWaypoint = (EntityWaypoint) entity;
-			if (entityWaypoint.team ==1){
-				//red
+			if (entityWaypoint.team == 1) {
+				// red
 				GlStateManager.color(1.0F, 0F, 0F, 1.0F);
-			}else if (entityWaypoint.team ==2){
-				//green
+			} else if (entityWaypoint.team == 2) {
+				// green
 				GlStateManager.color(0F, 1.0F, 0F, 1.0F);
-			}else if (entityWaypoint.team ==3){
-				//blue
+			} else if (entityWaypoint.team == 3) {
+				// blue
 				GlStateManager.color(0F, 0F, 1.0F, 1.0F);
-			}else if (entityWaypoint.team ==4){
+			} else if (entityWaypoint.team == 4) {
 				// yellow
-				GlStateManager.color(0F, 1.0F, 1.0F, 1.0F);
-			}else{
-				//normal coloring
+				GlStateManager.color(1.0F, 1.0F, 0.0F, 1.0F);
+			} else {
+				// normal coloring
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 		}
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		// GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.Model.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 
 		/**
@@ -88,5 +88,4 @@ public class RenderWaypoint extends Render {
 		GL11.glPopMatrix();
 
 	}
-
 }
