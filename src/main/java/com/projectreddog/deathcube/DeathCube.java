@@ -63,11 +63,11 @@ public class DeathCube {
 	public static Map<String, Long> playerAwaitingRespawn;
 
 	public static BlockPos gameControllerPos;
-	//public static BlockPos lobbySpawnPos;
-	//public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
-	//public static List<BlockPos> capturePoints = new ArrayList<BlockPos>();
+	// public static BlockPos lobbySpawnPos;
+	// public static List<BlockPos> spawnPoints = new ArrayList<BlockPos>();
+	// public static List<BlockPos> capturePoints = new ArrayList<BlockPos>();
 	public static List<BlockPos> gearTEPos = new ArrayList<BlockPos>();
-	
+
 	@SideOnly(Side.CLIENT)
 	public static boolean displayScoreboard_client;
 	@SideOnly(Side.CLIENT)
@@ -79,17 +79,18 @@ public class DeathCube {
 	@SideOnly(Side.CLIENT)
 	public static long gameTimeStart_client;
 	@SideOnly(Side.CLIENT)
-	public static double renderHelperYOffset  =0;
+	public static double renderHelperYOffset;
 	@SideOnly(Side.CLIENT)
-	public static double renderHelperYDirection =-1;
+	public static double renderHelperYDirection;
 	@SideOnly(Side.CLIENT)
-	public static double renderHelperRotation = 0d;
+	public static double renderHelperRotation;
+
 	/**
 	 * PreInitialization: Network handling, Mod Configs, Register items and blocks
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		
+
 		// Initialize Classes
 		ModBlocks.init();
 		ModItems.init();
@@ -105,7 +106,7 @@ public class DeathCube {
 	 */
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		//register entities before renders
+		// register entities before renders
 		ModEntities.init(this);
 
 		// Register Stuff
@@ -135,22 +136,22 @@ public class DeathCube {
 		 * 
 		 ****************************************************************************************************/
 		firstServerTick = true;
-		
-		if(MinecraftServer.getServer().worldServers[0] != null) {
+
+		if (MinecraftServer.getServer().worldServers[0] != null) {
 			WorldServer worldserver = MinecraftServer.getServer().worldServers[0];
-	        WorldInfo worldinfo = worldserver.getWorldInfo();
-	        
-	        worldinfo.setCleanWeatherTime(1728000);
-	        worldinfo.setRainTime(0);
-	        worldinfo.setThunderTime(0);
-	        worldinfo.setRaining(false);
-	        worldinfo.setThundering(false);
+			WorldInfo worldinfo = worldserver.getWorldInfo();
+
+			worldinfo.setCleanWeatherTime(1728000);
+			worldinfo.setRainTime(0);
+			worldinfo.setThunderTime(0);
+			worldinfo.setRaining(false);
+			worldinfo.setThundering(false);
 		}
-		
+
 		gameState = GameStates.Lobby;
 		fieldState = FieldStates.Inactive;
-		
-		//lobbySpawnPos = ModConfig.readConfig().lobbyPos;
+
+		// lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
 
 	/**
