@@ -11,24 +11,29 @@ import net.minecraft.util.IChatComponent;
 
 import com.projectreddog.deathcube.block.BlockLoot;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.utility.Log;
 
 public class TileEntityLootBlock extends TileEntity implements IUpdatePlayerListBox, IInventory {
 	
 	protected ItemStack[] inventory;
 	private long refreshTime = 0;
-	private boolean needsRefreshed = false;
+	private boolean needsRefreshed;
 
 	public TileEntityLootBlock() {
 		inventory = new ItemStack[Reference.LOOT_INVENTORY_SIZE];
+		
+		Log.info("Loot Block TE Constructor.  Needs refreshed: " + needsRefreshed);
 	}
 
 	@Override
 	public void update() {
 		if (!worldObj.isRemote) {
-			// LogHelper.info("TE update entity called");
+			//Log.info("Loot Block TE: " + needsRefreshed);
 			
 			if(needsRefreshed && System.currentTimeMillis() >= refreshTime) {
 				BlockLoot.toggleBlockState(this.worldObj, this.pos, this.worldObj.getBlockState(pos));
+				
+				Log.info("TE - Refresh Loot Block - Toggle");
 				
 				needsRefreshed = false;
 			}
@@ -245,5 +250,6 @@ public class TileEntityLootBlock extends TileEntity implements IUpdatePlayerList
 	public void setRefreshTime(long refreshTime) {
 		needsRefreshed = true;
 		this.refreshTime = refreshTime + ((long) Reference.LOOT_REFRESH_TIME * 1000);
+		Log.info("Set refresh time in TE.  Needs refreshed: " + needsRefreshed);
 	}
 }

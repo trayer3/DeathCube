@@ -124,6 +124,8 @@ public class BlockLoot extends BlockContainer {
 			
 			TileEntityLootBlock lookupTE = (TileEntityLootBlock) world.getTileEntity(pos);
 			lookupTE.setRefreshTime(System.currentTimeMillis());
+			
+			Log.info("Loot Block TE: " + lookupTE.getPos().toString());
         	
 			this.toggleBlockState(world, pos, world.getBlockState(pos));
 			

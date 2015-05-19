@@ -38,7 +38,7 @@ public class GuiLootBlock extends GuiContainer {
 		 * - Page 1 Buttons
 		 */
 		buttonWidth = 40;
-		button_ToggleClass = new GuiButton(Reference.BUTTON_1, x + gui_Width + 3, y + 5, buttonWidth, 20, "Class");
+		button_ToggleClass = new GuiButton(Reference.BUTTON_1, x + gui_Width + 3, y + 5, buttonWidth, 20, "Button");
 		buttonList.add(button_ToggleClass);
 		
 		this.xSize = gui_Width;
