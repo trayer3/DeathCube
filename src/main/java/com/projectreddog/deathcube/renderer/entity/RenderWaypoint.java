@@ -20,7 +20,7 @@ public class RenderWaypoint extends Render {
 
 	public RenderWaypoint(RenderManager renderManager) {
 		super(renderManager);
-		shadowSize = 1F;
+		shadowSize = 0F;
 		this.Model = new ModelWaypoint();
 	}
 
