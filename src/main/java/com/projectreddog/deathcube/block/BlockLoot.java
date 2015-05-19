@@ -57,7 +57,7 @@ public class BlockLoot extends BlockContainer {
 		}
 
 		if(currentState != -1) {
-			Log.info("Loot Block - Player Activate state value: " + currentState);
+			//Log.info("Loot Block - Player Activate state value: " + currentState);
 			
 			if (currentState == 0) {
 				/**
@@ -120,12 +120,12 @@ public class BlockLoot extends BlockContainer {
 	    	 * - Do not destroy the block
 	    	 * - 5 seconds * 20 ticks/second = 100 delay
 	    	 */
-			Log.info("Block Removed by Player - Setting Refresh Now");
+			//Log.info("Block Removed by Player - Setting Refresh Now");
 			
-			TileEntityLootBlock lookupTE = (TileEntityLootBlock) world.getTileEntity(pos);
-			lookupTE.setRefreshTime(System.currentTimeMillis());
+			//TileEntityLootBlock lookupTE = (TileEntityLootBlock) world.getTileEntity(pos);
+			//lookupTE.setRefreshTime(System.currentTimeMillis());
 			
-			Log.info("Loot Block TE: " + lookupTE.getPos().toString());
+			//Log.info("Loot Block TE: " + lookupTE.getPos().toString());
         	
 			this.toggleBlockState(world, pos, world.getBlockState(pos));
 			
@@ -180,7 +180,7 @@ public class BlockLoot extends BlockContainer {
 		Random rand = world instanceof World ? ((World) world).rand : RANDOM;
 		float randValue = rand.nextFloat();
 
-		Log.info("Get Drops for Loot Block");
+		//Log.info("Get Drops for Loot Block");
 		
 		int count = 1; //quantityDropped(state, fortune, rand);
 		for (int i = 0; i < count; i++) {

@@ -1,5 +1,6 @@
 package com.projectreddog.deathcube.tileentity;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -16,13 +17,13 @@ import com.projectreddog.deathcube.utility.Log;
 public class TileEntityLootBlock extends TileEntity implements IUpdatePlayerListBox, IInventory {
 	
 	protected ItemStack[] inventory;
-	private long refreshTime = 0;
-	private boolean needsRefreshed;
+	private long refreshTime = System.currentTimeMillis()  + ((long) Reference.LOOT_REFRESH_TIME * 1000);
+	private boolean needsRefreshed = true;
 
 	public TileEntityLootBlock() {
 		inventory = new ItemStack[Reference.LOOT_INVENTORY_SIZE];
 		
-		Log.info("Loot Block TE Constructor.  Needs refreshed: " + needsRefreshed);
+		//Log.info("Loot Block TE Constructor.  Needs refreshed: " + needsRefreshed);
 	}
 
 	@Override
@@ -30,10 +31,32 @@ public class TileEntityLootBlock extends TileEntity implements IUpdatePlayerList
 		if (!worldObj.isRemote) {
 			//Log.info("Loot Block TE: " + needsRefreshed);
 			
+			IBlockState state = null;
+			int currentState = 0;
+			
+			if(this.worldObj != null) {
+				if(this.pos != null) {
+					state = this.worldObj.getBlockState(this.pos);
+				} else
+					Log.info("Loot TE Position Null.");
+			} else
+				Log.info("Loot TE WorldObj Null.");
+			
+			if(state != null) {
+				currentState = ((Integer) state.getValue(BlockLoot.ACTIVE_STATE)).intValue();
+			} else
+				Log.info("Loot TE BlockState Null.");
+			
+			if(currentState == 1) {
+				needsRefreshed = true;
+			} else {
+				needsRefreshed = false;
+			}
+			
 			if(needsRefreshed && System.currentTimeMillis() >= refreshTime) {
 				BlockLoot.toggleBlockState(this.worldObj, this.pos, this.worldObj.getBlockState(pos));
 				
-				Log.info("TE - Refresh Loot Block - Toggle");
+				//Log.info("TE - Refresh Loot Block - Toggle");
 				
 				needsRefreshed = false;
 			}
@@ -241,15 +264,5 @@ public class TileEntityLootBlock extends TileEntity implements IUpdatePlayerList
 		for (int i = 0; i < inventory.length; ++i) {
 			inventory[i] = null;
 		}
-	}
-
-	public long getRefreshTime() {
-		return refreshTime;
-	}
-
-	public void setRefreshTime(long refreshTime) {
-		needsRefreshed = true;
-		this.refreshTime = refreshTime + ((long) Reference.LOOT_REFRESH_TIME * 1000);
-		Log.info("Set refresh time in TE.  Needs refreshed: " + needsRefreshed);
 	}
 }
