@@ -34,7 +34,7 @@ public class ItemDeathSkull extends ItemDeathCube {
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
     {
-		if(!player.worldObj.isRemote) {
+		//if(!player.worldObj.isRemote) {
 			Random rand = new Random();
 			float randAmountx = rand.nextFloat()/2;
 			float randAmountz = rand.nextFloat()/2;
@@ -55,7 +55,7 @@ public class ItemDeathSkull extends ItemDeathCube {
 				stack.damageItem(1, player);
 				entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
 			}
-		}
+		//}
 		
         return true;
     }
