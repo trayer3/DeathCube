@@ -7,33 +7,21 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
-import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModConfig;
 import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
-import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
@@ -46,10 +34,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private String mapName = "Map Name";
 	private int numTeamsFromGUI = 4;
-	
+
 	long currentTime;
 	long timeRemaining;
-	
+
 	/**
 	 * Spawn and Capture Point Variables
 	 */
@@ -71,13 +59,13 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		if (DeathCube.gameState == null) {
 			DeathCube.gameState = GameStates.Lobby;
 			DeathCube.fieldState = FieldStates.Inactive;
-			
+
 			Log.info("GameController Constructor - GameState: NULL - Initialized to Lobby.");
 		} else {
 			Log.info("GameController Constructor Call.  GameState: " + DeathCube.gameState);
 		}
-		
-		if(this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+
+		if (this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
 			DeathCube.gameControllerPos = this.pos;
 			Log.info("Found GameController Position: " + this.pos.toString());
 			Log.info("Set Master GameController Position: " + DeathCube.gameControllerPos.toString());
@@ -88,7 +76,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		if (this.worldObj != null) {
 			if (!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Num points: " + numTeamsFromGUI);
-				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));			
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
 				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD7_ID, String.valueOf(mapName)));
 			} else {
 				Log.info("World is remote - text request.");
@@ -135,7 +123,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public String getMapName() {
 		return mapName;
 	}
-	
+
 	public int getNumTeams() {
 		return numTeamsFromGUI;
 	}
@@ -153,7 +141,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		super.writeToNBT(tag);
 		tag.setString("map", mapName);
 		tag.setInteger("team", numTeamsFromGUI);
-		//Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
+		// Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
 	}
 
 	/**
@@ -190,11 +178,11 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 * 
 					 * Lobby actions:
 					 * Count the number of Spawn Points, Capture Points, Gear Config Blocks
-					 *   in current DeathCube Force Field boundaries.
-					 *   
+					 * in current DeathCube Force Field boundaries.
+					 * 
 					 * Better way/time to count and track these things?
 					 * 
-					 * ######  Not currently tracking at DeathCube.java level.  Just locally.  ######
+					 * ###### Not currently tracking at DeathCube.java level. Just locally. ######
 					 * 
 					 *****************************************************************************************/
 					spawnPointsList.clear();
@@ -238,9 +226,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						/**
 						 * Timer is Up - Start Game!
 						 */
-						DeathCube.gameTimeStart = System.currentTimeMillis();;
+						DeathCube.gameTimeStart = System.currentTimeMillis();
+						;
 						DeathCube.gameState = GameStates.Running;
-						
+
 						if (DeathCube.fieldState != FieldStates.Active)
 							DeathCube.fieldState = FieldStates.Active;
 
@@ -251,7 +240,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						/**
 						 * TODO: Periodically Broadcast Time Until Game Start ?
 						 */
-						//Log.info("GameState: " + DeathCube.gameState + " - Time Remaining: " + timeRemaining);
+						// Log.info("GameState: " + DeathCube.gameState + " - Time Remaining: " + timeRemaining);
 					}
 				} else if (DeathCube.gameState == GameStates.Running) {
 					/******************************************************************************************
@@ -265,22 +254,22 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 * On game over, empty playerAwaitingRespawn list and respawn players?
 					 * 
 					 *****************************************************************************************/
-					
+
 					/**
 					 * Check Time
 					 */
 					currentTime = System.currentTimeMillis();
 					timeRemaining = Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart);
-					
+
 					if (timeRemaining <= 0) {
 						/**
 						 * Timer is Up - Stop Game!
 						 */
 						if (DeathCube.fieldState != FieldStates.Inactive)
 							DeathCube.fieldState = FieldStates.Inactive;
-						
+
 						Log.info("Game has ended.");
-						
+
 						stopGame();
 					} else {
 						/**
@@ -288,20 +277,20 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 						 * - TODO: Render on-screen a count-down until player respawns.
 						 */
 						if (DeathCube.playerAwaitingRespawn.size() > 0) {
-							//Log.info("Player serving Death Penalty");
+							// Log.info("Player serving Death Penalty");
 							Set<String> keySet = DeathCube.playerAwaitingRespawn.keySet();
-							//Log.info("listKeys done.");
+							// Log.info("listKeys done.");
 
 							for (Iterator<String> keyIterator = keySet.iterator(); keyIterator.hasNext();) {
 								String playerNameKey = keyIterator.next();
-								if(this.worldObj.getPlayerEntityByName(playerNameKey) != null) {
+								if (this.worldObj.getPlayerEntityByName(playerNameKey) != null) {
 									long playerDeathTime = DeathCube.playerAwaitingRespawn.get(playerNameKey);
 									currentTime = System.currentTimeMillis();
 									long timeDiff = Reference.TIME_DEATH_PENALTY - (currentTime - playerDeathTime);
-									//Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
-									//Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
+									// Log.info(timeDiff + " until Player " + playerNameKey + " respawns.");
+									// Log.info("Death Penalty Queue Size: " + DeathCube.playerAwaitingRespawn.size());
 									if (timeDiff <= 0) {
-										//Log.info("Found Player waiting to respawn - time to spawn!");
+										// Log.info("Found Player waiting to respawn - time to spawn!");
 										String teamColor = DeathCube.playerToTeamColor.get(playerNameKey);
 										int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
 										DeathCube.gameTeams[teamIndex].sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
@@ -338,7 +327,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 										stopGame();
 									} else {
 										team.setNextCapturePointActive();
-										if(team.getCurrentCaptureIndex() > mostPointsCaptured) {
+										if (team.getCurrentCaptureIndex() > mostPointsCaptured) {
 											winningTeamColor = team.getTeamColor();
 										}
 									}
@@ -365,7 +354,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 */
 					currentTime = System.currentTimeMillis();
 					timeRemaining = Reference.TIME_POSTGAME - (currentTime - DeathCube.gameTimeStart);
-					
+
 					if (timeRemaining <= 0) {
 						/**
 						 * Timer is Up - Return to Lobby GameState
@@ -396,118 +385,121 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 				Log.info("GameController States Initialized.  Text update request sent.");
 			}
-			
-			if(DeathCube.firstServerTick && this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+
+			if (DeathCube.firstServerTick && this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
 				DeathCube.gameControllerPos = this.pos;
 				DeathCube.firstServerTick = false;
 				Log.info("Found GameController Position: " + this.pos.toString());
 				Log.info("Set Master GameController Position: " + DeathCube.gameControllerPos.toString());
 			}
-			
+
 			updateClient();
 		}
 	}
 
 	private void updateRenderHelpers() {
-		/*
-		 * update Rotation
-		 */
-		DeathCube.renderHelperRotation += Reference.RENDER_HELPER_ROTATION_SPEED;
-		if (DeathCube.renderHelperRotation > 360d){
-			DeathCube.renderHelperRotation =0d;
-		}
-		/*
-		 * Update Y offset
-		 */
-		
-		if (DeathCube.renderHelperYDirection == -1){
-			DeathCube.renderHelperYOffset -= Reference.RENDER_HELPER_Y_OFFSET_SPEED;
-			if (DeathCube.renderHelperYOffset < (Reference.RENDER_HELPER_MAX_Y_OFFSET *-1)) {
-				DeathCube.renderHelperYDirection *= -1;
-				
+
+		if (worldObj.isRemote) {
+			/*
+			 * update Rotation
+			 */
+			DeathCube.renderHelperRotation += Reference.RENDER_HELPER_ROTATION_SPEED;
+			if (DeathCube.renderHelperRotation > 360d) {
+				DeathCube.renderHelperRotation = 0d;
 			}
-		}else {
-			DeathCube.renderHelperYOffset += Reference.RENDER_HELPER_Y_OFFSET_SPEED;
-			if (DeathCube.renderHelperYOffset > Reference.RENDER_HELPER_MAX_Y_OFFSET){
-				DeathCube.renderHelperYDirection *= -1;
+			/*
+			 * Update Y offset
+			 */
+
+			if (DeathCube.renderHelperYDirection == -1) {
+				DeathCube.renderHelperYOffset -= Reference.RENDER_HELPER_Y_OFFSET_SPEED;
+				if (DeathCube.renderHelperYOffset < (Reference.RENDER_HELPER_MAX_Y_OFFSET * -1)) {
+					DeathCube.renderHelperYDirection *= -1;
+
+				}
+			} else {
+				DeathCube.renderHelperYOffset += Reference.RENDER_HELPER_Y_OFFSET_SPEED;
+				if (DeathCube.renderHelperYOffset > Reference.RENDER_HELPER_MAX_Y_OFFSET) {
+					DeathCube.renderHelperYDirection *= -1;
+				}
 			}
 		}
-		
+
 	}
 
 	public void updateClient() {
-		if((DeathCube.gameState == GameStates.Running || DeathCube.gameState == GameStates.PostGame) && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
+		if ((DeathCube.gameState == GameStates.Running || DeathCube.gameState == GameStates.PostGame) && DeathCube.gameTeams != null && DeathCube.gameTeams.length != 0) {
 			/**
-			 * Display Scoreboard.  Store values and send updates only when something has changed.
+			 * Display Scoreboard. Store values and send updates only when something has changed.
 			 */
 			boolean sendUpdate = false;
-			
+
 			boolean displayScoreboard = false;
 			String[] teamNames = new String[DeathCube.gameTeams.length];
 			int[] activeTeamPoints = new int[DeathCube.gameTeams.length];
 			double[] activeTeamPointTimes = new double[DeathCube.gameTeams.length];
-			
-			if(DeathCube.gameState == GameStates.Running) {
-				for(int i = 0; i < DeathCube.gameTeams.length; i++) {
+
+			if (DeathCube.gameState == GameStates.Running) {
+				for (int i = 0; i < DeathCube.gameTeams.length; i++) {
 					teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
-					
+
 					activeTeamPoints[i] = DeathCube.gameTeams[i].getCurrentCaptureIndex() + 1;
-					
+
 					TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
 					activeTeamPointTimes[i] = captureTE.getRemainingCaptureTime();
 				}
 				displayScoreboard = true;
-			} else if(DeathCube.gameState == GameStates.PostGame) {
+			} else if (DeathCube.gameState == GameStates.PostGame) {
 				/**
 				 * 
 				 * Game is over. Display the winner.
-				 * - TODO: Use a different graphic + renderer.  Don't display this in the scoreboard.
+				 * - TODO: Use a different graphic + renderer. Don't display this in the scoreboard.
 				 * - TODO: Display post-game statistics - maybe for a few seconds, then only if player is pressing a hot-key.
 				 * 
 				 */
-				for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-					
-					if(DeathCube.gameTeams[i].getTeamColor().equals(winningTeamColor)) {
+				for (int i = 0; i < DeathCube.gameTeams.length; i++) {
+
+					if (DeathCube.gameTeams[i].getTeamColor().equals(winningTeamColor)) {
 						teamNames[i] = DeathCube.gameTeams[i].getTeamColor() + " Wins!";
 					} else {
 						teamNames[i] = DeathCube.gameTeams[i].getTeamColor();
 					}
-					
+
 					activeTeamPoints[i] = 0;
-					
+
 					TileEntityCapturePoint captureTE = (TileEntityCapturePoint) this.worldObj.getTileEntity(DeathCube.gameTeams[i].getCurrentPointPos());
 					activeTeamPointTimes[i] = 0;
 				}
 				displayScoreboard = true;
 			}
-			
+
 			/**
 			 * Check for Changes.
 			 * - For first time, need to check if null.
 			 */
-			//last_teamNames = new String[DeathCube.gameTeams.length];
-			//last_activeTeamPoints = new int[DeathCube.gameTeams.length];
-			//last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
-			
-			if(last_displayScoreboard != displayScoreboard) {
+			// last_teamNames = new String[DeathCube.gameTeams.length];
+			// last_activeTeamPoints = new int[DeathCube.gameTeams.length];
+			// last_activeTeamPointTimes = new double[DeathCube.gameTeams.length];
+
+			if (last_displayScoreboard != displayScoreboard) {
 				sendUpdate = true;
 				Log.info("boolean displayScoreboard has changed.  Update scoreboard.");
 			}
-			
+
 			/**
 			 * Check Team Name Changes
 			 */
-			if(!sendUpdate) {
-				if(last_teamNames == null) {
+			if (!sendUpdate) {
+				if (last_teamNames == null) {
 					sendUpdate = true;
 					Log.error("last_teamNames is null.");
 				} else {
-					if(last_teamNames.length != DeathCube.gameTeams.length) {
+					if (last_teamNames.length != DeathCube.gameTeams.length) {
 						sendUpdate = true;
 						Log.warn("Check - last_teamNames length is not equal to main GameTeams[] length.");
 					} else {
-						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-							if(!teamNames[i].equals(last_teamNames[i])) {
+						for (int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if (!teamNames[i].equals(last_teamNames[i])) {
 								sendUpdate = true;
 								Log.error("teamName " + i + " is different.  Update scoreboard.");
 							}
@@ -515,22 +507,21 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					}
 				}
 			}
-			
-			
+
 			/**
 			 * Check active capture point index changes
 			 */
-			if(!sendUpdate) {
-				if(last_activeTeamPoints == null) {
+			if (!sendUpdate) {
+				if (last_activeTeamPoints == null) {
 					sendUpdate = true;
 					Log.error("last_activeTeamPoints is null.");
 				} else {
-					if(last_activeTeamPoints.length != DeathCube.gameTeams.length) {
+					if (last_activeTeamPoints.length != DeathCube.gameTeams.length) {
 						sendUpdate = true;
 						Log.warn("Check - last_activeTeamPoints length is not equal to main GameTeams[] length.");
 					} else {
-						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-							if(activeTeamPoints[i] !=last_activeTeamPoints[i]) {
+						for (int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if (activeTeamPoints[i] != last_activeTeamPoints[i]) {
 								sendUpdate = true;
 								Log.error("activeTeamPoint " + i + " is different.  Update scoreboard.");
 							}
@@ -538,52 +529,52 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					}
 				}
 			}
-			
+
 			/**
 			 * Check capture point countdown changes
 			 */
-			if(!sendUpdate) {
-				if(last_activeTeamPointTimes == null) {
+			if (!sendUpdate) {
+				if (last_activeTeamPointTimes == null) {
 					sendUpdate = true;
 					Log.error("last_activeTeamPointTimes is null.");
 				} else {
-					if(last_activeTeamPointTimes.length != DeathCube.gameTeams.length) {
+					if (last_activeTeamPointTimes.length != DeathCube.gameTeams.length) {
 						sendUpdate = true;
 						Log.warn("Check - last_activeTeamPointTimes length is not equal to main GameTeams[] length.");
 					} else {
-						for(int i = 0; i < DeathCube.gameTeams.length; i++) {
-							if(activeTeamPointTimes[i] != last_activeTeamPointTimes[i]) {
+						for (int i = 0; i < DeathCube.gameTeams.length; i++) {
+							if (activeTeamPointTimes[i] != last_activeTeamPointTimes[i]) {
 								sendUpdate = true;
-								//Log.error("Point Time " + i + " is different.  Update scoreboard.");
+								// Log.error("Point Time " + i + " is different.  Update scoreboard.");
 							}
 						}
 					}
 				}
 			}
-			
+
 			/**
 			 * If time is more than 5 sec since last update, send update.
 			 */
-			if(!sendUpdate) {
+			if (!sendUpdate) {
 				Long currentTime = System.currentTimeMillis();
 				double timeCheck = ((double) (currentTime - DeathCube.gameTimeCheck)) / 1000.0f;
-				
-				if(timeCheck >= 5) {
+
+				if (timeCheck >= 5) {
 					sendUpdate = true;
-					//Log.info("5 seconds since last scoreboard update.");
+					// Log.info("5 seconds since last scoreboard update.");
 				}
 			}
-			
-			if(sendUpdate) {
-				//Log.info("Sending scoreboard update...");
+
+			if (sendUpdate) {
+				// Log.info("Sending scoreboard update...");
 				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
-				//Log.info("Scoreboard update sent.");
-				
-				for(GameTeam team : DeathCube.gameTeams) {
+				// Log.info("Scoreboard update sent.");
+
+				for (GameTeam team : DeathCube.gameTeams) {
 					team.updateWaypoint();
 				}
-				
+
 				last_displayScoreboard = displayScoreboard;
 				last_teamNames = teamNames.clone();
 				last_activeTeamPoints = activeTeamPoints.clone();
@@ -591,7 +582,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			}
 		}
 	}
-	
+
 	public void startGame() {
 
 		/************************************************************************************************
@@ -602,58 +593,57 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		 * designator, e.g. A, B, C... - rather than color. Then, color would be assign during
 		 * the StartGame() method.)
 		 ************************************************************************************************/
-		
-		if(this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
+
+		if (this.pos != null && this.pos != new BlockPos(0, 0, 0)) {
 			DeathCube.gameControllerPos = this.pos;
 		}
-		
+
 		/**
 		 * TODO: Get list of Entities and kill all Waypoints.
 		 */
 		List<Entity> loadedEntities = MinecraftServer.getServer().getEntityWorld().loadedEntityList;
-		for(Entity entity : loadedEntities) {
-			if(entity instanceof EntityWaypoint) {
+		for (Entity entity : loadedEntities) {
+			if (entity instanceof EntityWaypoint) {
 				entity.setDead();
 				Log.info("Killed a waypoint.");
 			}
 		}
-		
-		
+
 		List<String> foundColors = new ArrayList<String>();
-		for(BlockPos spawnPos : this.spawnPointsList) {
+		for (BlockPos spawnPos : this.spawnPointsList) {
 			TileEntitySpawnPoint spawnTE = (TileEntitySpawnPoint) this.worldObj.getTileEntity(spawnPos);
-			if(!foundColors.contains(spawnTE.spawnPointTeamColor)) {
+			if (!foundColors.contains(spawnTE.spawnPointTeamColor)) {
 				foundColors.add(spawnTE.spawnPointTeamColor);
 			}
 		}
-		
-		if(foundColors.size() < 2) {
+
+		if (foundColors.size() < 2) {
 			/**
-			 * Map not properly set up.  Must be more than 2  
+			 * Map not properly set up. Must be more than 2
 			 */
 			Log.info("Less than two Spawn Point Colors found.");
 			stopGame();
-		} else if(foundColors.size() >= 2 && foundColors.size() < numTeamsFromGUI) {
+		} else if (foundColors.size() >= 2 && foundColors.size() < numTeamsFromGUI) {
 			/**
-			 * Map is not set up for as many teams as specified in GUI.  Reset to number found.
+			 * Map is not set up for as many teams as specified in GUI. Reset to number found.
 			 */
 			numTeamsInGame = foundColors.size();
 			// send message to client gameControllers?
 		} else {
 			/**
-			 * Found number equals GUI number or is greater.  OK to play with fewer teams.
+			 * Found number equals GUI number or is greater. OK to play with fewer teams.
 			 * - Do nothing.
 			 */
 			numTeamsInGame = numTeamsFromGUI;
 		}
-		
+
 		mostPointsCaptured = 0;
 		winningTeamColor = "trayer4";
 		DeathCube.gameTeams = new GameTeam[numTeamsInGame];
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
 		DeathCube.playerAwaitingRespawn = new HashMap<String, Long>();
-		
+
 		for (int i = 0; i < numTeamsInGame; i++) {
 			String color = foundColors.get(i);
 
@@ -753,7 +743,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			/**
 			 * Assign Team.
 			 */
-			if(DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+			if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
 				assignPlayerToTeam(player);
 			} else {
 				Log.info("Game Teams object is null or empty.");
@@ -821,24 +811,26 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		}
 	}
 
-	/**public static void sendPlayerToLobby(EntityPlayer inPlayer) {
-		/**
-		 * Teleport Players to Lobby Location.
-		 *
-
-		if (DeathCube.lobbySpawnPos == null) {
-			/**
-			 * Get Lobby Spawn from data file?
-			 *
-			Log.info("GameController LobbyPosition: NULL");
-		} else if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
-			Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
-		} else {
-			preparePlayerToSpawn(inPlayer);
-			//inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
-			//Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
-		}
-	} */
+	/**
+	 * public static void sendPlayerToLobby(EntityPlayer inPlayer) {
+	 * /**
+	 * Teleport Players to Lobby Location.
+	 *
+	 * 
+	 * if (DeathCube.lobbySpawnPos == null) {
+	 * /**
+	 * Get Lobby Spawn from data file?
+	 *
+	 * Log.info("GameController LobbyPosition: NULL");
+	 * } else if (DeathCube.lobbySpawnPos == new BlockPos(0, 0, 0)) {
+	 * Log.info("GameController LobbyPosition: " + DeathCube.lobbySpawnPos.toString());
+	 * } else {
+	 * preparePlayerToSpawn(inPlayer);
+	 * //inPlayer.setPositionAndUpdate(DeathCube.lobbySpawnPos.getX() + 0.5d, DeathCube.lobbySpawnPos.getY() + 1, DeathCube.lobbySpawnPos.getZ() + 0.5d);
+	 * //Log.info("GameController - Player sent to Lobby: " + DeathCube.lobbySpawnPos.toString());
+	 * }
+	 * }
+	 */
 
 	public void stopGame() {
 		/**
@@ -854,7 +846,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		DeathCube.gameTimeStart = System.currentTimeMillis();
 		DeathCube.gameTimeCheck = System.currentTimeMillis();
 		DeathCube.gameState = GameStates.PostGame;
-		
+
 		if (DeathCube.fieldState != FieldStates.Inactive)
 			DeathCube.fieldState = FieldStates.Inactive;
 
