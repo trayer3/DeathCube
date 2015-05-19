@@ -393,6 +393,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			}
 
 			updateClient();
+		} else {
+			updateRenderHelpers();
 		}
 	}
 
@@ -581,7 +583,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			}
 		}
 
-		updateRenderHelpers();
 	}
 
 	public void startGame() {
