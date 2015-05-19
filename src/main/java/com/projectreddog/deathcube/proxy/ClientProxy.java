@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModItems;
@@ -14,8 +15,11 @@ import com.projectreddog.deathcube.renderer.overlay.RenderOverlayHandler;
 public class ClientProxy extends CommonProxy {
 
 	@Override
-	public void registerRenderers(){
-		
+	public void registerRenderers() {
+		DeathCube.renderHelperYOffset = 0;
+		DeathCube.renderHelperYDirection = -1;
+		DeathCube.renderHelperRotation = 0d;
+
 		ModBlocks.initBlockRenderer();
 		ModItems.initItemRender();
 		RenderingRegistry.registerEntityRenderingHandler(EntityWaypoint.class, new RenderWaypoint(Minecraft.getMinecraft().getRenderManager()));
