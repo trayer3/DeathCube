@@ -118,14 +118,20 @@ public class DeathCubeEventHandler {
 					String attackerTeamColor = DeathCube.playerToTeamColor.get(event.entityPlayer.getName());
 					String targetTeamColor = DeathCube.playerToTeamColor.get(event.target.getName());
 
+					/**
+					 * Prevent Friendly Fire
+					 */
 					if (attackerTeamColor != null && targetTeamColor != null && attackerTeamColor.equals(targetTeamColor)) {
 						event.setCanceled(true);
 					} else {
 						Log.info("Player's team colors do not match.  Attack OK.");
 					}
-				}
-			}
-		}
+				} else
+					Log.info("Player Attack Event - Player-to-Team-Color variable is null.");
+			} else
+				Log.info("Player Attack Event - GameTeams variable is null or < 1.");
+		} else
+			Log.info("Player Attack Event - GameState variable is null or Not Running.");
 	}
 
 	@SubscribeEvent
