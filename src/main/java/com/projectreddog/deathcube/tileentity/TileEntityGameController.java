@@ -342,7 +342,6 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					/**
 					 * Tech added this section to update the game render helper variables to make the waypoints bounce & rotate.
 					 */
-					updateRenderHelpers();
 				} else if (DeathCube.gameState == GameStates.PostGame) {
 					/*****************************************************************************************
 					 * 
@@ -581,6 +580,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				last_activeTeamPointTimes = activeTeamPointTimes.clone();
 			}
 		}
+
+		updateRenderHelpers();
 	}
 
 	public void startGame() {
