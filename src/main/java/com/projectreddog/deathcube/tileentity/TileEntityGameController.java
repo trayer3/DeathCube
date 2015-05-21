@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.command.ICommandManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -368,8 +369,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 * Game Over actions.
 					 * TODO: Vote on next Map?
 					 * 
-					 *****************************************************************************************/
+					 *****************************************************************************************
 
+					ICommandManager icommandmanager = MinecraftServer.getCommandManager();
+		            try
+		            {
+		                this.lastOutput = null;
+		                this.successCount = icommandmanager.executeCommand(this, this.commandStored);
+		            } catch {
+		            	
+		            }  */
+					
 					if (DeathCube.fieldState != FieldStates.Off)
 						DeathCube.fieldState = FieldStates.Off;
 				}
