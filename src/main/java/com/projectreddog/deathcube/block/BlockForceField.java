@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.block;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,14 +13,15 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
-import com.projectreddog.deathcube.reference.Reference.GameStates;
 
 public class BlockForceField extends BlockDeathCube {
 	public float damageAmount = 5;
@@ -50,6 +52,28 @@ public class BlockForceField extends BlockDeathCube {
 	public boolean isOpaqueCube() {
 		return false;
 	}
+	
+	@SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+        Block block = iblockstate.getBlock();
+
+        if (this == ModBlocks.forcefield)
+        {
+            if (worldIn.getBlockState(pos.offset(side.getOpposite())) != iblockstate)
+            {
+                return true;
+            }
+
+            if (block == this)
+            {
+                return false;
+            }
+        }
+
+        return block == this ? false : super.shouldSideBeRendered(worldIn, pos, side);
+    }
 
 	/**
 	 * Player is touching the block on any face up,down,N,W,S or E
