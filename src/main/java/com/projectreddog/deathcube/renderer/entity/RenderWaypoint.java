@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
-import com.projectreddog.deathcube.model.ModelWaypoint;
+import com.projectreddog.deathcube.model.entity.ModelWaypoint;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class RenderWaypoint extends Render {

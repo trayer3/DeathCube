@@ -27,6 +27,7 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityTurret;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModItems;
@@ -294,6 +295,9 @@ public class DeathCubeEventHandler {
 		if (event.entity instanceof EntityWaypoint) {
 			DataWatcher dw = event.entity.getDataWatcher();
 			dw.addObject(20, 0);// Team AKA color
+		} else if (event.entity instanceof EntityTurret) {
+			DataWatcher dw = event.entity.getDataWatcher();
+			dw.addObject(20, 0.0f);// Rotation of turret head
 		}
 	}
 }
