@@ -298,6 +298,7 @@ public class DeathCubeEventHandler {
 		} else if (event.entity instanceof EntityTurret) {
 			DataWatcher dw = event.entity.getDataWatcher();
 			dw.addObject(20, 0.0f);// Rotation of turret head
+			dw.addObject(21, 0);// 21 = state (int)
 		}
 	}
 }

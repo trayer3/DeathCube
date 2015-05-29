@@ -5,9 +5,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import com.projectreddog.deathcube.reference.Reference;
+
 public class EntityTurret extends Entity {
 
-	public int topRotation = 0;
+	public float topRotation = 0;
+	public int state = 0; // 0= not firing 1 = start of fire 60 = end of fire & needs rest to 0
 
 	public EntityTurret(World world) {
 		super(world);
@@ -20,7 +23,24 @@ public class EntityTurret extends Entity {
 	public void onUpdate() {
 		if (worldObj.isRemote) {
 			DataWatcher dw = this.getDataWatcher();
-			this.topRotation = dw.getWatchableObjectInt(20);
+			this.topRotation = dw.getWatchableObjectFloat(20);
+			this.state = dw.getWatchableObjectInt(21);
+
+		} else {
+
+			// server
+			this.topRotation += 1f;
+			if (this.topRotation > 360) {
+				this.topRotation = 0;
+			}
+
+			this.state = this.state + 1;
+			if (this.state > Reference.TURRET_RECOIL_TICKS) {
+				this.state = 0;
+			}
+			this.getDataWatcher().updateObject(20, this.topRotation);
+			this.getDataWatcher().updateObject(21, this.state);
+
 		}
 	}
 
