@@ -301,4 +301,5 @@ public class DeathCubeEventHandler {
 			dw.addObject(21, 0);// 21 = state (int)
 		}
 	}
+
 }
