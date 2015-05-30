@@ -25,7 +25,6 @@ public class EntityTurret extends Entity {
 			DataWatcher dw = this.getDataWatcher();
 			this.topRotation = dw.getWatchableObjectFloat(20);
 			this.state = dw.getWatchableObjectInt(21);
-
 		} else {
 
 			// server
