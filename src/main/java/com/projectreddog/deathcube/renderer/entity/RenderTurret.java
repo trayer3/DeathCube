@@ -36,7 +36,7 @@ public class RenderTurret extends Render {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 		this.bindEntityTexture(entity);
-		GL11.glScalef(-1.0F, -1.0F, 1.0F);
+		GL11.glScalef(-0.80F, -.80F, .80F);
 		this.modelTurret.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 
 		GL11.glPopMatrix();

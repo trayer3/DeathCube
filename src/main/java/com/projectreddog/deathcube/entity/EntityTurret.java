@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +22,7 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 	public float topRotation = 0;
 	public int team = 1; // 1 = Red , 2 = Green , 3= Blue, 4 = yellow
+	private EntityAIArrowAttack aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F);
 
 	public int state = 0; // 0= not firing 1 = start of fire 60 = end of fire & needs rest to 0
 	public static double MAX_TURN_RATE = 0.05d;
@@ -29,10 +32,13 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 	public EntityTurret(World world) {
 		super(world);
-		this.setSize(1.0F, 1.0F);
+		this.setSize(1.0F, 2.0F);
 		this.getDataWatcher().updateObject(20, this.team);
 		this.tasks.addTask(0, new EntityAIArrowAttack(this, 0, 10, 10));// should act like a skely
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+		this.targetTasks.addTask(3, aiArrowAttack);
 		// this.onUpdate();
 
 	}
@@ -45,7 +51,7 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5d);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0d);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1d);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20d);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5d);
 
@@ -53,11 +59,12 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 	@Override
 	public void onUpdate() {
+		super.onUpdate();
 		if (worldObj.isRemote) {
 			DataWatcher dw = this.getDataWatcher();
-			// this.topRotation = dw.getWatchableObjectFloat(22);
-			// this.state = dw.getWatchableObjectInt(21);
-			// this.team = dw.getWatchableObjectInt(20);
+			this.topRotation = dw.getWatchableObjectFloat(22);
+			this.state = dw.getWatchableObjectInt(21);
+			this.team = dw.getWatchableObjectInt(20);
 
 		} else {
 
@@ -76,21 +83,17 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 				this.topRotation = 0;
 			}
 
-			this.state = this.state + 1;
+			if (this.state > 0) {
+				this.state = this.state + 1;
+			}
 			if (this.state > Reference.TURRET_RECOIL_TICKS) {
 				this.state = 0;
 			}
-			// this.getDataWatcher().updateObject(20, this.team);
-			// this.getDataWatcher().updateObject(22, this.topRotation);
-			// this.getDataWatcher().updateObject(21, this.state);
+			this.getDataWatcher().updateObject(20, this.team);
+			this.getDataWatcher().updateObject(22, this.topRotation);
+			this.getDataWatcher().updateObject(21, this.state);
 
 		}
-	}
-
-	@Override
-	protected void entityInit() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -108,6 +111,9 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase elb, float p_82196_2_) {
 		// TODO Auto-generated method stub
-		elb.attackEntityFrom(DamageSource.generic, 5);
+		if (this.state == 0) {
+			elb.attackEntityFrom(DamageSource.generic, 5);
+			this.state = 1;
+		}
 	}
 }

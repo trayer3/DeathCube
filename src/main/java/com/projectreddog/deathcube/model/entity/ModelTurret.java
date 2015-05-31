@@ -34,7 +34,7 @@ public class ModelTurret extends ModelBase {
 		this.renderGroupObject("Legs_Cylinder.001");
 		GL11.glTranslatef(0f, 0f, 0f);
 		if (entity != null) {
-			GL11.glRotatef((((EntityTurret) entity).topRotation), 0, 1, 0);
+			GL11.glRotatef((((EntityTurret) entity).rotationYawHead), 0, 1, 0);
 
 		}
 		this.renderGroupObject("Housing_Cube.001");
