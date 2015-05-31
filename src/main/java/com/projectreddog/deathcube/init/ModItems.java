@@ -27,5 +27,7 @@ public class ModItems {
 	public static void initItemRender() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(deathskull, 0, new ModelResourceLocation(Reference.MOD_ID + ":" + "deathskull", "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(lifeskull, 0, new ModelResourceLocation(Reference.MOD_ID + ":" + "lifeskull", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(turret, 0, new ModelResourceLocation(Reference.MOD_ID + ":" + "turret", "inventory"));
+
 	}
 }

@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.model.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,10 +38,29 @@ public class ModelTurret extends ModelBase {
 			GL11.glRotatef((((EntityTurret) entity).rotationYawHead), 0, 1, 0);
 
 		}
-		this.renderGroupObject("Housing_Cube.001");
 
 		if (entity instanceof EntityTurret) {
 			EntityTurret et = (EntityTurret) entity;
+
+			if (et.team == 1) {
+				// red
+				GlStateManager.color(1.0F, 0F, 0F, 1.0F);
+			} else if (et.team == 2) {
+				// green
+				GlStateManager.color(0F, 1.0F, 0F, 1.0F);
+			} else if (et.team == 3) {
+				// blue
+				GlStateManager.color(0F, 0F, 1.0F, 1.0F);
+			} else if (et.team == 4) {
+				// yellow
+				GlStateManager.color(1.0F, 1.0F, 0.0F, 1.0F);
+			} else {
+				// normal coloring
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			}
+
+			this.renderGroupObject("Housing_Cube.001");
+
 			if (et.state < Reference.TURRET_RECOIL_TICKS / 2) {
 				GL11.glTranslatef(0f, 0f, et.state * Reference.TURRET_TRAVEL_MULTIPLIER);
 			} else // => 30
@@ -48,6 +68,8 @@ public class ModelTurret extends ModelBase {
 				GL11.glTranslatef(0f, 0f, ((Reference.TURRET_RECOIL_TICKS - et.state) * Reference.TURRET_TRAVEL_MULTIPLIER));
 			}
 		}
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
 		this.renderGroupObject("Barrel_Cylinder.003");
 
 	}
@@ -69,6 +91,6 @@ public class ModelTurret extends ModelBase {
 
 	public ResourceLocation getTexture() {
 
-		return new ResourceLocation("machinemod", Reference.MODEL_TURRET_TEXTURE_LOCATION);
+		return new ResourceLocation(Reference.MOD_ID, Reference.MODEL_TURRET_TEXTURE_LOCATION);
 	}
 }

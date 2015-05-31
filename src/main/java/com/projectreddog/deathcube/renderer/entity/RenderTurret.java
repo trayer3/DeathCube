@@ -36,7 +36,7 @@ public class RenderTurret extends Render {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 		this.bindEntityTexture(entity);
-		GL11.glScalef(-0.80F, -.80F, .80F);
+		GL11.glScalef(-0.50F, -.50F, .50F);
 		this.modelTurret.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 
 		GL11.glPopMatrix();
@@ -44,7 +44,7 @@ public class RenderTurret extends Render {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return new ResourceLocation("machinemod", Reference.MODEL_TURRET_TEXTURE_LOCATION);
+		return new ResourceLocation(Reference.MOD_ID, Reference.MODEL_TURRET_TEXTURE_LOCATION);
 	}
 
 }

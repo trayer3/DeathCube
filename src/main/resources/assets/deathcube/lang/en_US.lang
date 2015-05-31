@@ -24,3 +24,5 @@ death.attack.deathcube:FORCE_FIELD_DEATH_6=%s, always respect the personal space
 death.attack.deathcube:FORCE_FIELD_DEATH_7=%s got fried by pure energy!
 death.attack.deathcube:FORCE_FIELD_DEATH_8=%s sizzled and died.
 death.attack.deathcube:FORCE_FIELD_DEATH_9=And that's why it's called DeathCube, %s.
+
+entity.deathcube.turret.name=Turret

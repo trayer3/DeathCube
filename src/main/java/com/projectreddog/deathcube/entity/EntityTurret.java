@@ -13,9 +13,10 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
+import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class EntityTurret extends EntityMob implements IRangedAttackMob {
@@ -32,13 +33,16 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 	public EntityTurret(World world) {
 		super(world);
-		this.setSize(1.0F, 2.0F);
+		this.setSize(.90F, 1.7F);
 		this.getDataWatcher().updateObject(20, this.team);
 		this.tasks.addTask(0, new EntityAIArrowAttack(this, 0, 10, 10));// should act like a skely
 		this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 		this.targetTasks.addTask(3, aiArrowAttack);
+		this.jumpMovementFactor = 0;
+		this.stepHeight = 0;
+
 		// this.onUpdate();
 
 	}
@@ -50,11 +54,11 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 	protected void applyEntityAttributes() {
 
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5d);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1d);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20d);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0d);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20d);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5d);
-
+		this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(10000d);
 	}
 
 	@Override
@@ -69,6 +73,10 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 		} else {
 
 			// server
+			if (this.motionY > 0) {
+				this.motionY = 0;
+				this.posY = this.lastTickPosY;
+			}
 			if (target == null) {
 				hasTarget = false;
 			} else if (target instanceof EntityLiving) {
@@ -112,8 +120,25 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 	public void attackEntityWithRangedAttack(EntityLivingBase elb, float p_82196_2_) {
 		// TODO Auto-generated method stub
 		if (this.state == 0) {
-			elb.attackEntityFrom(DamageSource.generic, 5);
+			if (elb instanceof EntityPlayer) {// 1 = Red , 2 = Green , 3= Blue, 4 = yellow
+				if (DeathCube.playerToTeamColor != null && DeathCube.gameState == Reference.GameStates.Running) {
+					if ((DeathCube.playerToTeamColor.get(((EntityPlayer) elb).getName()).equalsIgnoreCase("Red") && this.team != 1) || (DeathCube.playerToTeamColor.get(((EntityPlayer) elb).getName()).equalsIgnoreCase("Green") && this.team != 2) || (DeathCube.playerToTeamColor.get(((EntityPlayer) elb).getName()).equalsIgnoreCase("Blue") && this.team != 3)
+							|| (DeathCube.playerToTeamColor.get(((EntityPlayer) elb).getName()).equalsIgnoreCase("Yellow") && this.team != 4)) {
+						// player target is on a different team !
+						this.attackEntityAsMob(elb);
+						this.state = 1;
+						worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0, 0);
+						worldObj.playSoundAtEntity(this, "random.explode", 1, 1.5f);
+					}
+					return;
+				}
+			}
+			// elb.attackEntityFrom(DamageSource.generic, 5);
+			this.attackEntityAsMob(elb);
 			this.state = 1;
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0, 0);
+			worldObj.playSoundAtEntity(this, "random.explode", 1, 1.5f);
+
 		}
 	}
 }

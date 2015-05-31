@@ -10,7 +10,7 @@ public class ModEntities {
 
 	public static void init(Object mod) {
 		// example
-		EntityRegistry.registerModEntity(EntityWaypoint.class, Reference.ENTITY_WAYPOINT_NAME, Reference.ENTITY_WAYPOINT_ID, mod, 80, 1, true);
-		EntityRegistry.registerModEntity(EntityTurret.class, Reference.ENTITY_TURRET_NAME, Reference.ENTITY_TURRET_ID, mod, 80, 1, true);
+		EntityRegistry.registerModEntity(EntityWaypoint.class, Reference.ENTITY_WAYPOINT_NAME, Reference.ENTITY_WAYPOINT_ID, mod, 128, 1, true);
+		EntityRegistry.registerModEntity(EntityTurret.class, Reference.ENTITY_TURRET_NAME, Reference.ENTITY_TURRET_ID, mod, 128, 1, true);
 	}
 }
