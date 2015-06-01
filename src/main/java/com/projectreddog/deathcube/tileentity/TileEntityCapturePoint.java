@@ -219,10 +219,19 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 					//Log.info("Player in range of Capture Point.  Time until Capture: " + String.format("%.2f", remainingTime));
 
 					if (remainingTime <= 0) {
+						/**
+						 * Point has been captured.
+						 */
 						isBeingCaptured = false;
 						isActive = false;
 						isCaptured = true;
-						this.worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f, false);
+						//this.worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f, false);
+						//this.worldObj.playAuxSFXAtEntity(player, 1016, player.getPosition(), 0);
+						//this.worldObj.playSoundAtEntity(player, "random.levelup", 1.0f, 1.0f);
+						this.worldObj.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f);
+						
+						//  Iterate through hashmap and play capture sound for every player on this team?
+						
 						Log.info("Point Captured!");
 					}
 				} else {
