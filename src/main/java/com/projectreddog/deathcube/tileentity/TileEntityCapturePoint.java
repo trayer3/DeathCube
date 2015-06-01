@@ -28,6 +28,7 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	private boolean isActive = false;
 	private boolean isBeingCaptured = false;
 	private boolean isCaptured = false;
+	private boolean soundPlayed = false;
 	private int numPlayersOnPoint = 0;
 	private long pointTimerStart = 0, pointTimerCurrent = 0;
 	private double remainingTime = 0;
@@ -197,6 +198,10 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 	@Override
 	public void update() {
 		// Log.info("Capture Point Team: "+ getCapturePointTeamColor());
+		if( isCaptured && !soundPlayed ) {
+			this.worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "mob.ghast.death", 1.0f, 1.0f, false);
+		}
+		
 		if (!this.worldObj.isRemote && !isCaptured && isActive) {
 			/**
 			 * Check if players are nearby, only on Server-side.
@@ -226,11 +231,11 @@ public class TileEntityCapturePoint extends TileEntityDeathCube implements IUpda
 						isActive = false;
 						isCaptured = true;
 						//this.worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f, false);
-						//this.worldObj.playAuxSFXAtEntity(player, 1016, player.getPosition(), 0);
-						//this.worldObj.playSoundAtEntity(player, "random.levelup", 1.0f, 1.0f);
 						this.worldObj.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "random.levelup", 1.0f, 1.0f);
 						
 						//  Iterate through hashmap and play capture sound for every player on this team?
+						//this.worldObj.playAuxSFXAtEntity(player, 1016, player.getPosition(), 0);
+						//this.worldObj.playSoundAtEntity(player, "random.levelup", 1.0f, 1.0f);
 						
 						Log.info("Point Captured!");
 					}
