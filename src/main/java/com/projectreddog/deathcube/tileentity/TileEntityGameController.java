@@ -779,7 +779,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * Play sound at Game Start
 			 * - TODO: Get Custom sound.
 			 */
-			player.playSound("mob.cow.hurt", 1.0f, 1.0f);
+			//player.playSound("mob.cow.hurt", 1.0f, 1.0f);
 		}
 	}
 
