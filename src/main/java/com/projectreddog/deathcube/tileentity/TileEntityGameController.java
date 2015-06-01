@@ -780,6 +780,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			 * - TODO: Get Custom sound.
 			 */
 			//player.playSound("mob.cow.hurt", 1.0f, 1.0f);
+			this.worldObj.playAuxSFXAtEntity(player, 1016, player.getPosition(), 0);
+			//this.worldObj.playSoundAtEntity(player, "mob.cow.hurt", 1.0f, 1.0f);
 		}
 	}
 
