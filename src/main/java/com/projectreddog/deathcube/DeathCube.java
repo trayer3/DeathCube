@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
@@ -146,6 +147,17 @@ public class DeathCube {
 			worldinfo.setThunderTime(0);
 			worldinfo.setRaining(false);
 			worldinfo.setThundering(false);
+			
+			GameRules serverGameRules = worldinfo.getGameRulesInstance();
+			
+			if(serverGameRules != null) {
+				serverGameRules.setOrCreateGameRule("doFireTick", "false");
+				serverGameRules.setOrCreateGameRule("mobGriefing", "false");
+				serverGameRules.setOrCreateGameRule("doMobSpawning", "false");
+				serverGameRules.setOrCreateGameRule("doMobLoot", "false");
+				serverGameRules.setOrCreateGameRule("commandBlockOutput", "false");
+				serverGameRules.setOrCreateGameRule("doDaylightCycle", "false");
+			}
 		}
 
 		gameState = GameStates.Lobby;
