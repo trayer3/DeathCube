@@ -35,6 +35,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	 */
 	private String mapName = "Map Name";
 	private int numTeamsFromGUI = 4;
+	private int gameTimeLimit = Reference.TIME_MAINGAME;
 
 	long currentTime;
 	long timeRemaining;
@@ -78,7 +79,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			if (!this.worldObj.isRemote) {
 				Log.info("Server sending requested text. Num points: " + numTeamsFromGUI);
 				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD1_ID, String.valueOf(numTeamsFromGUI)));
-				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD7_ID, String.valueOf(mapName)));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, mapName));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(gameTimeLimit)));
 			} else {
 				Log.info("World is remote - text request.");
 			}
@@ -108,14 +110,30 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				Log.warn("Tried to parse non-Integer: " + text);
 			}
 			markDirty();
-		} else if (fieldID == Reference.MESSAGE_FIELD7_ID) {
+		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
 			mapName = text;
 			if (!this.worldObj.isRemote) {
 				/**
 				 * If a server message (not remote), update the Clients too.
 				 */
-				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD7_ID, mapName));
+				ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD2_ID, mapName));
 				ModConfig.updateConfig(mapName);
+			}
+			markDirty();
+		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
+			try {
+				/**
+				 * Input game time as minutes, store as milliseconds.
+				 */
+				gameTimeLimit = Integer.parseInt(text) * 60000;
+				if (!this.worldObj.isRemote) {
+					/**
+					 * If a server message (not remote), update the Clients too.
+					 */
+					ModNetwork.sendToAll(new MessageHandleTextUpdate(this.pos, Reference.MESSAGE_FIELD3_ID, String.valueOf(gameTimeLimit)));
+				}
+			} catch (NumberFormatException e) {
+				Log.warn("Tried to parse non-Integer: " + text);
 			}
 			markDirty();
 		}
@@ -128,12 +146,17 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 	public int getNumTeams() {
 		return numTeamsFromGUI;
 	}
+	
+	public int getGameTimeLimit() {
+		return gameTimeLimit;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		mapName = tag.getString("map");
 		numTeamsFromGUI = tag.getInteger("team");
+		gameTimeLimit = tag.getInteger("time");
 		Log.info("Game Controller - NBT Read :: Number of Teams: " + numTeamsFromGUI);
 	}
 
@@ -142,6 +165,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		super.writeToNBT(tag);
 		tag.setString("map", mapName);
 		tag.setInteger("team", numTeamsFromGUI);
+		tag.setInteger("time", gameTimeLimit);
 		// Log.info("Game Controller - NBT Write :: Number of Teams: " + numTeamsFromGUI);
 	}
 
@@ -260,7 +284,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 					 * Check Time
 					 */
 					currentTime = System.currentTimeMillis();
-					timeRemaining = Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart);
+					timeRemaining = gameTimeLimit - (currentTime - DeathCube.gameTimeStart);
 
 					if (timeRemaining <= 0) {
 						/**
@@ -579,7 +603,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 
 			if (sendUpdate) {
 				// Log.info("Sending scoreboard update...");
-				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart));
+				ModNetwork.sendToAll(new MessageHandleClientGameUpdate(displayScoreboard, DeathCube.gameTeams.length, teamNames, activeTeamPoints, activeTeamPointTimes, DeathCube.gameTimeStart, gameTimeLimit));
 				DeathCube.gameTimeCheck = System.currentTimeMillis();
 				// Log.info("Scoreboard update sent.");
 

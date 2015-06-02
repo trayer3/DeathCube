@@ -208,7 +208,7 @@ public class DeathCubeEventHandler {
 					String[] names = { "None" };
 					int[] points = { 0 };
 					double[] pointTimes = { 0.0d };
-					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0), (EntityPlayerMP) event.entity);
+					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0, 0), (EntityPlayerMP) event.entity);
 
 					Log.info("Game not Running: Player joined Lobby.");
 

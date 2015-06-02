@@ -20,6 +20,7 @@ public class GuiGameController extends GuiDeathCube {
 	private TileEntityGameController game_controller;
 	private GuiTextField text_MapName;
 	private GuiTextField text_NumTeams;
+	private GuiTextField text_GameTimeLimit;
 	private GuiButton button_Start;
 	private int gui_Width = 225;
 	private int gui_Height = 137;
@@ -74,14 +75,20 @@ public class GuiGameController extends GuiDeathCube {
 		text_NumTeams = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing*2, fieldWidth, fieldHeight);
 		text_NumTeams.setMaxStringLength(1);
 		text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
+		
+		text_GameTimeLimit = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing*3, fieldWidth, fieldHeight);
+		text_GameTimeLimit.setMaxStringLength(1);
+		text_GameTimeLimit.setText(String.valueOf(game_controller.getGameTimeLimit()));
 	}
 	
 	@Override
 	public void onTextfieldUpdate(int fieldID) {
 		if (fieldID == Reference.MESSAGE_FIELD1_ID) {
 			text_NumTeams.setText(String.valueOf(game_controller.getNumTeams()));
-		} else if (fieldID == Reference.MESSAGE_FIELD7_ID) {
+		} else if (fieldID == Reference.MESSAGE_FIELD2_ID) {
 			text_MapName.setText(game_controller.getMapName());
+		} else if (fieldID == Reference.MESSAGE_FIELD3_ID) {
+			text_GameTimeLimit.setText(String.valueOf(game_controller.getGameTimeLimit()));
 		}
 	}
 	
@@ -93,6 +100,7 @@ public class GuiGameController extends GuiDeathCube {
 		super.mouseClicked(mouseX, mouseY, button);
 		text_MapName.mouseClicked(mouseX, mouseY, button);
 		text_NumTeams.mouseClicked(mouseX, mouseY, button);
+		text_GameTimeLimit.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -123,6 +131,10 @@ public class GuiGameController extends GuiDeathCube {
 			
 			mc.fontRendererObj.drawString("Teams", x + xSpacingLabel, y + ySpacing*2 + 2, 4210752);
 			text_NumTeams.drawTextBox();
+			
+			mc.fontRendererObj.drawString("Time Limit", x + xSpacingLabel, y + ySpacing*3 + 2, 4210752);
+			mc.fontRendererObj.drawString("(min)", x + xSpacingLabel + 30, y + ySpacing*3 + 2 + 4, 4210752);
+			text_GameTimeLimit.drawTextBox();
 		}
 
 		super.drawScreen(mouseX, mouseY, partTicks);
@@ -137,7 +149,9 @@ public class GuiGameController extends GuiDeathCube {
 		if (text_NumTeams.textboxKeyTyped(chr, keyCode)) {
 			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD1_ID, text_NumTeams.getText()));
 		} else if (text_MapName.textboxKeyTyped(chr, keyCode)) {
-			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD7_ID, text_MapName.getText()));
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD2_ID, text_MapName.getText()));
+		} else if (text_GameTimeLimit.textboxKeyTyped(chr, keyCode)) {
+			ModNetwork.simpleNetworkWrapper.sendToServer(new MessageHandleTextUpdate(game_controller.getPos(), Reference.MESSAGE_FIELD3_ID, text_GameTimeLimit.getText()));
 		} else {
 			super.keyTyped(chr, keyCode);
 		}

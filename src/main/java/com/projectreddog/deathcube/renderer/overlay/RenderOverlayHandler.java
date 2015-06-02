@@ -93,7 +93,7 @@ public class RenderOverlayHandler extends Gui {
 				}
 
 				long currentTime = System.currentTimeMillis();
-				float timeRemaining = ((float) (Reference.TIME_MAINGAME - (currentTime - DeathCube.gameTimeStart_client))) / 1000.0f;
+				float timeRemaining = ((float) (DeathCube.gameTimeLimit_client - (currentTime - DeathCube.gameTimeStart_client))) / 1000.0f;
 				int remainingMinutes = (int) (timeRemaining / 60);
 				String remainingSeconds = String.format("%02d", ((int) (timeRemaining % 60)));
 

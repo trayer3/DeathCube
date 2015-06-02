@@ -36,11 +36,12 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 	private int[] gameTeamsActivePoints;
 	private double[] gameTeamsPointTimes;
 	private long gameTimeStartClient;
+	private int gameTimeLimitClient;
 
 	public MessageHandleClientGameUpdate() {
 	}
 
-	public MessageHandleClientGameUpdate(boolean displayScoreboard, int numberOfTeams, String[] gameTeamsNames, int[] gameTeamsActivePoints, double[] gameTeamsPointTimes, long gameTimeStartClient) {
+	public MessageHandleClientGameUpdate(boolean displayScoreboard, int numberOfTeams, String[] gameTeamsNames, int[] gameTeamsActivePoints, double[] gameTeamsPointTimes, long gameTimeStartClient, int gameTimeLimitClient) {
 		//Log.info("Message Constructor - " + displayScoreboard);
 		//Log.info("Message Constructor - " + numberOfTeams + " teams. " + gameTimeStartClient + " time flag.");
 		this.displayScoreboard = displayScoreboard;
@@ -49,6 +50,7 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 		this.gameTeamsActivePoints = gameTeamsActivePoints.clone();
 		this.gameTeamsPointTimes = gameTeamsPointTimes.clone();
 		this.gameTimeStartClient = gameTimeStartClient;
+		this.gameTimeLimitClient = gameTimeLimitClient;
 		
 		/**
 		for(int i = 0; i < numberOfTeams; i++) {
@@ -72,6 +74,7 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 			gameTeamsPointTimes[i] = buf.readDouble();
 		}
 		gameTimeStartClient = buf.readLong();
+		gameTimeLimitClient = buf.readInt();
 		
 		/**
 		Log.info("Message fromBytes - " + displayScoreboard);
@@ -92,6 +95,7 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 			buf.writeDouble(gameTeamsPointTimes[i]);
 		}
 		buf.writeLong(gameTimeStartClient);
+		buf.writeInt(gameTimeLimitClient);
 	}
 
 	@Override
@@ -116,6 +120,7 @@ public class MessageHandleClientGameUpdate implements IMessage, IMessageHandler<
 		DeathCube.gameTeams_activePoints_client = message.gameTeamsActivePoints;
 		DeathCube.gameTeams_pointTimes_client = message.gameTeamsPointTimes;
 		DeathCube.gameTimeStart_client = message.gameTimeStartClient;
+		DeathCube.gameTimeLimit_client = message.gameTimeLimitClient;
 	}
 
 	public void handleServerSide(MessageHandleClientGameUpdate message, EntityPlayer player) {
