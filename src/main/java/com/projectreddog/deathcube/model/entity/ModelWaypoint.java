@@ -1,5 +1,5 @@
 
-package com.projectreddog.deathcube.model;
+package com.projectreddog.deathcube.model.entity;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
