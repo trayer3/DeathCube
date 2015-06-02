@@ -330,6 +330,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 										team.setNextCapturePointActive();
 										if (team.getCurrentCaptureIndex() > mostPointsCaptured) {
 											winningTeamColor = team.getTeamColor();
+											mostPointsCaptured = team.getCurrentCaptureIndex(); 
 										}
 									}
 								}
@@ -798,6 +799,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			if (DeathCube.gameTeams[i].getTeamSize() < smallestTeamSize) {
 				teamsBalanced = false;
 				smallestTeamColor = DeathCube.gameTeams[i].getTeamColor();
+				smallestTeamSize = DeathCube.gameTeams[i].getTeamSize();
 				Log.info("Smallest Team: " + DeathCube.gameTeams[i].getTeamColor());
 			}
 		}
