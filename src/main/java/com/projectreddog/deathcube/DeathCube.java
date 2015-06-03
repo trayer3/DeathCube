@@ -82,6 +82,10 @@ public class DeathCube {
 	@SideOnly(Side.CLIENT)
 	public static long gameTimeLimit_client;
 	@SideOnly(Side.CLIENT)
+	public static boolean playerIsDead_client;
+	@SideOnly(Side.CLIENT)
+	public static int playerRespawnTime_client;
+	@SideOnly(Side.CLIENT)
 	public static double renderHelperYOffset;
 	@SideOnly(Side.CLIENT)
 	public static double renderHelperYDirection;

@@ -10,6 +10,7 @@ import java.util.Set;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
@@ -21,6 +22,7 @@ import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.game.GameTeam;
 import com.projectreddog.deathcube.init.ModConfig;
 import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleClientDeath;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
@@ -319,7 +321,10 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 										String teamColor = DeathCube.playerToTeamColor.get(playerNameKey);
 										int teamIndex = DeathCube.teamColorToIndex.get(teamColor);
 										DeathCube.gameTeams[teamIndex].sendPlayerToTeamSpawn(this.worldObj.getPlayerEntityByName(playerNameKey));
+										ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientDeath(false, 0), (EntityPlayerMP) this.worldObj.getPlayerEntityByName(playerNameKey));
 										keyIterator.remove();
+									} else {
+										ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientDeath(true, (int) (timeDiff / 1000)), (EntityPlayerMP) this.worldObj.getPlayerEntityByName(playerNameKey));
 									}
 								} else {
 									/**
@@ -327,6 +332,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 									 * - Remove them from the queue
 									 */
 									DeathCube.playerAwaitingRespawn.remove(playerNameKey);
+									//keyIterator.remove();  // Should be this to remove from queue?
 								}
 							}
 						}

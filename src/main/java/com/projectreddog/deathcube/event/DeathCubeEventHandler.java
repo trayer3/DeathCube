@@ -32,6 +32,7 @@ import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
 import com.projectreddog.deathcube.init.ModItems;
 import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleClientDeath;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
@@ -209,6 +210,7 @@ public class DeathCubeEventHandler {
 					int[] points = { 0 };
 					double[] pointTimes = { 0.0d };
 					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientGameUpdate(false, 0, names, points, pointTimes, 0, 0), (EntityPlayerMP) event.entity);
+					ModNetwork.simpleNetworkWrapper.sendTo(new MessageHandleClientDeath(false, 0), (EntityPlayerMP) event.entity);
 
 					Log.info("Game not Running: Player joined Lobby.");
 

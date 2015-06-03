@@ -75,8 +75,14 @@ public class RenderOverlayHandler extends Gui {
 				this.fontRenderer.drawString("Point:", x_margin + x_spacing, 2, fontColor);
 				int y_spacing = 1;
 				for (int i = 0; i < DeathCube.gameTeams_names_client.length; i++) {
+					/**
+					 * Team Name
+					 */
 					this.fontRenderer.drawString(DeathCube.gameTeams_names_client[i], x_margin, 2 + y_spacing * 10, fontColor);
 					
+					/**
+					 * Active Point
+					 */
 					if(DeathCube.gameTeams_activePoints_client[i] > 0) {
 						this.fontRenderer.drawString(String.valueOf(DeathCube.gameTeams_activePoints_client[i]), x_margin + x_spacing, 2 + y_spacing * 10, fontColor);
 					}
@@ -92,6 +98,9 @@ public class RenderOverlayHandler extends Gui {
 					y_spacing++;
 				}
 
+				/**
+				 * Time remaining in Game
+				 */
 				long currentTime = System.currentTimeMillis();
 				float timeRemaining = ((float) (DeathCube.gameTimeLimit_client - (currentTime - DeathCube.gameTimeStart_client))) / 1000.0f;
 				int remainingMinutes = (int) (timeRemaining / 60);
@@ -99,6 +108,17 @@ public class RenderOverlayHandler extends Gui {
 
 				this.fontRenderer.drawString("GameTime:", x_margin, 2 + y_spacing * 10, fontColor);
 				this.fontRenderer.drawString(String.valueOf(remainingMinutes) + ":" + remainingSeconds, x_margin + x_spacing + 10, 2 + y_spacing * 10, fontColor);
+				
+				/**
+				 * If player is dead, time remaining until respawn.
+				 * - TODO: Center text on screen, or near hotbar
+				 */
+				if(DeathCube.playerIsDead_client) {
+					//this.mc.renderEngine.bindTexture(getTextureLocationMarker());
+					//this.drawTexturedModalRect(xPos, yPos, 0, 0, width, height);
+					
+					this.fontRenderer.drawString("Respawn in: " + String.valueOf(DeathCube.playerRespawnTime_client), x_margin, 90, fontColor);
+				}
 			}
 		}
 	}
