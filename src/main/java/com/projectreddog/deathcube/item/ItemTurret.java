@@ -59,7 +59,11 @@ public class ItemTurret extends ItemDeathCube {
 				}
 			}
 			boolean rtn = world.spawnEntityInWorld(et);
-
+			if (rtn && !player.capabilities.isCreativeMode) {
+				// spawned in world so reduce stack size
+				// only if they are not in creative .. because FUN !
+				stack.stackSize--;
+			}
 			Log.info(rtn);
 		}
 
