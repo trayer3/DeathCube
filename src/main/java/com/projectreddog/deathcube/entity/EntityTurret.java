@@ -129,7 +129,11 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 						this.state = 1;
 						worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0, 0);
 						worldObj.playSoundAtEntity(this, "random.explode", 1, 1.5f);
+					} else {
+						// player on same team re-set target?
+						this.setAttackTarget(null);
 					}
+
 					return;
 				}
 			}
