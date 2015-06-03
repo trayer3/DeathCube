@@ -78,7 +78,7 @@ public class GuiGameController extends GuiDeathCube {
 		
 		text_GameTimeLimit = new GuiTextField(20, fontRendererObj, x + xSpacingField + 10, y + ySpacing*3, fieldWidth, fieldHeight);
 		text_GameTimeLimit.setMaxStringLength(1);
-		text_GameTimeLimit.setText(String.valueOf(game_controller.getGameTimeLimit()));
+		text_GameTimeLimit.setText(String.valueOf(game_controller.getGameTimeLimit() / 60000));
 	}
 	
 	@Override
@@ -133,7 +133,7 @@ public class GuiGameController extends GuiDeathCube {
 			text_NumTeams.drawTextBox();
 			
 			mc.fontRendererObj.drawString("Time Limit", x + xSpacingLabel, y + ySpacing*3 + 2, 4210752);
-			mc.fontRendererObj.drawString("(min)", x + xSpacingLabel + 30, y + ySpacing*3 + 2 + 4, 4210752);
+			mc.fontRendererObj.drawString("(min)", x + xSpacingLabel + 80, y + ySpacing*3 + 2, 4210752);
 			text_GameTimeLimit.drawTextBox();
 		}
 
