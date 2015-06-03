@@ -7,6 +7,7 @@ tile.deathcube:forcefieldgen.name=Force Field Generator
 tile.deathcube:gamecontroller.name=DeathCube Game Controller
 tile.deathcube:lobby.name=Lobby Block
 tile.deathcube:loot_block.name=Loot Block
+tile.deathcube:mine_block.name=Trip Mine
 tile.deathcube:spawnpoint.name=Spawn Point
 tile.deathcube:startinggearconfig.name=DeathCube Starting Gear Config
 

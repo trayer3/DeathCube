@@ -15,6 +15,7 @@ import com.projectreddog.deathcube.block.BlockForceFieldGen;
 import com.projectreddog.deathcube.block.BlockGameController;
 import com.projectreddog.deathcube.block.BlockLobby;
 import com.projectreddog.deathcube.block.BlockLoot;
+import com.projectreddog.deathcube.block.BlockMine;
 import com.projectreddog.deathcube.block.BlockSpawnPoint;
 import com.projectreddog.deathcube.block.BlockStartingGearConfig;
 import com.projectreddog.deathcube.reference.Reference;
@@ -25,6 +26,7 @@ public class ModBlocks {
 	public static final BlockDeathCube boost_block = new BlockBoost();
 	public static final BlockDeathCube example = new BlockExample();
 	public static final BlockDeathCube lobby = new BlockLobby();
+	public static final BlockDeathCube mine_block = new BlockMine();
 	
 	public static final Block capturepoint = new BlockCapturePoint();
 	public static final Block forcefield = new BlockForceField();
@@ -38,6 +40,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(boost_block, Reference.MODBLOCK_BOOST);
 		GameRegistry.registerBlock(example, Reference.MODBLOCK_EXAMPLE);
 		GameRegistry.registerBlock(lobby, Reference.MODBLOCK_LOBBY);
+		GameRegistry.registerBlock(mine_block, Reference.MODBLOCK_MINE);
 		
 		GameRegistry.registerBlock(capturepoint, Reference.MODBLOCK_CAPTURE_POINT);
 		GameRegistry.registerBlock(forcefield, Reference.MODBLOCK_FORCE_FIELD);
@@ -54,6 +57,7 @@ public class ModBlocks {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(boost_block), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_BOOST, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(example), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_EXAMPLE, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(lobby), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_LOBBY, "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(mine_block), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_MINE, "inventory"));
 		
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(capturepoint), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_CAPTURE_POINT, "inventory"));
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(forcefield), 0, new ModelResourceLocation(Reference.MOD_ID + ":" + Reference.MODBLOCK_FORCE_FIELD, "inventory"));

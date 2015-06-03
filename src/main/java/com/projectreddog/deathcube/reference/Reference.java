@@ -34,6 +34,7 @@ public class Reference {
 	public static final String MODBLOCK_GAME_CONTROLLER = "gamecontroller";
 	public static final String MODBLOCK_LOBBY = "lobby";
 	public static final String MODBLOCK_LOOT = "loot_block";
+	public static final String MODBLOCK_MINE = "mine_block";
 	public static final String MODBLOCK_SPAWN_POINT = "spawnpoint";
 	public static final String MODBLOCK_STARTING_GEAR_CONFIG = "startinggearconfig";
 
