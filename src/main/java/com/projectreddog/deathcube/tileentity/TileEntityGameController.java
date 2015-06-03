@@ -825,6 +825,8 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 				smallestTeamColor = DeathCube.gameTeams[i].getTeamColor();
 				smallestTeamSize = DeathCube.gameTeams[i].getTeamSize();
 				Log.info("Smallest Team: " + DeathCube.gameTeams[i].getTeamColor());
+			} else if (teamsBalanced && smallestTeamSize < DeathCube.gameTeams[i].getTeamSize()) {
+				teamsBalanced = false;
 			}
 		}
 
