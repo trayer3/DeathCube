@@ -51,7 +51,7 @@ public class DeathCubeEventHandler {
 			 */
 			Block brokenBlock = event.state.getBlock();
 
-			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves)
+			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(ModBlocks.mine_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves)
 					|| brokenBlock.equals(Blocks.leaves2)) {
 				/**
 				 * Do Nothing. It is OK to break these blocks.
@@ -81,7 +81,7 @@ public class DeathCubeEventHandler {
 		if (!event.player.capabilities.isCreativeMode) {
 			Block placedBlock = event.placedBlock.getBlock();
 
-			if (placedBlock.equals(Blocks.cobblestone) || placedBlock.equals(ModBlocks.loot_block)) {
+			if (placedBlock.equals(Blocks.cobblestone) || placedBlock.equals(ModBlocks.loot_block) || placedBlock.equals(ModBlocks.mine_block)) {
 				/**
 				 * Do nothing. It is OK to place these blocks.
 				 */

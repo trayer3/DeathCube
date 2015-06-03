@@ -53,10 +53,10 @@ public class BlockMine extends BlockBasePassThrough {
 	@Override
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
-		if(!world.isRemote) {
+		if(!world.isRemote && !player.capabilities.isCreativeMode) {
 			world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F, true);
 		}
-		return true;
+		return world.setBlockToAir(pos);
     }
 	
 	@Override

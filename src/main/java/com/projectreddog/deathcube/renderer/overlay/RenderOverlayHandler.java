@@ -117,7 +117,7 @@ public class RenderOverlayHandler extends Gui {
 					//this.mc.renderEngine.bindTexture(getTextureLocationMarker());
 					//this.drawTexturedModalRect(xPos, yPos, 0, 0, width, height);
 					
-					this.fontRenderer.drawString("Respawn in: " + String.valueOf(DeathCube.playerRespawnTime_client), x_margin, 90, fontColor);
+					this.fontRenderer.drawString("Respawn in: " + String.valueOf(DeathCube.playerRespawnTime_client), x_margin, 65, fontColor);
 				}
 			}
 		}

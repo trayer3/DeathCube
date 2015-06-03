@@ -273,43 +273,49 @@ public class GameTeam {
 			if (lookupTE.getInventoryClass().equals(playerInventoryClass)) {
 				ItemStack[] configInvClone = lookupTE.getInventory();
 				
-				for(int i = 0; i < 4; i++) {
-					/**
-					 * Color Armor if Leather
-					 */
-					int color = 0;
-					String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
-					
-					if(teamColor.equals(Reference.TEAM_RED)) {
-						color = ItemDye.dyeColors[EnumDyeColor.RED.getDyeDamage()];
-					} else if(teamColor.equals(Reference.TEAM_BLUE)) {
-						color = ItemDye.dyeColors[EnumDyeColor.BLUE.getDyeDamage()];
-					} else if(teamColor.equals(Reference.TEAM_GREEN)) {
-						color = ItemDye.dyeColors[EnumDyeColor.GREEN.getDyeDamage()];
-					} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
-						color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getDyeDamage()];
+				if(configInvClone != null) {
+					for(int i = 0; i < 4; i++) {
+						/**
+						 * Color Armor if Leather
+						 */
+						int color = 0;
+						String teamColor = DeathCube.playerToTeamColor.get(inPlayer.getName());
+						
+						if(teamColor.equals(Reference.TEAM_RED)) {
+							color = ItemDye.dyeColors[EnumDyeColor.RED.getDyeDamage()];
+						} else if(teamColor.equals(Reference.TEAM_BLUE)) {
+							color = ItemDye.dyeColors[EnumDyeColor.BLUE.getDyeDamage()];
+						} else if(teamColor.equals(Reference.TEAM_GREEN)) {
+							color = ItemDye.dyeColors[EnumDyeColor.GREEN.getDyeDamage()];
+						} else if(teamColor.equals(Reference.TEAM_YELLOW)) {
+							color = ItemDye.dyeColors[EnumDyeColor.YELLOW.getDyeDamage()];
+						}
+						
+						ItemStack armorPiece = null;
+						
+						if(configInvClone[Reference.GEAR_INVENTORY_SIZE - 1 - i] != null) {
+							armorPiece = configInvClone[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
+						}
+						
+						if(armorPiece != null && armorPiece.getItem().equals(Items.leather_helmet)) {
+							Items.leather_helmet.setColor(armorPiece, color);
+						} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_chestplate)) {
+							Items.leather_chestplate.setColor(armorPiece, color);
+						} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_leggings)) {
+							Items.leather_leggings.setColor(armorPiece, color);
+						} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_boots)) {
+							Items.leather_boots.setColor(armorPiece, color);
+						}
+						
+						inPlayer.inventory.armorInventory[i] = armorPiece;
 					}
 					
-					ItemStack armorPiece = configInvClone[Reference.GEAR_INVENTORY_SIZE - 1 - i].copy();
-					
-					if(armorPiece != null && armorPiece.getItem().equals(Items.leather_helmet)) {
-						Items.leather_helmet.setColor(armorPiece, color);
-					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_chestplate)) {
-						Items.leather_chestplate.setColor(armorPiece, color);
-					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_leggings)) {
-						Items.leather_leggings.setColor(armorPiece, color);
-					} else if(armorPiece != null && armorPiece.getItem().equals(Items.leather_boots)) {
-						Items.leather_boots.setColor(armorPiece, color);
-					}
-					
-					inPlayer.inventory.armorInventory[i] = armorPiece;
-				}
-				
-				for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
-					if(configInvClone[i] != null) {
-						inPlayer.inventory.mainInventory[i] = configInvClone[i].copy();
-					} else {
-						inPlayer.inventory.mainInventory[i] = null;
+					for(int i = 0; i < (Reference.GEAR_INVENTORY_SIZE - 4); i++) {
+						if(configInvClone[i] != null) {
+							inPlayer.inventory.mainInventory[i] = configInvClone[i].copy();
+						} else {
+							inPlayer.inventory.mainInventory[i] = null;
+						}
 					}
 				}
 			}
