@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -30,6 +31,12 @@ public class ModelTurret extends ModelBase {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		// myModel.renderAll();
 
+		if (entity instanceof EntityLivingBase) {
+			if (((EntityLivingBase) entity).hurtTime > 0) {
+				GlStateManager.color(.8F, 0F, 0F, 0.5F);
+
+			}
+		}
 		this.renderGroupObject("RotorBase_Cylinder");
 		this.renderGroupObject("Cylinder_Cylinder.002");
 		this.renderGroupObject("Legs_Cylinder.001");
@@ -59,6 +66,12 @@ public class ModelTurret extends ModelBase {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 
+			if (entity instanceof EntityLivingBase) {
+				if (((EntityLivingBase) entity).hurtTime > 0) {
+					GlStateManager.color(.8F, 0F, 0F, 0.5F);
+
+				}
+			}
 			this.renderGroupObject("Housing_Cube.001");
 
 			if (et.state < Reference.TURRET_RECOIL_TICKS / 2) {
@@ -70,6 +83,12 @@ public class ModelTurret extends ModelBase {
 		}
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+		if (entity instanceof EntityLivingBase) {
+			if (((EntityLivingBase) entity).hurtTime > 0) {
+				GlStateManager.color(.8F, 0F, 0F, 0.5F);
+
+			}
+		}
 		this.renderGroupObject("Barrel_Cylinder.003");
 
 	}
