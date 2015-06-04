@@ -37,7 +37,7 @@ public class BlockMine extends BlockBasePassThrough {
 		 * Summon Explosion (that does not damage terrain - how?)
 		 * - Remove block
 		 */
-		WorldActionHelper.doFakeExpolsion(worldIn, pos, 1, DamageSource.generic);
+		WorldActionHelper.doFakeExpolsion(worldIn, pos, 1, DamageSource.generic, true);
 
 	}
 

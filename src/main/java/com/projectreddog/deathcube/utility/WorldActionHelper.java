@@ -27,7 +27,7 @@ public class WorldActionHelper {
 	 * @param damageSource
 	 * @return
 	 */
-	public static boolean doFakeExpolsion(World world, BlockPos bp, float size, DamageSource damageSource) {
+	public static boolean doFakeExpolsion(World world, BlockPos bp, float size, DamageSource damageSource, boolean RemoveBlockAtLocation) {
 		if (!world.isRemote) {// fail safe only works on server side :O
 			// calculate block center
 			double explosionX = bp.getX() + .5d;
@@ -88,6 +88,9 @@ public class WorldActionHelper {
 				world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, explosionX, explosionY, explosionZ, 1.0D, 0.0D, 0.0D, new int[0]);
 			}
 
+			if (RemoveBlockAtLocation) {
+				world.setBlockToAir(bp);
+			}
 			return true;
 
 		}
