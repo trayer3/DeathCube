@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
@@ -40,9 +41,7 @@ public class BlockMine extends BlockBasePassThrough {
 		if(!worldIn.isRemote) {
 			//worldIn.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F, true);
 			
-			DeathCubeExplosion explosion = new DeathCubeExplosion(worldIn, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);
-	        explosion.doExplosionA();
-		    explosion.doExplosionB(true);
+			new DeathCubeExplosion(worldIn, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);
 		}		
 	}
 	

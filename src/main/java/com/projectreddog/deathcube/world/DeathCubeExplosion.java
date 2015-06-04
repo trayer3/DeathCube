@@ -33,6 +33,7 @@ public class DeathCubeExplosion {
 	private final double explosionY;
 	private final double explosionZ;
 	private final Entity exploder;
+	private final DamageSource damageSource;
 	private final float explosionSize;
 	/** A list of ChunkPositions of blocks affected by this explosion */
 	private final List affectedBlockPositions;
@@ -40,17 +41,21 @@ public class DeathCubeExplosion {
 	private static final String __OBFID = "CL_00000134";
 	private final Vec3 position;
 
-	public DeathCubeExplosion(World worldIn, Entity exploder_entity, double explosionX, double explosionY, double explosionZ, float explosionSize) {
+	public DeathCubeExplosion(World worldIn, Entity exploder_entity, DamageSource damageSource, double explosionX, double explosionY, double explosionZ, float explosionSize) {
 		this.explosionRNG = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
 		this.mapPlayerToVector = Maps.newHashMap();
 		this.worldObj = worldIn;
 		this.exploder = exploder_entity;
+		this.damageSource = damageSource;
 		this.explosionSize = explosionSize;
 		this.explosionX = explosionX;
 		this.explosionY = explosionY;
 		this.explosionZ = explosionZ;
 		this.position = new Vec3(this.explosionX, this.explosionY, this.explosionZ);
+		
+		this.doExplosionA();
+	    this.doExplosionB(true);
 	}
 
 	/**
@@ -136,7 +141,7 @@ public class DeathCubeExplosion {
 						d9 /= d13;
 						double d14 = (double) this.worldObj.getBlockDensity(vec3, entity.getEntityBoundingBox());
 						double d10 = (1.0D - d12) * d14;
-						entity.attackEntityFrom(DamageSource.generic, (float) ((int) ((d10 * d10 + d10) / 2.0D * 8.0D * (double) f3 + 1.0D)));
+						entity.attackEntityFrom(damageSource, (float) ((int) ((d10 * d10 + d10) / 2.0D * 8.0D * (double) f3 + 1.0D)));
 						double d11 = EnchantmentProtection.func_92092_a(entity, d10);
 						entity.motionX += d5 * d11;
 						entity.motionY += d7 * d11;
