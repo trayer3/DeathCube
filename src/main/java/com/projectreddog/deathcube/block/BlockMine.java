@@ -37,7 +37,7 @@ public class BlockMine extends BlockBasePassThrough {
 		 * Summon Explosion (that does not damage terrain - how?)
 		 * - Remove block
 		 */
-		WorldActionHelper.doFakeExpolsion(worldIn, pos, 1, DamageSource.generic, true);
+		WorldActionHelper.doFakeExpolsion(worldIn, pos, 5, DamageSource.generic, true);
 
 	}
 
@@ -47,17 +47,14 @@ public class BlockMine extends BlockBasePassThrough {
 	 */
 	@Override
 	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-		if (!world.isRemote && !player.capabilities.isCreativeMode) {
-			world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F, true);
-		}
-		return world.setBlockToAir(pos);
+		return (WorldActionHelper.doFakeExpolsion(world, pos, 5, DamageSource.generic, true));
+
 	}
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (!worldIn.isRemote) {
-			worldIn.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F, true);
-		}
+		WorldActionHelper.doFakeExpolsion(worldIn, pos, 5, DamageSource.generic, true);
+
 		return false; // Or true?
 	}
 
