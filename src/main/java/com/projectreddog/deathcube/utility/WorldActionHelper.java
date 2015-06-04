@@ -24,11 +24,10 @@ public class WorldActionHelper {
 	 * @param world
 	 * @param bp
 	 * @param size
-	 * @param damage
 	 * @param damageSource
 	 * @return
 	 */
-	public static boolean doFakeExpolsion(World world, BlockPos bp, float size, float damage, DamageSource damageSource) {
+	public static boolean doFakeExpolsion(World world, BlockPos bp, float size, DamageSource damageSource) {
 		if (!world.isRemote) {// fail safe only works on server side :O
 			// calculate block center
 			double explosionX = bp.getX() + .5d;
