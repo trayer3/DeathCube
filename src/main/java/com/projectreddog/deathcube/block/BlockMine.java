@@ -40,13 +40,9 @@ public class BlockMine extends BlockBasePassThrough {
 		if(!worldIn.isRemote) {
 			//worldIn.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F, true);
 			
-			DeathCubeExplosion explosion = new DeathCubeExplosion(worldIn, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F, false, true);
-	        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(worldIn, explosion.getVanillaExplosion())) {
-	        	// Nothing
-	        } else {
-	        	explosion.doExplosionA();
-		        explosion.doExplosionB(true);
-	        }
+			DeathCubeExplosion explosion = new DeathCubeExplosion(worldIn, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);
+	        explosion.doExplosionA();
+		    explosion.doExplosionB(true);
 		}		
 	}
 	
