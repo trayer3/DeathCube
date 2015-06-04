@@ -4,8 +4,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
@@ -14,10 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference;
-import com.projectreddog.deathcube.reference.Reference.GameStates;
-import com.projectreddog.deathcube.utility.Log;
+import com.projectreddog.deathcube.world.DeathCubeExplosion;
 
 public class BlockMine extends BlockBasePassThrough {
 
@@ -42,7 +38,15 @@ public class BlockMine extends BlockBasePassThrough {
 		 * - Remove block
 		 */
 		if(!worldIn.isRemote) {
-			worldIn.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F, true);
+			//worldIn.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F, true);
+			
+			DeathCubeExplosion explosion = new DeathCubeExplosion(worldIn, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F, false, true);
+	        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(worldIn, explosion.getVanillaExplosion())) {
+	        	// Nothing
+	        } else {
+	        	explosion.doExplosionA();
+		        explosion.doExplosionB(true);
+	        }
 		}		
 	}
 	
