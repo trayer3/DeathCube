@@ -38,7 +38,6 @@ public class ItemDeathSkull extends ItemDeathCube {
 	 */
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		// if(!player.worldObj.isRemote) {
 		Random rand = new Random();
 		float randAmountx = rand.nextFloat() / 2;
 		float randAmountz = rand.nextFloat() / 2;
@@ -51,11 +50,30 @@ public class ItemDeathSkull extends ItemDeathCube {
 		}
 		Log.info("x , z randmount2:" + randAmountx + " " + randAmountz);
 
-		if (player.worldObj.isRemote) {
-			// only run on clinet becase we are talking to the server
-			ModNetwork.sendToServer(new MessageHandleCrossPlayerMovement(entity.getEntityId(), randAmountx, (float) ((Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2)), randAmountz));
+		/**
+		 * Damage Item
+		 * - Extra durability usage if attacker is not on ground
+		 */
+		if (player.onGround) {
+			stack.damageItem(1, player);
+		} else {
+			stack.damageItem(2, player);
 		}
-		// }
+
+		if (entity instanceof EntityPlayer) {
+			if (player.worldObj.isRemote) {
+				/**
+				 * Only run on client
+				 * - Sending message to the server
+				 * - Possibly allow only if attacker is onGround?
+				 */
+				//if (player.onGround) {
+					ModNetwork.sendToServer(new MessageHandleCrossPlayerMovement(entity.getEntityId(), randAmountx, (float) ((Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2)), randAmountz));
+				//}
+			}
+		} else {
+			entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+		}
 
 		return true;
 	}
