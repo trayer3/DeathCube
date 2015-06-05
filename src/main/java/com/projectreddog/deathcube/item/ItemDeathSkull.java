@@ -78,6 +78,15 @@ public class ItemDeathSkull extends ItemDeathCube {
 		} else {
 			entity.addVelocity(velocityAmountX, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), velocityAmountZ);
 		}
+		
+		/**
+		 * Check if item should break:
+		 * - Remove item from player if durability is 0 (or less than 1?)
+		 */
+		if(stack.getItemDamage() <= 0) {
+			//player.clearItemInUse();
+			player.destroyCurrentEquippedItem();
+		}
 
 		return true;
 	}
