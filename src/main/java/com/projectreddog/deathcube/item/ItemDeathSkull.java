@@ -52,7 +52,7 @@ public class ItemDeathSkull extends ItemDeathCube {
 
 		if (entity instanceof EntityPlayer) {
 			stack.damageItem(1, player);
-			((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+			((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), randAmountz);
 			Log.info("in entityPlayer");
 
 		} else if (entity instanceof EntityPlayerMP) {
