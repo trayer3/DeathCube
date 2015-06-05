@@ -4,12 +4,13 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import com.projectreddog.deathcube.init.ModNetwork;
+import com.projectreddog.deathcube.network.MessageHandleCrossPlayerMovement;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 
@@ -50,20 +51,9 @@ public class ItemDeathSkull extends ItemDeathCube {
 		}
 		Log.info("x , z randmount2:" + randAmountx + " " + randAmountz);
 
-		if (entity instanceof EntityPlayer) {
-			stack.damageItem(1, player);
-			((EntityPlayer) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), randAmountz);
-			Log.info("in entityPlayer");
-
-		} 
-		if (entity instanceof EntityPlayerMP) {
-			stack.damageItem(1, player);
-			((EntityPlayerMP) entity).addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
-			Log.info("in entityPlayerMP");
-		} else {
-			stack.damageItem(1, player);
-			entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
-			Log.info("in Else");
+		if (player.worldObj.isRemote) {
+			// only run on clinet becase we are talking to the server
+			ModNetwork.sendToServer(new MessageHandleCrossPlayerMovement(entity.getEntityId(), randAmountx, (float) ((Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2)), randAmountz));
 		}
 		// }
 
