@@ -33,6 +33,7 @@ import com.projectreddog.deathcube.proxy.IProxy;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.stats.StatDeathCube;
 import com.projectreddog.deathcube.utility.Log;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME)
@@ -62,6 +63,8 @@ public class DeathCube {
 	public static Map<String, Integer> teamColorToIndex;
 	public static Map<String, String> playerToTeamColor;
 	public static Map<String, Long> playerAwaitingRespawn;
+	
+	public static StatDeathCube gameStatistics;
 
 	public static BlockPos gameControllerPos;
 	// public static BlockPos lobbySpawnPos;
@@ -168,6 +171,8 @@ public class DeathCube {
 
 		gameState = GameStates.Lobby;
 		fieldState = FieldStates.Inactive;
+		
+		gameStatistics = new StatDeathCube();
 
 		// lobbySpawnPos = ModConfig.readConfig().lobbyPos;
 	}
