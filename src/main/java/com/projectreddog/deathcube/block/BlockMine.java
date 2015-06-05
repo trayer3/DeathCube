@@ -38,7 +38,7 @@ public class BlockMine extends BlockBasePassThrough {
 		 * Summon Explosion (that does not damage terrain - how?)
 		 * - Remove block
 		 */
-		new DeathCubeExplosion(worldIn, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);	
+		new DeathCubeExplosion(worldIn, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F);	
 	}
 	
 	/**
@@ -49,14 +49,14 @@ public class BlockMine extends BlockBasePassThrough {
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
 		if(!player.capabilities.isCreativeMode) {
-			new DeathCubeExplosion(world, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);
+			new DeathCubeExplosion(world, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F);
 		}
 		return world.setBlockToAir(pos);
     }
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, net.minecraft.entity.player.EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-		new DeathCubeExplosion(worldIn, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.0F);
+		new DeathCubeExplosion(worldIn, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F);
 		return false;  // Or true?
 	}
 	

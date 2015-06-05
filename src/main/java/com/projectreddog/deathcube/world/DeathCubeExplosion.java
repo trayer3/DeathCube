@@ -42,6 +42,10 @@ public class DeathCubeExplosion {
 	private final Vec3 position;
 
 	public DeathCubeExplosion(World worldIn, Entity exploder_entity, DamageSource damageSource, double explosionX, double explosionY, double explosionZ, float explosionSize) {
+		if(!worldIn.isRemote) {
+	    	worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
+	    }
+		
 		this.explosionRNG = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
 		this.mapPlayerToVector = Maps.newHashMap();
@@ -56,9 +60,6 @@ public class DeathCubeExplosion {
 		
 		this.doExplosionA();
 	    this.doExplosionB(true);
-	    if(!worldIn.isRemote) {
-	    	worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
-	    }
 	}
 
 	/**
@@ -172,6 +173,7 @@ public class DeathCubeExplosion {
 			this.worldObj.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D, new int[0]);
 		}
 
+		/*
 		Iterator iterator;
 		BlockPos blockpos;
 
@@ -200,7 +202,7 @@ public class DeathCubeExplosion {
 				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5, new int[0]);
 				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
 			}
-		}
+		} */
 	}
 
 	public Map func_77277_b() {
