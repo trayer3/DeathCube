@@ -56,6 +56,9 @@ public class DeathCubeExplosion {
 		
 		this.doExplosionA();
 	    this.doExplosionB(true);
+	    if(!worldIn.isRemote) {
+	    	worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
+	    }
 	}
 
 	/**
