@@ -115,29 +115,34 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerAttack(AttackEntityEvent event) {
-		if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
-			if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
-				if (DeathCube.playerToTeamColor != null) {
-					String attackerTeamColor = DeathCube.playerToTeamColor.get(event.entityPlayer.getName());
-					String targetTeamColor = DeathCube.playerToTeamColor.get(event.target.getName());
+		if(event.entityPlayer != null) {
+			if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
+				if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
+					if (DeathCube.playerToTeamColor != null) {
+						String attackerTeamColor = DeathCube.playerToTeamColor.get(event.entityPlayer.getName());
+						String targetTeamColor = DeathCube.playerToTeamColor.get(event.target.getName());
 
-					/**
-					 * Prevent Friendly Fire
-					 */
-					if (attackerTeamColor != null && targetTeamColor != null && attackerTeamColor.equals(targetTeamColor)) {
-						event.setCanceled(true);
-					} else {
-						Log.info("Player's team colors do not match.  Attack OK.");
-					}
+						/**
+						 * Prevent Friendly Fire
+						 */
+						if (attackerTeamColor != null && targetTeamColor != null && attackerTeamColor.equals(targetTeamColor)) {
+							event.setCanceled(true);
+						} else {
+							Log.info("Player's team colors do not match.  Attack OK.");
+						}
+					} else
+						Log.info("Player Attack Event - Player-to-Team-Color variable is null.");
 				} else
-					Log.info("Player Attack Event - Player-to-Team-Color variable is null.");
+					Log.info("Player Attack Event - GameTeams variable is null or < 1.");
 			} else
-				Log.info("Player Attack Event - GameTeams variable is null or < 1.");
-		} else
-			Log.info("Player Attack Event - GameState variable is null or Not Running.");
-		
-		if(event.entityPlayer.getHeldItem().getItem() == ModItems.deathskull) {
-			((EntityPlayer) event.target).addVelocity(0.0d, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), 0.0d);
+				Log.info("Player Attack Event - GameState variable is null or Not Running.");
+			
+			Log.info("Item Held: " + event.entityPlayer.getHeldItem().getItem().toString());
+			if(event.entityPlayer.getHeldItem().getItem() == ModItems.deathskull) {
+				Log.info("Player attacking with Death Skull");
+				Log.info("Target: " + event.target.getName());
+				event.target.addVelocity(0.0d, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), 0.0d);
+			}
 		}
 	}
 
