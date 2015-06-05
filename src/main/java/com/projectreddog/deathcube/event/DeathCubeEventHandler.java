@@ -35,6 +35,7 @@ import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientDeath;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
+import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
@@ -134,6 +135,10 @@ public class DeathCubeEventHandler {
 				Log.info("Player Attack Event - GameTeams variable is null or < 1.");
 		} else
 			Log.info("Player Attack Event - GameState variable is null or Not Running.");
+		
+		if(event.entityPlayer.getHeldItem().getItem() == ModItems.deathskull) {
+			((EntityPlayer) event.target).addVelocity(0.0d, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), 0.0d);
+		}
 	}
 
 	@SubscribeEvent

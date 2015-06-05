@@ -49,7 +49,7 @@ public class BlockMine extends BlockBasePassThrough {
     public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
 		if(!player.capabilities.isCreativeMode) {
-			new DeathCubeExplosion(world, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F);
+			//new DeathCubeExplosion(world, null, DamageSource.generic, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0F);
 		}
 		return world.setBlockToAir(pos);
     }
