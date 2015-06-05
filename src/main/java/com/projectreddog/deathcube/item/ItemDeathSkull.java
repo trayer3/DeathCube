@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.init.ModNetwork;
@@ -38,17 +39,20 @@ public class ItemDeathSkull extends ItemDeathCube {
 	 */
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		Random rand = new Random();
-		float randAmountx = rand.nextFloat() / 2;
-		float randAmountz = rand.nextFloat() / 2;
-		Log.info("x , z randmount:" + randAmountx + " " + randAmountz);
-		if (rand.nextBoolean()) {
-			randAmountx = -randAmountx;
+		
+		Vec3 attackerDirection = player.getLookVec();
+		float velocityAmountX = 0;
+		float velocityAmountZ = 0;
+		if(player.isSprinting()) {
+			velocityAmountX = (float) attackerDirection.xCoord * 1.25f;
+			velocityAmountZ = (float) attackerDirection.zCoord * 1.25f;
+		} else {
+			velocityAmountX = (float) attackerDirection.xCoord / 3.0f;
+			velocityAmountZ = (float) attackerDirection.zCoord / 3.0f;
 		}
-		if (rand.nextBoolean()) {
-			randAmountz = -randAmountz;
-		}
-		Log.info("x , z randmount2:" + randAmountx + " " + randAmountz);
+		Log.info("Attacker Vector: " + attackerDirection.toString());
+		Log.info("DeathSkull X: " + velocityAmountX);
+		Log.info("DeathSkull Z: " + velocityAmountZ);
 
 		/**
 		 * Damage Item
@@ -68,11 +72,11 @@ public class ItemDeathSkull extends ItemDeathCube {
 				 * - Possibly allow only if attacker is onGround?
 				 */
 				//if (player.onGround) {
-					ModNetwork.sendToServer(new MessageHandleCrossPlayerMovement(entity.getEntityId(), randAmountx, (float) ((Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2)), randAmountz));
+					ModNetwork.sendToServer(new MessageHandleCrossPlayerMovement(entity.getEntityId(), velocityAmountX, (float) ((Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2)), velocityAmountZ));
 				//}
 			}
 		} else {
-			entity.addVelocity(randAmountx, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), randAmountz);
+			entity.addVelocity(velocityAmountX, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT * 2), velocityAmountZ);
 		}
 
 		return true;
