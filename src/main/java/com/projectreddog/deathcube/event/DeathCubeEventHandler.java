@@ -136,13 +136,6 @@ public class DeathCubeEventHandler {
 					Log.info("Player Attack Event - GameTeams variable is null or < 1.");
 			} else
 				Log.info("Player Attack Event - GameState variable is null or Not Running.");
-			
-			Log.info("Item Held: " + event.entityPlayer.getHeldItem().getItem().toString());
-			if(event.entityPlayer.getHeldItem().getItem() == ModItems.deathskull) {
-				Log.info("Player attacking with Death Skull");
-				Log.info("Target: " + event.target.getName());
-				event.target.addVelocity(0.0d, (Reference.ITEM_DEATHSKULL_VELOCITY_AMOUNT), 0.0d);
-			}
 		}
 	}
 
