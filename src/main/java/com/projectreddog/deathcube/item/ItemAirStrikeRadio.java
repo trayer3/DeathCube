@@ -24,7 +24,7 @@ public class ItemAirStrikeRadio extends ItemDeathCube {
 			float offsetHeight = 20f;
 			EntityRPGRocket entityRPGRocket = new EntityRPGRocket(worldIn);
 
-			Vec3 vec3 = playerIn.getPositionEyes(1);
+			Vec3 vec3 = new Vec3(playerIn.posX, playerIn.posY + (double) playerIn.getEyeHeight(), playerIn.posZ);
 			Vec3 vec31 = playerIn.getLook(1);
 			Vec3 vec32 = vec3.addVector(vec31.xCoord * 50, vec31.yCoord * 50, vec31.zCoord * 50);
 			worldIn.rayTraceBlocks(vec3, vec32, false, false, true);
