@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -16,6 +17,8 @@ public class EntityRPGRocket extends EntityThrowable {
 	public boolean hasTarget;
 
 	public Entity target;
+
+	private float currentVelocity;
 
 	public EntityRPGRocket(World world) {
 		super(world);
@@ -33,6 +36,16 @@ public class EntityRPGRocket extends EntityThrowable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		if (this.worldObj.isRemote) {
+			this.worldObj.spawnParticle(EnumParticleTypes.FLAME, this.posX, this.posY, this.posZ, 0, 0, 0);
+			this.worldObj.spawnParticle(EnumParticleTypes.CLOUD, this.posX, this.posY, this.posZ, 0, 0, 0);
+
+			this.worldObj.spawnParticle(EnumParticleTypes.CLOUD, this.posX, this.posY, this.posZ, 0, 0, 0);
+
+			this.worldObj.spawnParticle(EnumParticleTypes.CLOUD, this.posX, this.posY, this.posZ, 0, 0, 0);
+
+		}
 	}
 
 	@Override
@@ -44,7 +57,13 @@ public class EntityRPGRocket extends EntityThrowable {
 	 */
 	@Override
 	protected float getGravityVelocity() {
-		return 0.0F;
+		return 0.03F;
+	}
+
+	protected float getVelocity() {
+
+		return 3F;
+
 	}
 
 	@Override
@@ -52,10 +71,11 @@ public class EntityRPGRocket extends EntityThrowable {
 
 		if (mop.entityHit != null) {
 
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 3.0F, false);
+			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
 
+		} else {
+			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
 		}
-		new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 3.0F, false);
 		this.setDead();
 	}
 
