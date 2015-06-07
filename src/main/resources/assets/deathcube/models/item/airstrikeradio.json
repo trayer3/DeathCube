@@ -1,0 +1,7 @@
+{
+      "parent": "deathcube:item/deathcube_item",
+      "textures": {
+        "layer0": "deathcube:items/airstrikeradio"
+        }
+ 
+}
