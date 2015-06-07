@@ -106,9 +106,11 @@ public class Reference {
 
 	public static final int ENTITY_WAYPOINT_ID = 1;
 	public static final int ENTITY_TURRET_ID = 2;
+	public static final int ENTITY_RPG_ROCKET_ID = 3;
 
 	public static final String ENTITY_WAYPOINT_NAME = "waypoint";
 	public static final String ENTITY_TURRET_NAME = "turret";
+	public static final String ENTITY_RPG_ROCKET_NAME = "RPG";
 
 	public static final String ENTITY_WAYPOINT_TEXTURE_LOCATION = "models/Waypoint.png";
 
@@ -117,6 +119,7 @@ public class Reference {
 	public static final double RENDER_HELPER_ROTATION_SPEED = 1d;
 
 	public static final String MODEL_TURRET_TEXTURE_LOCATION = "models/Turret.png";
+	public static final String MODEL_RPGROCKET_TEXTURE_LOCATION = "models/RPGRocket.png";
 
 	public static final int TURRET_RECOIL_TICKS = 10;
 	public static final float TURRET_TRAVEL_MULTIPLIER = -.05f;
