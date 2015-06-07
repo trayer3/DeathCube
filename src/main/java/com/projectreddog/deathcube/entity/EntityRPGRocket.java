@@ -39,16 +39,24 @@ public class EntityRPGRocket extends EntityThrowable {
 	protected void entityInit() {
 	}
 
+	/**
+	 * Gets the amount of gravity to apply to the thrown entity with each tick.
+	 */
+	@Override
+	protected float getGravityVelocity() {
+		return 0.0F;
+	}
+
 	@Override
 	protected void onImpact(MovingObjectPosition mop) {
 
 		if (mop.entityHit != null) {
 
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 3.0F);
+			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 3.0F, false);
 
 		}
-		new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 3.0F);
-
+		new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 3.0F, false);
+		this.setDead();
 	}
 
 }

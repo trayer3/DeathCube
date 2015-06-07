@@ -1,12 +1,10 @@
 package com.projectreddog.deathcube.world;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentProtection;
@@ -42,10 +40,10 @@ public class DeathCubeExplosion {
 	private final Vec3 position;
 
 	public DeathCubeExplosion(World worldIn, Entity exploder_entity, DamageSource damageSource, double explosionX, double explosionY, double explosionZ, float explosionSize) {
-		if(!worldIn.isRemote) {
-	    	worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
-	    }
-		
+		if (!worldIn.isRemote) {
+			worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
+		}
+
 		this.explosionRNG = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
 		this.mapPlayerToVector = Maps.newHashMap();
@@ -57,9 +55,30 @@ public class DeathCubeExplosion {
 		this.explosionY = explosionY;
 		this.explosionZ = explosionZ;
 		this.position = new Vec3(this.explosionX, this.explosionY, this.explosionZ);
-		
+
 		this.doExplosionA();
-	    this.doExplosionB(true);
+		this.doExplosionB(true);
+	}
+
+	public DeathCubeExplosion(World worldIn, Entity exploder_entity, DamageSource damageSource, double explosionX, double explosionY, double explosionZ, float explosionSize, boolean removePosition) {
+		if (!worldIn.isRemote && removePosition) {
+			worldIn.setBlockToAir(new BlockPos(explosionX, explosionY, explosionZ));
+		}
+
+		this.explosionRNG = new Random();
+		this.affectedBlockPositions = Lists.newArrayList();
+		this.mapPlayerToVector = Maps.newHashMap();
+		this.worldObj = worldIn;
+		this.exploder = exploder_entity;
+		this.damageSource = damageSource;
+		this.explosionSize = explosionSize;
+		this.explosionX = explosionX;
+		this.explosionY = explosionY;
+		this.explosionZ = explosionZ;
+		this.position = new Vec3(this.explosionX, this.explosionY, this.explosionZ);
+
+		this.doExplosionA();
+		this.doExplosionB(true);
 	}
 
 	/**
@@ -174,35 +193,36 @@ public class DeathCubeExplosion {
 		}
 
 		/*
-		Iterator iterator;
-		BlockPos blockpos;
-
-		iterator = this.affectedBlockPositions.iterator();
-
-		while (iterator.hasNext()) {
-			blockpos = (BlockPos) iterator.next();
-			Block block = this.worldObj.getBlockState(blockpos).getBlock();
-
-			if (spawnParticles) {
-				double d0 = (double) ((float) blockpos.getX() + this.worldObj.rand.nextFloat());
-				double d1 = (double) ((float) blockpos.getY() + this.worldObj.rand.nextFloat());
-				double d2 = (double) ((float) blockpos.getZ() + this.worldObj.rand.nextFloat());
-				double d3 = d0 - this.explosionX;
-				double d4 = d1 - this.explosionY;
-				double d5 = d2 - this.explosionZ;
-				double d6 = (double) MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-				d3 /= d6;
-				d4 /= d6;
-				d5 /= d6;
-				double d7 = 0.5D / (d6 / (double) this.explosionSize + 0.1D);
-				d7 *= (double) (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat() + 0.3F);
-				d3 *= d7;
-				d4 *= d7;
-				d5 *= d7;
-				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5, new int[0]);
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
-			}
-		} */
+		 * Iterator iterator;
+		 * BlockPos blockpos;
+		 * 
+		 * iterator = this.affectedBlockPositions.iterator();
+		 * 
+		 * while (iterator.hasNext()) {
+		 * blockpos = (BlockPos) iterator.next();
+		 * Block block = this.worldObj.getBlockState(blockpos).getBlock();
+		 * 
+		 * if (spawnParticles) {
+		 * double d0 = (double) ((float) blockpos.getX() + this.worldObj.rand.nextFloat());
+		 * double d1 = (double) ((float) blockpos.getY() + this.worldObj.rand.nextFloat());
+		 * double d2 = (double) ((float) blockpos.getZ() + this.worldObj.rand.nextFloat());
+		 * double d3 = d0 - this.explosionX;
+		 * double d4 = d1 - this.explosionY;
+		 * double d5 = d2 - this.explosionZ;
+		 * double d6 = (double) MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
+		 * d3 /= d6;
+		 * d4 /= d6;
+		 * d5 /= d6;
+		 * double d7 = 0.5D / (d6 / (double) this.explosionSize + 0.1D);
+		 * d7 *= (double) (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat() + 0.3F);
+		 * d3 *= d7;
+		 * d4 *= d7;
+		 * d5 *= d7;
+		 * this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5, new int[0]);
+		 * this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
+		 * }
+		 * }
+		 */
 	}
 
 	public Map func_77277_b() {
