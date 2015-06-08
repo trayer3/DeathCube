@@ -60,7 +60,7 @@ public class EntityRPGRocket extends EntityThrowable {
 		return 0.03F;
 	}
 
-	protected float getVelocity() {
+	public float getVelocity() {
 
 		return 3F;
 
