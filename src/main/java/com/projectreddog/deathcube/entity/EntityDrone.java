@@ -1,11 +1,11 @@
 package com.projectreddog.deathcube.entity;
 
-import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityDrone extends EntityMob {
+public class EntityDrone extends Entity {
 
 	public BlockPos targetPos;
 	public boolean hasDeliveredPayload = false;
@@ -23,8 +23,8 @@ public class EntityDrone extends EntityMob {
 		this.setSize(.90F, 1.7F);
 		this.noClip = true;
 		this.targetPos = targetPos;
-
 	}
+
 
 	@Override
 	public void onUpdate() {
@@ -32,7 +32,7 @@ public class EntityDrone extends EntityMob {
 		if (!this.worldObj.isRemote) {
 			if (hasDeliveredPayload == false) {
 				if (targetPos.getY() < this.posY) {
-					this.motionY = -.01;
+					this.posY = this.posY -.75d;
 				} else {
 					// fire !
 					hasDeliveredPayload = true;
@@ -67,10 +67,9 @@ public class EntityDrone extends EntityMob {
 
 				}
 			} else {
-				if (this.worldObj.getActualHeight() > this.posY) {
+				if (128 > this.posY) {
 					//
-					this.motionY = +.5;
-
+this.posY = this.posY +.5d;
 				} else {
 					// out of world set to dead X X
 					// ---
@@ -91,6 +90,12 @@ public class EntityDrone extends EntityMob {
 	public void writeEntityToNBT(NBTTagCompound tagCompound) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected void entityInit() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -70,10 +71,11 @@ public class ItemAirStrikeRadio extends ItemDeathCube {
 				// summon the entity drone
 				EntityDrone entityDrone = new EntityDrone(worldIn, new BlockPos(bp.getX(), bp.getY() + 20, bp.getZ()));
 				entityDrone.posX = bp.getX();
-				entityDrone.posY = 30;// worldIn.getActualHeight();
+				entityDrone.posY = 128;// worldIn.getActualHeight();
 				entityDrone.posZ = bp.getZ();
 
 				entityDrone.forceSpawn = true;
+				entityDrone.targetPos = bp.offset(EnumFacing.UP,20);
 				boolean rtn = worldIn.spawnEntityInWorld(entityDrone);
 
 				if (rtn && !playerIn.capabilities.isCreativeMode) {
