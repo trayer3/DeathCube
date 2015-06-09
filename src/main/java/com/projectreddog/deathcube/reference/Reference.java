@@ -122,6 +122,7 @@ public class Reference {
 
 	public static final String MODEL_TURRET_TEXTURE_LOCATION = "models/Turret.png";
 	public static final String MODEL_RPGROCKET_TEXTURE_LOCATION = "models/RPGRocket.png";
+	public static final String MODEL_DRONE_TEXTURE_LOCATION = "models/Drone.png";
 
 	public static final int TURRET_RECOIL_TICKS = 10;
 	public static final float TURRET_TRAVEL_MULTIPLIER = -.05f;

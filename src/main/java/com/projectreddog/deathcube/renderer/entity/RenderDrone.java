@@ -44,7 +44,7 @@ public class RenderDrone extends Render {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return new ResourceLocation(Reference.MOD_ID, Reference.MODEL_TURRET_TEXTURE_LOCATION);
+		return new ResourceLocation(Reference.MOD_ID, Reference.MODEL_DRONE_TEXTURE_LOCATION);
 	}
 
 }
