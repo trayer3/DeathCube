@@ -28,6 +28,8 @@ import com.projectreddog.deathcube.network.MessageHandleTextUpdate;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.FieldStates;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.stats.StatDeathCube;
+import com.projectreddog.deathcube.stats.StatDeathCubePlayer;
 import com.projectreddog.deathcube.utility.Log;
 
 public class TileEntityGameController extends TileEntityDeathCube implements IUpdatePlayerListBox {
@@ -686,6 +688,7 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 		DeathCube.teamColorToIndex = new HashMap<String, Integer>();
 		DeathCube.playerToTeamColor = new HashMap<String, String>();
 		DeathCube.playerAwaitingRespawn = new HashMap<String, Long>();
+		DeathCube.gameStatistics = new StatDeathCube();
 
 		for (int i = 0; i < numTeamsInGame; i++) {
 			String color = foundColors.get(i);
@@ -793,10 +796,9 @@ public class TileEntityGameController extends TileEntityDeathCube implements IUp
 			}
 
 			/**
-			 * TODO: Initialize Kill Streak Timers
+			 * Add Player to Game Statistics Tracking
 			 */
-			// killStreakTimer.put(p, 0);
-			// killStreakMultiplier.put(p, 0);
+			DeathCube.gameStatistics.addPlayer(player.getName());
 
 			/**
 			 * Teleport Players to Team Spawn Locations.

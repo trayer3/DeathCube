@@ -37,6 +37,7 @@ import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
+import com.projectreddog.deathcube.stats.StatDeathCubePlayer;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
@@ -141,31 +142,38 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerDeath(LivingDeathEvent event) {
-		if (event.entityLiving instanceof EntityPlayer) {
+		if (event.entity instanceof EntityPlayer) {
 			Log.info("Event Test - EntityPlayer was killed!");
 			if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
 				if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
-					if (event.source.getSourceOfDamage() instanceof EntityPlayer) {
-						Log.info("Event Test - EntityPlayer killed EntityPlayer");
-						Log.info(((EntityPlayer) event.entityLiving).toString() + " killed by " + ((EntityPlayer) event.source.getSourceOfDamage()).toString());
+					if (DeathCube.gameStatistics != null) {
+						if (event.source.getSourceOfDamage() instanceof EntityPlayer) {
+							Log.info("Event Test - EntityPlayer killed by EntityPlayer");
+							Log.info(((EntityPlayer) event.entity).toString() + " killed by " + ((EntityPlayer) event.source.getSourceOfDamage()).toString());
+						} else {
+							Log.info("Event Test - EntityPlayer killed by non-EntityPlayer");
+							Log.info(((EntityPlayer) event.entity).toString() + " killed by " + (event.source.getSourceOfDamage()).toString());
+						}
 					}
 				}
 			}
-		} else if (event.entityLiving instanceof EntityPlayerMP) {
+		} 
+		
+		if (event.entity instanceof EntityPlayerMP) {
 			Log.info("Event Test - EntityPlayerMP was killed!");
 			if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
 				if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
-					if (event.source.getSourceOfDamage() instanceof EntityPlayerMP) {
-						Log.info("Event Test - EntityPlayerMP killed EntityPlayerMP");
+					if (DeathCube.gameStatistics != null) {
+						if (event.source.getSourceOfDamage() instanceof EntityPlayerMP) {
+							Log.info("Event Test - EntityPlayerMP killed by EntityPlayerMP");
+							Log.info(((EntityPlayerMP) event.entity).toString() + " killed by " + ((EntityPlayerMP) event.source.getSourceOfDamage()).toString());
+						} else {
+							Log.info("Event Test - EntityPlayerMP killed by non-EntityPlayerMP");
+							Log.info(((EntityPlayerMP) event.entity).toString() + " killed by " + (event.source.getSourceOfDamage()).toString());
+						}
 					}
 				}
 			}
-		} else {
-			/*
-			 * if(event.entityLiving.getName() != null && event.source.getSourceOfDamage().toString() != null) {
-			 * Log.info("Event Test: " + event.entityLiving.getName() + " died from " + event.source.getSourceOfDamage().toString());
-			 * }
-			 */
 		}
 	}
 
@@ -274,6 +282,13 @@ public class DeathCubeEventHandler {
 						}
 					}
 					Log.info("Player joined Running Game.");
+					
+					/**
+					 * Check if Player is being tracked in Game Statistics
+					 */
+					if (DeathCube.gameStatistics != null) {
+						DeathCube.gameStatistics.addPlayer(((EntityPlayer) event.entity).getName());
+					}
 				}
 			}
 
