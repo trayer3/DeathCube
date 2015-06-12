@@ -1,10 +1,14 @@
 package com.projectreddog.deathcube.item;
 
+import java.util.Random;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.entity.EntityRPGRocket;
+import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 
 public class ItemRPGLauncher extends ItemDeathCube {
@@ -19,7 +23,11 @@ public class ItemRPGLauncher extends ItemDeathCube {
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
 		if (!worldIn.isRemote) {
 
-			boolean rtn = worldIn.spawnEntityInWorld(new EntityRPGRocket(worldIn, playerIn));
+			EntityRPGRocket entityRPGRocket = new EntityRPGRocket(worldIn, playerIn);
+
+			entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
+
+			boolean rtn = worldIn.spawnEntityInWorld(entityRPGRocket);
 			if (rtn && !playerIn.capabilities.isCreativeMode) {
 				// spawned in world so reduce stack size
 				// only if they are not in creative .. because FUN !
@@ -29,5 +37,11 @@ public class ItemRPGLauncher extends ItemDeathCube {
 		}
 
 		return itemStackIn;
+	}
+
+	public String randomDeathMessage() {
+		Random rand = new Random();
+
+		return Reference.MOD_ID + ":" + "RPG_ROCKET_DEATH_" + (rand.nextInt(9) + 1);
 	}
 }

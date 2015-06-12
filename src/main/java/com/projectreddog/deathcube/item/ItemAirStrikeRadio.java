@@ -75,7 +75,8 @@ public class ItemAirStrikeRadio extends ItemDeathCube {
 				entityDrone.posZ = bp.getZ();
 
 				entityDrone.forceSpawn = true;
-				entityDrone.targetPos = bp.offset(EnumFacing.UP,20);
+				entityDrone.targetPos = bp.offset(EnumFacing.UP, 20);
+
 				boolean rtn = worldIn.spawnEntityInWorld(entityDrone);
 
 				if (rtn && !playerIn.capabilities.isCreativeMode) {
@@ -93,4 +94,5 @@ public class ItemAirStrikeRadio extends ItemDeathCube {
 
 		return itemStackIn;
 	}
+
 }

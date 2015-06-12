@@ -20,6 +20,8 @@ public class EntityRPGRocket extends EntityThrowable {
 
 	private float currentVelocity;
 
+	public DamageSource damageSource;
+
 	public EntityRPGRocket(World world) {
 		super(world);
 	}
@@ -69,14 +71,17 @@ public class EntityRPGRocket extends EntityThrowable {
 	@Override
 	protected void onImpact(MovingObjectPosition mop) {
 
+		if (this.damageSource == null) {
+			// set default if none is set
+			this.damageSource = DamageSource.generic;
+		}
 		if (mop.entityHit != null) {
 
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
+			new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
 
 		} else {
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
+			new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
 		}
 		this.setDead();
 	}
-
 }
