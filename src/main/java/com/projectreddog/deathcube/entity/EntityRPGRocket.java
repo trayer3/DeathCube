@@ -3,6 +3,7 @@ package com.projectreddog.deathcube.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
@@ -19,6 +20,8 @@ public class EntityRPGRocket extends EntityThrowable {
 	public Entity target;
 
 	private float currentVelocity;
+
+	public DamageSource damageSource;
 
 	public EntityRPGRocket(World world) {
 		super(world);
@@ -60,7 +63,7 @@ public class EntityRPGRocket extends EntityThrowable {
 		return 0.03F;
 	}
 
-	protected float getVelocity() {
+	public float getVelocity() {
 
 		return 3F;
 
@@ -69,14 +72,27 @@ public class EntityRPGRocket extends EntityThrowable {
 	@Override
 	protected void onImpact(MovingObjectPosition mop) {
 
+		if (this.damageSource == null) {
+			// set default if none is set
+			this.damageSource = DamageSource.generic;
+		}
 		if (mop.entityHit != null) {
 
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
+			new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
 
 		} else {
-			new DeathCubeExplosion(this.worldObj, null, DamageSource.generic, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
+			if (this.worldObj.isAirBlock(mop.getBlockPos())) {
+				// its air so explode here
+				new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
+			} else {
+				// we were inside a block when it hapend so the BP is off
+				// we need to shift to the side that was hit and explode on that side
+				BlockPos bp = mop.getBlockPos().offset(mop.sideHit, 1);
+				new DeathCubeExplosion(this.worldObj, null, this.damageSource, bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5, 5.0F, false);
+
+			}
+
 		}
 		this.setDead();
 	}
-
 }

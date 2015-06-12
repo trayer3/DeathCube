@@ -31,4 +31,25 @@ death.attack.deathcube:FORCE_FIELD_DEATH_7=%s got fried by pure energy!
 death.attack.deathcube:FORCE_FIELD_DEATH_8=%s sizzled and died.
 death.attack.deathcube:FORCE_FIELD_DEATH_9=And that's why it's called DeathCube, %s.
 
+death.attack.deathcube:AIR_STRIKE_DEATH_1=%s's scorched body burned to dust as the drone flies quietly away.
+death.attack.deathcube:AIR_STRIKE_DEATH_2=The sky is your enemy when the drone flies by %s.
+death.attack.deathcube:AIR_STRIKE_DEATH_3=%s the drone didn't stop over to take a selfie you know!
+death.attack.deathcube:AIR_STRIKE_DEATH_4=In the race to get to the after life %s is running hard.  
+death.attack.deathcube:AIR_STRIKE_DEATH_5=%s next time keep one eye to the sky.
+death.attack.deathcube:AIR_STRIKE_DEATH_6=%s heard the drone and yelled for his teammates to run, alas it was too late for him.
+death.attack.deathcube:AIR_STRIKE_DEATH_7=%s they will be scraping him off the streets for weeks.
+death.attack.deathcube:AIR_STRIKE_DEATH_8=%s tiz but a scratch, A big firey explosion of a scratch.
+death.attack.deathcube:AIR_STRIKE_DEATH_9=%s should have stayed indoors.
+
+death.attack.deathcube:RPG_ROCKET_DEATH_1=%s played catch with an RPG and won!
+death.attack.deathcube:RPG_ROCKET_DEATH_2=One does not simply play catch with a RPG, %s.
+death.attack.deathcube:RPG_ROCKET_DEATH_3=Here a bit there a bit every where are bits of %s
+death.attack.deathcube:RPG_ROCKET_DEATH_4=%s should have got the RPG coverage on his life insurance policy.
+death.attack.deathcube:RPG_ROCKET_DEATH_5=%s Its like the rockets have a thing for you.
+death.attack.deathcube:RPG_ROCKET_DEATH_6=%s almost got away but the RGP had different plans.
+death.attack.deathcube:RPG_ROCKET_DEATH_7=%s you'd think I'd run out of ways to say you died by now, Nope BAMMMMM RPG to DA FACE!
+death.attack.deathcube:RPG_ROCKET_DEATH_8=Target acquired, tracking... Target within Range Boom Goes %s
+death.attack.deathcube:RPG_ROCKET_DEATH_9=%s you left a crater in our hearts and streets when you died... but mostly in the streets :O 
+
+
 entity.deathcube.turret.name=Turret

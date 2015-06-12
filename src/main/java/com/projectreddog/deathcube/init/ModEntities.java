@@ -2,6 +2,7 @@ package com.projectreddog.deathcube.init;
 
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import com.projectreddog.deathcube.entity.EntityDrone;
 import com.projectreddog.deathcube.entity.EntityRPGRocket;
 import com.projectreddog.deathcube.entity.EntityTurret;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
@@ -14,6 +15,7 @@ public class ModEntities {
 		EntityRegistry.registerModEntity(EntityWaypoint.class, Reference.ENTITY_WAYPOINT_NAME, Reference.ENTITY_WAYPOINT_ID, mod, 128, 1, true);
 		EntityRegistry.registerModEntity(EntityTurret.class, Reference.ENTITY_TURRET_NAME, Reference.ENTITY_TURRET_ID, mod, 128, 1, true);
 		EntityRegistry.registerModEntity(EntityRPGRocket.class, Reference.ENTITY_RPG_ROCKET_NAME, Reference.ENTITY_RPG_ROCKET_ID, mod, 128, 1, true);
+		EntityRegistry.registerModEntity(EntityDrone.class, Reference.ENTITY_DRONE_NAME, Reference.ENTITY_DRONE_ID, mod, 128, 1, true);
 
 	}
 }
