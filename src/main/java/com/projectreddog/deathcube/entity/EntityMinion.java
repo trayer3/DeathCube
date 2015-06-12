@@ -25,6 +25,10 @@ import com.projectreddog.deathcube.reference.Reference;
 
 public class EntityMinion extends EntityZombie implements IRangedAttackMob {
 
+	// TODO create a gameprofile with players name / id
+	// TOOD create a networkplayerinfo(gameprofile) // use getLocationSkin in render code to get the texture ! (client only stuff)
+
+	// TODO or getLocationSkin from AbstractClientPlayer (client only)
 	public float topRotation = 0;
 	public int team = 1; // 1 = Red , 2 = Green , 3= Blue, 4 = yellow
 	private EntityAIArrowAttack aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F);
