@@ -27,6 +27,7 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.EntityMinion;
 import com.projectreddog.deathcube.entity.EntityTurret;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
 import com.projectreddog.deathcube.init.ModBlocks;
@@ -35,9 +36,7 @@ import com.projectreddog.deathcube.init.ModNetwork;
 import com.projectreddog.deathcube.network.MessageHandleClientDeath;
 import com.projectreddog.deathcube.network.MessageHandleClientGameUpdate;
 import com.projectreddog.deathcube.network.MessageRequestTextUpdate_Client;
-import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.reference.Reference.GameStates;
-import com.projectreddog.deathcube.stats.StatDeathCubePlayer;
 import com.projectreddog.deathcube.tileentity.TileEntityCapturePoint;
 import com.projectreddog.deathcube.tileentity.TileEntityGameController;
 import com.projectreddog.deathcube.tileentity.TileEntitySpawnPoint;
@@ -53,8 +52,8 @@ public class DeathCubeEventHandler {
 			 */
 			Block brokenBlock = event.state.getBlock();
 
-			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(ModBlocks.mine_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web) || brokenBlock.equals(Blocks.leaves)
-					|| brokenBlock.equals(Blocks.leaves2)) {
+			if (brokenBlock.equals(Blocks.cobblestone) || brokenBlock.equals(ModBlocks.loot_block) || brokenBlock.equals(ModBlocks.mine_block) || brokenBlock.equals(Blocks.tallgrass) || brokenBlock.equals(Blocks.yellow_flower) || brokenBlock.equals(Blocks.red_flower) || brokenBlock.equals(Blocks.double_plant) || brokenBlock.equals(Blocks.mob_spawner) || brokenBlock.equals(Blocks.web)
+					|| brokenBlock.equals(Blocks.leaves) || brokenBlock.equals(Blocks.leaves2)) {
 				/**
 				 * Do Nothing. It is OK to break these blocks.
 				 */
@@ -116,7 +115,7 @@ public class DeathCubeEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerAttack(AttackEntityEvent event) {
-		if(event.entityPlayer != null) {
+		if (event.entityPlayer != null) {
 			if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
 				if (DeathCube.gameTeams != null && DeathCube.gameTeams.length > 1) {
 					if (DeathCube.playerToTeamColor != null) {
@@ -157,8 +156,8 @@ public class DeathCubeEventHandler {
 					}
 				}
 			}
-		} 
-		
+		}
+
 		if (event.entity instanceof EntityPlayerMP) {
 			Log.info("Event Test - EntityPlayerMP was killed!");
 			if (DeathCube.gameState != null && DeathCube.gameState == GameStates.Running) {
@@ -282,7 +281,7 @@ public class DeathCubeEventHandler {
 						}
 					}
 					Log.info("Player joined Running Game.");
-					
+
 					/**
 					 * Check if Player is being tracked in Game Statistics
 					 */
@@ -320,6 +319,9 @@ public class DeathCubeEventHandler {
 			dw.addObject(20, 0);// Team AKA color
 			dw.addObject(22, 0.0f);// Rotation of turret head
 			dw.addObject(21, 0);// 21 = state (int)
+		} else if (event.entity instanceof EntityMinion) {
+			DataWatcher dw = event.entity.getDataWatcher();
+			dw.addObject(20, 0);// Team AKA color
 		}
 	}
 

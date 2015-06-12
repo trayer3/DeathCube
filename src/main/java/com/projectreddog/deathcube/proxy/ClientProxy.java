@@ -1,12 +1,14 @@
 package com.projectreddog.deathcube.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.entity.EntityDrone;
+import com.projectreddog.deathcube.entity.EntityMinion;
 import com.projectreddog.deathcube.entity.EntityRPGRocket;
 import com.projectreddog.deathcube.entity.EntityTurret;
 import com.projectreddog.deathcube.entity.EntityWaypoint;
@@ -32,6 +34,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, new RenderTurret(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityRPGRocket.class, new RenderRPGRocket(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDrone.class, new RenderDrone(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityMinion.class, new RenderZombie(Minecraft.getMinecraft().getRenderManager()));
 
 		// register event for overlay
 		MinecraftForge.EVENT_BUS.register(new RenderOverlayHandler());
