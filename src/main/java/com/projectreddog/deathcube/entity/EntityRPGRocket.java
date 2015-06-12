@@ -3,6 +3,7 @@ package com.projectreddog.deathcube.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
@@ -80,7 +81,17 @@ public class EntityRPGRocket extends EntityThrowable {
 			new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, 5.0F, false);
 
 		} else {
-			new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
+			if (this.worldObj.isAirBlock(mop.getBlockPos())) {
+				// its air so explode here
+				new DeathCubeExplosion(this.worldObj, null, this.damageSource, mop.getBlockPos().getX() + 0.5, mop.getBlockPos().getY() + 0.5, mop.getBlockPos().getZ() + 0.5, 5.0F, false);
+			} else {
+				// we were inside a block when it hapend so the BP is off
+				// we need to shift to the side that was hit and explode on that side
+				BlockPos bp = mop.getBlockPos().offset(mop.sideHit, 1);
+				new DeathCubeExplosion(this.worldObj, null, this.damageSource, bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5, 5.0F, false);
+
+			}
+
 		}
 		this.setDead();
 	}
