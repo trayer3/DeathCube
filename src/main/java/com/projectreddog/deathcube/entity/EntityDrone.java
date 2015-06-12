@@ -48,31 +48,31 @@ public class EntityDrone extends Entity {
 
 						// only run if open to sky
 						entityRPGRocket.setLocationAndAngles(this.posX + .5d, this.posY + offsetHeight, this.posZ + .5d, 0, -90);
-						entityRPGRocket.setVelocity(0, entityRPGRocket.getVelocity() * -1, 0);
+						entityRPGRocket.motionY = entityRPGRocket.getVelocity() * -1;
 						entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
 						boolean rtn = this.worldObj.spawnEntityInWorld(entityRPGRocket);
 
 						entityRPGRocket = new EntityRPGRocket(this.worldObj);
 						entityRPGRocket.setLocationAndAngles(this.posX + .5d + 2, this.posY + offsetHeight, this.posZ + .5d, 0, -90);
-						entityRPGRocket.setVelocity(0, entityRPGRocket.getVelocity() * -1, 0);
+						entityRPGRocket.motionY = entityRPGRocket.getVelocity() * -1;
 						entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
 						rtn = rtn && this.worldObj.spawnEntityInWorld(entityRPGRocket);
 
 						entityRPGRocket = new EntityRPGRocket(this.worldObj);
 						entityRPGRocket.setLocationAndAngles(this.posX + .5d - 2, this.posY + offsetHeight, this.posZ + .5d, 0, -90);
-						entityRPGRocket.setVelocity(0, entityRPGRocket.getVelocity() * -1, 0);
+						entityRPGRocket.motionY = entityRPGRocket.getVelocity() * -1;
 						entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
 						rtn = rtn && this.worldObj.spawnEntityInWorld(entityRPGRocket);
 
 						entityRPGRocket = new EntityRPGRocket(this.worldObj);
 						entityRPGRocket.setLocationAndAngles(this.posX + .5d, this.posY + offsetHeight, this.posZ + .5d + 2, 0, -90);
-						entityRPGRocket.setVelocity(0, entityRPGRocket.getVelocity() * -1, 0);
+						entityRPGRocket.motionY = entityRPGRocket.getVelocity() * -1;
 						entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
 						rtn = rtn && this.worldObj.spawnEntityInWorld(entityRPGRocket);
 
 						entityRPGRocket = new EntityRPGRocket(this.worldObj);
 						entityRPGRocket.setLocationAndAngles(this.posX + .5d, this.posY + offsetHeight, this.posZ + .5d - 2, 0, -90);
-						entityRPGRocket.setVelocity(0, entityRPGRocket.getVelocity() * -1, 0);
+						entityRPGRocket.motionY = entityRPGRocket.getVelocity() * -1;
 						entityRPGRocket.damageSource = new DamageSource(randomDeathMessage());
 						rtn = rtn && this.worldObj.spawnEntityInWorld(entityRPGRocket);
 
