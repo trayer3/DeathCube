@@ -322,6 +322,7 @@ public class DeathCubeEventHandler {
 		} else if (event.entity instanceof EntityMinion) {
 			DataWatcher dw = event.entity.getDataWatcher();
 			dw.addObject(20, 0);// Team AKA color
+			dw.addObject(21, "");// Player name
 		}
 	}
 
