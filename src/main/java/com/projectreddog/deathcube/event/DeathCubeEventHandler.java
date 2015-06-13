@@ -152,7 +152,19 @@ public class DeathCubeEventHandler {
 							Log.info(((EntityPlayer) event.entity).toString() + " killed by " + ((EntityPlayer) event.source.getSourceOfDamage()).toString());
 						} else {
 							Log.info("Event Test - EntityPlayer killed by non-EntityPlayer");
-							Log.info(((EntityPlayer) event.entity).toString() + " killed by " + (event.source.getSourceOfDamage()).toString());
+							String deathSource, damageType;
+							if(event.source != null) {
+								if(event.source.getSourceOfDamage() != null) {
+									if(event.source.getSourceOfDamage().getName() != null) {
+										deathSource = event.source.getSourceOfDamage().getName();
+										Log.info("Death Source: " + deathSource);
+									}
+								} 
+								if (event.source.getDamageType() != null) {
+									damageType = event.source.getDamageType();
+									Log.info("Damage Type: " + damageType);
+								}
+							}
 						}
 					}
 				}
@@ -169,7 +181,19 @@ public class DeathCubeEventHandler {
 							Log.info(((EntityPlayerMP) event.entity).toString() + " killed by " + ((EntityPlayerMP) event.source.getSourceOfDamage()).toString());
 						} else {
 							Log.info("Event Test - EntityPlayerMP killed by non-EntityPlayerMP");
-							Log.info(((EntityPlayerMP) event.entity).toString() + " killed by " + (event.source.getSourceOfDamage()).toString());
+							String deathSource, damageType;
+							if(event.source != null) {
+								if(event.source.getSourceOfDamage() != null) {
+									if(event.source.getSourceOfDamage().getName() != null) {
+										deathSource = event.source.getSourceOfDamage().getName();
+										Log.info("Death Source: " + deathSource);
+									}
+								} 
+								if (event.source.getDamageType() != null) {
+									damageType = event.source.getDamageType();
+									Log.info("Damage Type: " + damageType);
+								}
+							}
 						}
 					}
 				}
