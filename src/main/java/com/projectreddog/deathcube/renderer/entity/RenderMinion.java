@@ -1,34 +1,30 @@
 package com.projectreddog.deathcube.renderer.entity;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.ResourceLocation;
 
 import com.projectreddog.deathcube.entity.EntityMinion;
-import com.projectreddog.deathcube.model.entity.ModelTurret;
 
-public class RenderMinion extends RenderPlayer {
-
-	protected ModelBase modelTurret;
+public class RenderMinion extends RendererLivingEntity {
 
 	private RenderItem itemRenderer;
 
 	public RenderMinion(RenderManager renderManager) {
 
-		super(renderManager);
+		this(renderManager, false);
 
-		// LogHelper.info("in RenderLoader constructor");
-		shadowSize = 1F;
-		this.modelTurret = new ModelTurret();
-		itemRenderer = Minecraft.getMinecraft().getRenderItem();
+	}
+
+	public RenderMinion(RenderManager renderManager, boolean useSmallArms) {
+
+		super(renderManager, new ModelPlayer(0.0f, useSmallArms), 0.5f);
 
 	}
 
@@ -46,7 +42,7 @@ public class RenderMinion extends RenderPlayer {
 
 		this.func_177137_d((EntityMinion) p_180596_1_);
 		if (((EntityMinion) p_180596_1_).player != null) {
-			super.doRender((EntityLivingBase) ((EntityMinion) p_180596_1_).player, p_180596_2_, d3, p_180596_6_, p_180596_8_, p_180596_9_);
+			super.doRender(p_180596_1_, p_180596_2_, d3, p_180596_6_, p_180596_8_, p_180596_9_);
 		}
 
 	}
@@ -93,7 +89,18 @@ public class RenderMinion extends RenderPlayer {
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return this.func_180594_a((AbstractClientPlayer) entity);
+		return this.func_180594_a((AbstractClientPlayer) ((EntityMinion) entity).player);
+	}
+
+	/**
+	 * returns the more specialized type of the model as the player model.
+	 */
+	public ModelPlayer getPlayerModel() {
+		return (ModelPlayer) super.getMainModel();
+	}
+
+	protected ResourceLocation func_180594_a(AbstractClientPlayer p_180594_1_) {
+		return p_180594_1_.getLocationSkin();
 	}
 
 }
