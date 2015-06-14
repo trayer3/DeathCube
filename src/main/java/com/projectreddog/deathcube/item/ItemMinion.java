@@ -41,23 +41,27 @@ public class ItemMinion extends ItemDeathCube {
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();
-			EntityMinion entityMinion = new EntityMinion(world, player);
+			int teamnum = 1;
+			if (DeathCube.gameState == Reference.GameStates.Running) {
+				if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Red")) {
+					teamnum = 1;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Green")) {
+					teamnum = 2;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Blue")) {
+					teamnum = 3;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Yellow")) {
+					teamnum = 4;
+				}
+			}
+
+			EntityMinion entityMinion = new EntityMinion(world, player, teamnum);
 			entityMinion.setPosition(x + .5d, y + 1.0d, z + .5d);
 			entityMinion.prevPosX = x + .5d;
 			entityMinion.prevPosY = y + 1.0d;
 			entityMinion.prevPosZ = z + .5d;
 			// 1 = Red , 2 = Green , 3= Blue, 4 = yellow
-			if (DeathCube.gameState == Reference.GameStates.Running) {
-				if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Red")) {
-					entityMinion.team = 1;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Green")) {
-					entityMinion.team = 2;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Blue")) {
-					entityMinion.team = 3;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Yellow")) {
-					entityMinion.team = 4;
-				}
-			}
+
+			Log.info("Spawn Mini-minon for team: " + entityMinion.team);
 			boolean rtn = world.spawnEntityInWorld(entityMinion);
 			if (rtn && !player.capabilities.isCreativeMode) {
 				// spawned in world so reduce stack size

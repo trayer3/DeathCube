@@ -16,6 +16,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.projectreddog.deathcube.DeathCube;
 import com.projectreddog.deathcube.reference.Reference;
+import com.projectreddog.deathcube.utility.Log;
 
 public class EntityAINearestAttackableTargetNotTeam extends EntityAITarget {
 	protected final Class targetClass;
@@ -94,11 +95,18 @@ public class EntityAINearestAttackableTargetNotTeam extends EntityAITarget {
 						|| (DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()).equalsIgnoreCase("Yellow") && this.team != 4)) {
 					// player target is on a different team !
 					opposingTeam = true;
+					Log.info("Set to true" + " Team:" + this.team + " ELB team:" + DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()));
 				} else {
 					// player on same team re-set target?
 					opposingTeam = false;
+					Log.info("Set to FALSE" + " Team:" + this.team + " ELB team:" + DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()));
+
 				}
 
+			} else {
+				Log.info("false" + " Team:" + this.team + " ELB team:" + DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()));
+
+				opposingTeam = false;
 			}
 
 		}

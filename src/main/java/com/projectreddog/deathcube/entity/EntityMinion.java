@@ -35,9 +35,10 @@ public class EntityMinion extends EntityMob {
 
 	}
 
-	public EntityMinion(World world, EntityPlayer player) {
+	public EntityMinion(World world, EntityPlayer player, int team) {
 		this(world);
 		this.player = player;
+		this.team = team;
 		this.getDataWatcher().updateObject(21, this.player.getName());
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
