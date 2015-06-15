@@ -41,23 +41,27 @@ public class ItemTurret extends ItemDeathCube {
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();
-			EntityTurret et = new EntityTurret(world);
+
+			int tempTeam = 1;
+			if (DeathCube.gameState == Reference.GameStates.Running) {
+				if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Red")) {
+					tempTeam = 1;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Green")) {
+					tempTeam = 2;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Blue")) {
+					tempTeam = 3;
+				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Yellow")) {
+					tempTeam = 4;
+				}
+			}
+
+			EntityTurret et = new EntityTurret(world, tempTeam);
 			et.setPosition(x + .5d, y + 1.0d, z + .5d);
 			et.prevPosX = x + .5d;
 			et.prevPosY = y + 1.0d;
 			et.prevPosZ = z + .5d;
 			// 1 = Red , 2 = Green , 3= Blue, 4 = yellow
-			if (DeathCube.gameState == Reference.GameStates.Running) {
-				if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Red")) {
-					et.team = 1;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Green")) {
-					et.team = 2;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Blue")) {
-					et.team = 3;
-				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Yellow")) {
-					et.team = 4;
-				}
-			}
+
 			boolean rtn = world.spawnEntityInWorld(et);
 			if (rtn && !player.capabilities.isCreativeMode) {
 				// spawned in world so reduce stack size
