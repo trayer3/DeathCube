@@ -104,7 +104,8 @@ public class EntityAINearestAttackableTargetNotTeam extends EntityAITarget {
 				}
 
 			} else {
-				Log.info("false" + " Team:" + this.team + " ELB team:" + DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()));
+
+				// Log.info("false" + " Team:" + this.team + " ELB team:" + DeathCube.playerToTeamColor.get(((EntityPlayer) entityLivingBase).getName()));
 
 				opposingTeam = false;
 			}
