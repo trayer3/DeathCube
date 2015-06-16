@@ -8,7 +8,6 @@ import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +16,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.DeathCube;
+import com.projectreddog.deathcube.entity.ai.EntityAINearestAttackableTargetNotTeam;
 import com.projectreddog.deathcube.reference.Reference;
 
 public class EntityTurret extends EntityMob implements IRangedAttackMob {
@@ -31,14 +31,30 @@ public class EntityTurret extends EntityMob implements IRangedAttackMob {
 
 	public Entity target;
 
-	public EntityTurret(World world) {
+	public EntityTurret(World world, int team) {
 		super(world);
+		this.team = team;
 		this.setSize(.90F, 1.7F);
 		this.getDataWatcher().updateObject(20, this.team);
 		this.tasks.addTask(0, new EntityAIArrowAttack(this, 0, 10, 10));// should act like a skely
 		this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTargetNotTeam(this, EntityPlayer.class, true, this.team));
+		this.targetTasks.addTask(3, aiArrowAttack);
+		this.jumpMovementFactor = 0;
+		this.stepHeight = 0;
+
+		// this.onUpdate();
+
+	}
+
+	public EntityTurret(World world) {
+		super(world);
+		this.setSize(.90F, 1.7F);
+		this.tasks.addTask(0, new EntityAIArrowAttack(this, 0, 10, 10));// should act like a skely
+		this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTargetNotTeam(this, EntityPlayer.class, true, this.team));
 		this.targetTasks.addTask(3, aiArrowAttack);
 		this.jumpMovementFactor = 0;
 		this.stepHeight = 0;

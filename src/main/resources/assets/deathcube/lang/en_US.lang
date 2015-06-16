@@ -17,6 +17,7 @@ item.deathcube:lifeskull.name=Life Skull
 item.deathcube:turret.name=Turret
 item.deathcube:rpglauncher.name=RPG Launcher
 item.deathcube:airstrikeradio.name=Airstrike Radio
+item.deathcube:minion.name=Mini-me
 
 
 commands.game.usage=/game <start | end | refresh>

@@ -7,15 +7,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import com.projectreddog.deathcube.DeathCube;
-import com.projectreddog.deathcube.entity.EntityTurret;
+import com.projectreddog.deathcube.entity.EntityMinion;
 import com.projectreddog.deathcube.reference.Reference;
 import com.projectreddog.deathcube.utility.Log;
 
-public class ItemTurret extends ItemDeathCube {
+public class ItemMinion extends ItemDeathCube {
 
-	public ItemTurret() {
+	public ItemMinion() {
 		super();
-		this.setUnlocalizedName("turret");
+		this.setUnlocalizedName("minion");
 		this.maxStackSize = 1;
 	}
 
@@ -41,28 +41,28 @@ public class ItemTurret extends ItemDeathCube {
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();
-
-			int tempTeam = 1;
+			int teamnum = 1;
 			if (DeathCube.gameState == Reference.GameStates.Running) {
 				if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Red")) {
-					tempTeam = 1;
+					teamnum = 1;
 				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Green")) {
-					tempTeam = 2;
+					teamnum = 2;
 				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Blue")) {
-					tempTeam = 3;
+					teamnum = 3;
 				} else if (DeathCube.playerToTeamColor.get(player.getName()).equalsIgnoreCase("Yellow")) {
-					tempTeam = 4;
+					teamnum = 4;
 				}
 			}
 
-			EntityTurret et = new EntityTurret(world, tempTeam);
-			et.setPosition(x + .5d, y + 1.0d, z + .5d);
-			et.prevPosX = x + .5d;
-			et.prevPosY = y + 1.0d;
-			et.prevPosZ = z + .5d;
+			EntityMinion entityMinion = new EntityMinion(world, player, teamnum);
+			entityMinion.setPosition(x + .5d, y + 1.0d, z + .5d);
+			entityMinion.prevPosX = x + .5d;
+			entityMinion.prevPosY = y + 1.0d;
+			entityMinion.prevPosZ = z + .5d;
 			// 1 = Red , 2 = Green , 3= Blue, 4 = yellow
 
-			boolean rtn = world.spawnEntityInWorld(et);
+			Log.info("Spawn Mini-minon for team: " + entityMinion.team);
+			boolean rtn = world.spawnEntityInWorld(entityMinion);
 			if (rtn && !player.capabilities.isCreativeMode) {
 				// spawned in world so reduce stack size
 				// only if they are not in creative .. because FUN !
@@ -73,4 +73,5 @@ public class ItemTurret extends ItemDeathCube {
 
 		return false;
 	}
+
 }
