@@ -51,7 +51,7 @@ public class EntityMinion extends EntityMob {
 	}
 
 	protected void applyEntityAI() {
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] { EntityPigZombie.class }));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[] { EntityPigZombie.class }));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTargetNotTeam(this, EntityPlayer.class, true, team));
 	}
 
